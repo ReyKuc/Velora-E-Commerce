@@ -1,0 +1,300 @@
+<!--public/cart.html-->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Velora | Sepetim</title>
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+    header {
+    background-color: #000;
+    padding: 20px 0 10px;
+    border-bottom: 2px solid #d4af37;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+nav a {
+    color: #f5f5f5;
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+nav a:hover {
+    color: #d4af37;
+}
+
+@media (max-width: 768px) {
+
+    header {
+        position: relative;
+        border-bottom: none;
+    }
+
+    nav {
+        display: none;
+        position: absolute;
+        top: 70px;
+        right: 20px;
+        background: black;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+        border: 1px solid #d4af37;
+        z-index: 1000;
+    }
+
+    nav.active {
+        display: flex;
+    }
+
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        position: absolute;
+        top: 25px;
+        right: 20px;
+        z-index: 1100;
+        cursor: pointer;
+    }
+
+    .hamburger span {
+        width: 28px;
+        height: 3px;
+        background: #ffffff;
+    }
+}
+</style>
+</head>
+<body>
+<header>
+<h1 style="color: #d4af37;" >VELORA</h1>
+<nav id="navMenu">
+    <a href="index.html">ANA SAYFA</a>
+    <a href="products.html">ÜRÜNLER</a>
+    <a href="favorites.html">FAVORİLER</a>
+     <a href="login.html" id="loginLink">GİRİŞ YAP</a>
+            <a href="register.html" id="registerLink">KAYIT OL</a>
+           <a href="#" id="logoutBtn" class="logout-btn" style="display:none; ">
+    ->
+</a>
+<div id="logoutConfirm" class="logout-confirm">
+        <p>Çıkış yapmak istediğine emin misin?</p>
+        <button id="confirmYes">Evet</button>
+        <button id="confirmNo">Hayır</button>
+    </div>
+
+</nav>
+ <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</header>
+
+<div class="form-container">
+<h2>Sepetim</h2>
+<div id="message" class="message"></div>
+<div id="cartItems"></div>
+<button id="checkoutBtn" class="add-to-cart-btn" style="display:none;">
+    Satın Al
+</button>
+
+</div>
+
+<footer>
+<p>&copy; 2025 VELORA</p>
+</footer>
+
+<script>
+const cartItemsDiv = document.getElementById("cartItems");
+const messageDiv = document.getElementById("message");
+const checkoutBtn = document.getElementById("checkoutBtn");
+const role = localStorage.getItem("role");
+
+if (role === "admin") {
+    document.querySelector('a[href="cart.html"]').style.display = "none";
+    document.querySelector('a[href="favorites.html"]').style.display = "none";
+}
+
+const token = localStorage.getItem("token");
+if (!token) {
+    messageDiv.style.display = "block";
+    messageDiv.className = "message error";
+    messageDiv.textContent = "Lütfen giriş yapın";
+}
+
+// Sepeti getir
+async function loadCart() {
+    if (!token) return;
+    try {
+        const res = await fetch("/api/cart", { // /api/cart olarak düzeltildi
+            method: "GET",
+            headers: { "Authorization": "Bearer " + token }
+        });
+        const cart = await res.json();
+        
+        // Hata kontrolü eklendi
+        if (cart.success === false) {
+             messageDiv.style.display = "block";
+             messageDiv.className = "message error";
+             messageDiv.textContent = cart.message || "Sepet yüklenirken hata oluştu (Yetki/Sunucu hatası).";
+             return;
+        }
+
+        if (!cart.items || cart.items.length === 0) {
+            cartItemsDiv.innerHTML = "<p>Sepetiniz boş.</p>";
+            checkoutBtn.style.display = "none";
+            return;
+        }
+
+        checkoutBtn.style.display = "block";
+        cartItemsDiv.innerHTML = "";
+
+        cart.items.forEach(item => {
+            const div = document.createElement("div");
+            div.style.border = "1px solid #d4af37";
+            div.style.borderRadius = "12px";
+            div.style.padding = "12px";
+            div.style.marginBottom = "10px";
+            div.style.backgroundColor = "#0d0d0d";
+            div.style.display = "flex";
+            div.style.justifyContent = "space-between";
+            div.style.alignItems = "center";
+
+            div.innerHTML = `
+                <span>${item.product.name} x ${item.quantity}</span>
+                <span>${(item.product.price * item.quantity).toFixed(2)} ₺</span>
+                
+                <div>
+                    <button class="incBtn" data-id="${item.product._id}">+</button>
+                    <button class="removeBtn" data-id="${item.product._id}">Sil</button>
+                </div>
+                
+            `;
+            
+            cartItemsDiv.appendChild(div);
+        });
+
+        // Artır butonları
+        document.querySelectorAll(".incBtn").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                const id = btn.getAttribute("data-id");
+                await fetch("/api/cart/add", { // /api/cart/add olarak düzeltildi
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    },
+                    body: JSON.stringify({ productId: id, quantity: 1 })
+                });
+                loadCart();
+            });
+        });
+
+        // Sil butonları
+        document.querySelectorAll(".removeBtn").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                const id = btn.getAttribute("data-id");
+                await fetch("/api/cart/remove/" + id, { // /api/cart/remove/ olarak düzeltildi
+                    method: "DELETE",
+                    headers: { "Authorization": "Bearer " + token }
+                });
+                loadCart();
+            });
+        });
+
+    } catch (err) {
+        messageDiv.style.display = "block";
+        messageDiv.className = "message error";
+        messageDiv.textContent = "Sepet yüklenirken beklenmeyen bir hata oluştu.";
+    }
+}
+
+// Satın al
+checkoutBtn.addEventListener("click", async () => {
+    try {
+        const res = await fetch("/api/cart/checkout", { // /api/cart/checkout olarak düzeltildi
+            method: "POST",
+            headers: { "Authorization": "Bearer " + token }
+        });
+        const data = await res.json();
+        if (data.success) {
+            alert("Satın alma başarılı!");
+            loadCart();
+        } else {
+            alert(data.message || "Satın alma başarısız!");
+        }
+    } catch (err) {
+        alert("Sunucu hatası!");
+    }
+});
+
+loadCart();
+</script>
+<script>
+const hamburger = document.getElementById("hamburger");
+const nav = document.getElementById("navMenu");
+
+hamburger.addEventListener("click", () => {
+    nav.classList.toggle("active");
+});
+const logoutBtn = document.getElementById("logoutBtn");
+const logoutConfirm = document.getElementById("logoutConfirm");
+const yesBtn = document.getElementById("confirmYes");
+const noBtn = document.getElementById("confirmNo");
+
+logoutConfirm.style.display = "none";
+// giriş kontrolü
+if (localStorage.getItem("token")) {
+    logoutBtn.style.display = "inline-block";
+}
+
+// tıkla → sor
+logoutBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    logoutConfirm.style.display = "block";
+});
+
+// hayır
+noBtn.addEventListener("click", () => {
+    logoutConfirm.style.display = "none";
+});
+
+// evet
+yesBtn.addEventListener("click", () => {
+    localStorage.removeItem("token");
+    logoutConfirm.innerHTML = "<p>Çıkış yapıldı</p>";
+
+    setTimeout(() => {
+        logoutConfirm.style.display = "none";
+        logoutBtn.style.display = "none";
+    }, 1200);
+});
+
+const loginLink = document.getElementById("loginLink");
+const registerLink = document.getElementById("registerLink");
+
+if (localStorage.getItem("token")) {
+    loginLink.style.display = "none";
+    registerLink.style.display = "none";
+    logoutBtn.style.display = "inline-block";
+} else {
+    loginLink.style.display = "inline-block";
+    registerLink.style.display = "inline-block";
+    logoutBtn.style.display = "none";
+}
+
+</script>
+
+</body>
+</html>

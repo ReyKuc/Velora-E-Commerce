@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velora | Giriş Yap</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+header {
+    background-color: #000;
+    padding: 20px 0 10px;
+    border-bottom: 2px solid #d4af37;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+nav a {
+    color: #f5f5f5;
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+nav a:hover {
+    color: #d4af37;
+}
+
+.role-select {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.role-select label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: 2px solid #d4af37;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background-color: #2a2a2a;
+}
+
+.role-select input[type="radio"] {
+    cursor: pointer;
+}
+
+.role-select label:hover {
+    background-color: #3a3a3a;
+}
+
+.role-select input[type="radio"]:checked + label,
+.role-select label:has(input[type="radio"]:checked) {
+    background-color: #d4af37;
+    color: #0d0d0d;
+}
+
+@media (max-width: 768px) {
+    header {
+        position: relative;
+        border-bottom: none;
+    }
+
+    nav {
+        display: none;
+        position: absolute;
+        top: 70px;
+        right: 20px;
+        background: black;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+        border: 1px solid #d4af37;
+        z-index: 1000;
+    }
+
+    button[type="submit"] {
+        width: 200px;
+        display: block;
+        margin: 20px auto;
+        border-radius: 50px;
+    }
+
+    nav.active {
+        display: flex;
+    }
+
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        position: absolute;
+        top: 25px;
+        right: 20px;
+        z-index: 1100;
+        cursor: pointer;
+    }
+
+    .hamburger span {
+        width: 28px;
+        height: 3px;
+        background: #ffffff;
+    }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1 style="color: #d4af37;">VELORA</h1>
+    <nav id="navMenu">
+        <a href="index.html">ANA SAYFA</a>
+        <a href="products.html">ÜRÜNLER</a>
+        <a href="cart.html">SEPETİM</a>
+        <a href="favorites.html">FAVORİLER</a>
+    </nav>
+    <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</header>
+
+<div class="form-container">
+    <h2>Giriş Yap</h2>
+    
+    <div class="role-select">
+        <label>
+            <input type="radio" name="role" value="user" checked>
+            <span>Kullanıcı</span>
+        </label>
+        <label>
+            <input type="radio" name="role" value="admin">
+            <span>Admin</span>
+        </label>
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <form id="loginForm">
+        <label for="usernameOrEmail">E-posta veya Kullanıcı Adı</label>
+        <input type="text" id="usernameOrEmail" name="usernameOrEmail" required>
+
+        <label for="password">Şifre</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Giriş Yap</button>
+
+        <p>
+            Hesabın yok mu? <a href="register.html">Kayıt Ol</a>
+        </p>
+    </form>
+</div>
+
+<footer>
+    <p>&copy; 2025 VELORA</p>
+</footer>
+
+<script>
+const hamburger = document.getElementById("hamburger");
+const nav = document.getElementById("navMenu");
+
+if (hamburger) {
+    hamburger.addEventListener("click", () => {
+        nav.classList.toggle("active");
+    });
+}
+
+const loginForm = document.getElementById("loginForm");
+const messageDiv = document.getElementById("message");
+
+loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // trim() kullanarak olası boşluk hatalarını temizliyoruz
+    const usernameOrEmail = document.getElementById("usernameOrEmail").value.trim();
+    const password = document.getElementById("password").value;
+    const role = document.querySelector('input[name="role"]:checked').value;
+
+    console.log("📤 Sunucuya gidiyor:", { usernameOrEmail, password, role });
+
+    try {
+        const res = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({ usernameOrEmail, password, role })
+        });
+
+        // Yanıt durumunu kontrol et
+        console.log("📡 Yanıt Durumu:", res.status);
+        
+        const data = await res.json();
+        console.log("📥 Sunucudan gelen:", data);
+
+        messageDiv.style.display = "block";
+
+        if (data.success) {
+            messageDiv.textContent = data.message || "Giriş başarılı!";
+            messageDiv.className = "message success";
+
+            // Verileri kaydet
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("role", data.role);
+            localStorage.setItem("userEmail", usernameOrEmail);
+
+            setTimeout(() => {
+                // Admin veya User yönlendirmesi
+                if (data.role === "admin") {
+                    window.location.href = "/admin.html";
+                } else {
+                    window.location.href = "/index.html";
+                }
+            }, 1000);
+        } else {
+            messageDiv.textContent = data.message || "Giriş başarısız!";
+            messageDiv.className = "message error";
+            
+            // Eğer "Kullanıcı bulunamadı" diyorsa konsola bir uyarı daha basalım
+            if(data.message === "Kullanıcı bulunamadı") {
+                console.warn("DİKKAT: Veritabanında bu kullanıcı yok veya gönderilen string hatalı.");
+            }
+        }
+    } catch (err) {
+        console.error("💥 Kritik Hata:", err);
+        messageDiv.style.display = "block";
+        messageDiv.textContent = "Bağlantı hatası!";
+        messageDiv.className = "message error";
+    }
+});
+</script>
+
+</body>
+</html>

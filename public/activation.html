@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VELORA | Ürün Aktivasyon</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #000;
+            color: #fff;
+        }
+
+        header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #d4af37;
+        }
+
+        h1 {
+            color: #d4af37;
+            letter-spacing: 2px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .product-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #d4af37;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            background-color: #0d0d0d;
+        }
+
+        .product-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .product-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .toggle-btn {
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 80px;
+        }
+
+        .toggle-btn.active {
+            background-color: #2ecc71;
+            color: #000;
+        }
+
+        .toggle-btn.passive {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+
+        .toggle-btn:hover {
+            opacity: 0.85;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>ÜRÜN AKTİVASYON PANELİ</h1>
+    <a href="admin.html" style="color: #d4af37; text-decoration: none;">← Admin Paneline Dön</a>
+</header>
+
+<div class="container">
+    <div id="productList">Ürünler yükleniyor...</div>
+</div>
+
+<script>
+const productList = document.getElementById("productList");
+const token = localStorage.getItem("token");
+const role = localStorage.getItem("role");
+
+// 1. Güvenlik Kontrolü
+if (!token || role !== "admin") {
+    alert("Yetkisiz erişim!");
+    window.location.href = "login.html";
+}
+
+// 2. Ürünleri Backend'den Çekme
+async function loadProducts() {
+    try {
+        const res = await fetch("/api/admin/products", {
+            headers: { 
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+        
+        const data = await res.json();
+
+        // Backend { success: true, products: [] } döndürdüğü için data.products kullanıyoruz
+        if (data.success && data.products) {
+            renderProducts(data.products);
+        } else {
+            productList.innerHTML = "<p>Ürün bulunamadı veya yetki hatası.</p>";
+        }
+
+    } catch (err) {
+        console.error("Yükleme hatası:", err);
+        productList.innerHTML = "<p>Sunucuyla bağlantı kurulamadı.</p>";
+    }
+}
+
+// 3. Ürünleri Ekrana Basma
+function renderProducts(products) {
+    productList.innerHTML = "";
+
+    products.forEach(product => {
+        const div = document.createElement("div");
+        div.className = "product-item";
+
+        const isActive = product.isActive;
+        const btnClass = isActive ? "active" : "passive";
+        const btnText = isActive ? "AKTİF" : "PASİF";
+
+        div.innerHTML = `
+            <div class="product-left">
+                <img src="${product.image}" class="product-image">
+                <div class="product-info">
+                    <strong>${product.name}</strong>
+                    <small>${product.category}</small>
+                    <span style="color:#d4af37;">${product.price} ₺</span>
+                </div>
+            </div>
+
+            <button 
+                class="toggle-btn ${btnClass}" 
+                onclick="toggleStatus('${product._id}', this)">
+                ${btnText}
+            </button>
+        `;
+
+        productList.appendChild(div);
+    });
+}
+
+// 4. Durum Değiştirme (Backend Entegrasyonu)
+async function toggleStatus(productId, btn) {
+    try {
+        // Butonu geçici olarak kilitle (çift tıklamayı önlemek için)
+        btn.disabled = true;
+        btn.style.opacity = "0.5";
+
+        const res = await fetch(`/api/admin/products/${productId}/toggle-active`, {
+            method: "PUT",
+            headers: { 
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            // Görsel durumu güncelle
+            const currentlyActive = btn.classList.contains("active");
+            
+            if (currentlyActive) {
+                btn.classList.remove("active");
+                btn.classList.add("passive");
+                btn.textContent = "PASİF";
+            } else {
+                btn.classList.remove("passive");
+                btn.classList.add("active");
+                btn.textContent = "AKTİF";
+            }
+        } else {
+            alert("Hata: " + (data.message || "İşlem başarısız"));
+        }
+    } catch (err) {
+        console.error("Toggle hatası:", err);
+        alert("Sunucuyla iletişim kurulamadı.");
+    } finally {
+        btn.disabled = false;
+        btn.style.opacity = "1";
+    }
+}
+
+// Sayfa açıldığında yükle
+loadProducts();
+</script>
+
+</body>
+</html>

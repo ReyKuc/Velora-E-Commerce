@@ -1,0 +1,244 @@
+/*public/css/style.css*/
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212; /* Koyu arka plan */
+    color: #f5f5f5; /* Açık yazı rengi */
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+a {
+    color: #d4af37; /* Altın sarısı link rengi */
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #e0b84f;
+}
+
+/* Başlık (Header) Stilleri */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5vw 4vw;   /* pencereye göre ölçek */
+}
+
+header h1 {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+nav {
+    display: flex;
+    gap: 2vw;  /* ölçekli boşluk */
+}
+
+nav a {
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+    white-space: nowrap; /* alt satıra düşmesin */
+}
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background: black;
+}
+
+@media (max-width: 768px) {
+
+    nav {
+        display: none;
+        flex-direction: column;
+        gap: 1rem;
+        background: white;
+        position: absolute;
+        top: 70px;
+        right: 20px;
+        padding: 1rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    
+
+    nav.active {
+        display: flex;
+    }
+
+   .hamburger {
+        display: flex;
+        position: absolute;
+        top: 25px;
+        right: 20px;
+    }
+}
+
+
+/* Form ve Ana İçerik Kapsayıcısı */
+.form-container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #1f1f1f;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+}
+
+.form-container h2 {
+    text-align: center;
+    color: #d4af37;
+    margin-bottom: 30px;
+}
+
+/* Form Elemanları */
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #aaa;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    background-color: #2a2a2a;
+    color: #f5f5f5;
+    box-sizing: border-box;
+}
+
+button[type="submit"],
+.add-to-cart-btn { /* Genel buton stili */
+    width: 50%;
+    padding : 12px;
+    
+    border: none;
+    border-radius: 50px;
+    background-color: #d4af37;
+    color: #0d0d0d;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin: 20px auto;
+}
+
+button[type="submit"]:hover {
+    background-color: #e0b84f;
+     margin: 20px auto;
+       border-radius: 50px;
+}
+.logout-btn {
+    font-size: 24px;
+    cursor: pointer;
+    display: none;
+}
+
+.logout-confirm {
+    display: none;
+    position: relative;
+    top: calc(100% + 8px);
+    right: 0;
+    background: #000;
+    border: 1px solid #d4af37;
+    padding: 15px;
+    border-radius: 10px;
+    z-index: 2000;
+}
+
+
+.logout-confirm button {
+    margin: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: none;
+}
+
+/* Mesaj Alanı Stilleri */
+.message {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    display: none; /* Varsayılan olarak gizli */
+    text-align: center;
+}
+
+.message.success {
+    background-color: #4CAF50; /* Yeşil */
+    color: white;
+}
+
+.message.error {
+    background-color: #f44336; /* Kırmızı */
+    color: white;
+}
+
+/* Footer Stilleri */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #1f1f1f;
+    margin-top: 50px;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.4);
+    color: #aaa;
+}
+
+/* Sepet ve Favoriler Sayfaları İçin List Stilleri */
+#cartList, #favoritesList {
+    list-style: none;
+    padding: 0;
+}
+
+#cartList li, #favoritesList li {
+    background-color: #2a2a2a;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 5px solid #d4af37;
+}
+
+.remove-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+/* Admin Özel Butonları */
+.status-toggle-btn {
+    padding: 8px 20px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.toggle-on {
+    background-color: #2ecc71; /* Yeşil */
+    color: white;
+}
+
+.toggle-off {
+    background-color: #e74c3c; /* Kırmızı */
+    color: white;
+}
+
+.admin-controls {
+    display: flex;
+    gap: 10px;
+}

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>API Test</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #00ff00;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #d4af37;
+            border: none;
+            border-radius: 5px;
+        }
+        #result {
+            background: #000;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid #d4af37;
+            white-space: pre-wrap;
+            font-size: 14px;
+        }
+        .success { color: #00ff00; }
+        .error { color: #ff4444; }
+    </style>
+</head>
+<body>
+    <h1>🔍 VELORA API Test Paneli</h1>
+    
+    <h2>Test Butonları:</h2>
+    <button onclick="testAuthRoute()">1. Auth Route Test</button>
+    <button onclick="testRegister()">2. Register Test</button>
+    <button onclick="testLogin()">3. Login Test (User)</button>
+    <button onclick="testLoginAdmin()">4. Login Test (Admin)</button>
+    <button onclick="testProducts()">5. Products Test</button>
+    
+    <div id="result"></div>
+
+    <script>
+        const resultDiv = document.getElementById('result');
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? 'error' : type === 'success' ? 'success' : '';
+            resultDiv.innerHTML += `<div class="${color}">[${timestamp}] ${message}</div>`;
+        }
+
+        async function testAuthRoute() {
+            resultDiv.innerHTML = '';
+            log('🧪 Auth route test başlatıldı...');
+            
+            try {
+                const res = await fetch('/api/auth/test');
+                const data = await res.json();
+                
+                if (res.ok) {
+                    log('✅ Auth route çalışıyor!', 'success');
+                    log(JSON.stringify(data, null, 2), 'success');
+                } else {
+                    log('❌ Auth route yanıt verdi ama hatalı', 'error');
+                    log(JSON.stringify(data, null, 2), 'error');
+                }
+            } catch (err) {
+                log('❌ Auth route ERİŞİLEMİYOR!', 'error');
+                log(err.message, 'error');
+            }
+        }
+
+        async function testRegister() {
+            resultDiv.innerHTML = '';
+            log('🧪 Register test başlatıldı...');
+            
+            const testUser = {
+                name: 'testuser' + Math.floor(Math.random() * 1000),
+                email: 'test' + Math.floor(Math.random() * 1000) + '@test.com',
+                password: '123456',
+                role: 'user'
+            };
+            
+            log('📤 Gönderilen veri: ' + JSON.stringify(testUser, null, 2));
+            
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(testUser)
+                });
+                
+                const data = await res.json();
+                
+                if (res.ok) {
+                    log('✅ Kayıt başarılı!', 'success');
+                    log(JSON.stringify(data, null, 2), 'success');
+                } else {
+                    log(`⚠️ Kayıt başarısız (${res.status})`, 'error');
+                    log(JSON.stringify(data, null, 2), 'error');
+                }
+            } catch (err) {
+                log('❌ Register endpoint ERİŞİLEMİYOR!', 'error');
+                log(err.message, 'error');
+            }
+        }
+
+        async function testLogin() {
+            resultDiv.innerHTML = '';
+            log('🧪 Login test başlatıldı (User)...');
+            
+            const loginData = {
+                usernameOrEmail: 'test@test.com',
+                password: '123456',
+                role: 'user'
+            };
+            
+            log('📤 Gönderilen veri: ' + JSON.stringify(loginData, null, 2));
+            
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(loginData)
+                });
+                
+                const data = await res.json();
+                
+                if (res.ok) {
+                    log('✅ Login başarılı!', 'success');
+                    log(JSON.stringify(data, null, 2), 'success');
+                } else {
+                    log(`⚠️ Login başarısız (${res.status})`, 'error');
+                    log(JSON.stringify(data, null, 2), 'error');
+                }
+            } catch (err) {
+                log('❌ Login endpoint ERİŞİLEMİYOR!', 'error');
+                log(err.message, 'error');
+            }
+        }
+
+       async function testLoginAdmin() {
+    log('🧪 Admin login testi başlatıldı...');
+    try {
+        const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                usernameOrEmail: "admin@velora.com",
+                password: "admin123",
+                role: "admin"
+            })
+        });
+
+        const data = await res.json();
+        
+        // SONUCU EKRANA YAZDIR (Boş kalmaması için)
+        if (data.success) {
+            log('✅ Admin login BAŞARILI!', 'success');
+            log(JSON.stringify(data, null, 2));
+            
+            // Test panelindeyken otomatik yönlendirmeyi engelleyelim
+            log('ℹ️ Not: Test panelinde olduğunuz için admin.html sayfasına otomatik yönlendirme yapılmadı.');
+        } else {
+            log('⚠️ Admin login BAŞARISIZ!', 'error');
+            log(JSON.stringify(data, null, 2));
+        }
+    } catch (err) {
+        log('❌ HATA: ' + err.message, 'error');
+    }
+}
+
+        async function testProducts() {
+            resultDiv.innerHTML = '';
+            log('🧪 Products test başlatıldı...');
+            
+            try {
+                const res = await fetch('/api/products');
+                const data = await res.json();
+                
+                if (res.ok) {
+                    log('✅ Products endpoint çalışıyor!', 'success');
+                    log(`Toplam ${data.length} ürün bulundu`, 'success');
+                } else {
+                    log('⚠️ Products hatalı yanıt', 'error');
+                    log(JSON.stringify(data, null, 2), 'error');
+                }
+            } catch (err) {
+                log('❌ Products endpoint ERİŞİLEMİYOR!', 'error');
+                log(err.message, 'error');
+            }
+        }
+
+        // Sayfa yüklendiğinde otomatik test
+        window.onload = () => {
+            log('🚀 Test paneli hazır!');
+            log('💡 İpucu: Önce "Auth Route Test" butonuna tıklayın');
+        };
+    </script>
+</body>
+</html>

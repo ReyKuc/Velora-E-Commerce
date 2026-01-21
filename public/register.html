@@ -1,0 +1,187 @@
+<!--register.html-->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velora | Kayıt Ol</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+header {
+    background-color: #000;
+    padding: 20px 0 10px;
+    border-bottom: 2px solid #d4af37;
+}
+
+button[type="submit"] {
+    width: 200px;
+    display: block;
+    margin: 20px auto;
+    border-radius: 50px;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+nav a {
+    color: #f5f5f5;
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+nav a:hover {
+    color: #d4af37;
+}
+
+/* Role Seçimi Butonları */
+.role-selector {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.role-btn {
+    padding: 12px 30px;
+    border: 2px solid #d4af37;
+    border-radius: 50px;
+    background-color: #2a2a2a;
+    color: #f5f5f5;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.role-btn:hover {
+    background-color: #3a3a3a;
+}
+
+.role-btn.active {
+    background-color: #d4af37;
+    color: #0d0d0d;
+}
+
+@media (max-width: 768px) {
+    header {
+        position: relative;
+        border-bottom: none;
+    }
+
+    nav {
+        display: none;
+        position: absolute;
+        top: 70px;
+        right: 20px;
+        background: black;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+        border: 1px solid #d4af37;
+        z-index: 1000;
+    }
+
+    nav.active {
+        display: flex;
+    }
+
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        position: absolute;
+        top: 25px;
+        right: 20px;
+        z-index: 1100;
+        cursor: pointer;
+    }
+
+    .hamburger span {
+        width: 28px;
+        height: 3px;
+        background: #ffffff;
+    }
+}
+</style>
+
+</head>
+<body>
+
+<header>
+    <h1 style="color: #d4af37;">VELORA</h1>
+    <nav id="navMenu">
+        <a href="index.html">ANA SAYFA</a>
+        <a href="products.html">ÜRÜNLER</a>
+        <a href="cart.html">SEPETİM</a>
+        <a href="favorites.html">FAVORİLER</a>
+    </nav>
+    <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</header>
+
+<div class="form-container">
+    <h2>Kayıt Ol</h2>
+    
+    <!-- Role Seçici -->
+    <div class="role-selector">
+        <button class="role-btn active" data-role="user">USER</button>
+        <button class="role-btn" data-role="admin">ADMIN</button>
+    </div>
+    
+    <div id="message" class="message"></div>
+
+    <form id="registerForm">
+        <input type="hidden" id="selectedRole" value="user">
+
+        <label for="username">Kullanıcı Adı</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="email">E-posta</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password">Şifre</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="password2">Şifre Tekrar</label>
+        <input type="password" id="password2" name="password2" required>
+
+        <button type="submit">Kayıt Ol</button>
+    </form>
+
+    <p>Zaten hesabın var mı? <a href="login.html">Giriş Yap</a></p>
+</div>
+
+<footer>
+    <p>&copy; 2025 VELORA</p>
+</footer>
+
+<script>
+// Role seçimi
+const roleButtons = document.querySelectorAll('.role-btn');
+const selectedRoleInput = document.getElementById('selectedRole');
+
+roleButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        roleButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedRoleInput.value = btn.dataset.role;
+    });
+});
+
+// Register form
+
+</script>
+<script src="js/script.js"></script>
+
+
+</body>
+</html>

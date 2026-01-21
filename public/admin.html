@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VELORA | Admin Paneli</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+    <style>
+        /* === GENEL === */
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        header {
+            background-color: #000;
+            padding: 20px 0 10px;
+            border-bottom: 2px solid #d4af37;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        nav a {
+            color: #f5f5f5;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #d4af37;
+            transform: scale(1.05);
+        }
+
+        .logout-confirm {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1a1a1a;
+            padding: 20px;
+            border: 1px solid #d4af37;
+            z-index: 2000;
+        }
+
+        .hero { margin-top: 80px; }
+        .hero h1 {
+            font-size: 4rem;
+            color: #d4af37;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 100px #d4af37; }
+            to { text-shadow: 0 0 250px #f5c542; }
+        }
+
+        .categories-container {
+            margin: 80px auto;
+            max-width: 1000px;
+            background-color: #000;
+            border: 2px solid #d4af37;
+            border-radius: 20px;
+            padding: 40px 30px;
+        }
+
+        .categories {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .category {
+            background-color: #d4af37;
+            color: #000;
+            border-radius: 15px;
+            width: 150px;
+            padding: 20px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .category:hover { transform: scale(1.08); background-color: #c39b31; }
+
+        footer {
+            margin-top: 50px;
+            padding: 15px 0;
+            border-top: 1px solid rgba(212,175,55,0.3);
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+                flex-direction: column;
+                background: black;
+                padding: 1rem;
+            }
+            nav.active { display: flex; }
+            .hamburger {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                position: absolute;
+                top: 25px;
+                right: 20px;
+                cursor: pointer;
+            }
+            .hamburger span { width: 28px; height: 3px; background: #fff; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav id="navMenu">
+        <a href="priceupdate.html">FİYAT YÖNETİMİ</a>
+        <a href="activation.html">ÜRÜN AKTİFLEŞTİRME</a>
+        <a href="#" id="logoutBtn" style="display:none; color: #d4af37;">ÇIKIŞ (->)</a>
+    </nav>
+    <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</header>
+
+<div id="logoutConfirm" class="logout-confirm">
+    <p>Çıkış yapmak istediğine emin misin?</p>
+    <button id="confirmYes">Evet</button>
+    <button id="confirmNo">Hayır</button>
+</div>
+
+<section class="hero">
+    <h1>VELORA</h1>
+    <p>Admin Paneline Hoş Geldiniz</p>
+</section>
+
+<section id="categories" class="categories-container">
+    <h2>KATEGORİLER</h2>
+    <div class="categories">
+        <a href="products.html?category=Kadın" class="category">Kadın</a>
+        <a href="products.html?category=Erkek" class="category">Erkek</a>
+        <a href="products.html?category=Kozmetik" class="category">Kozmetik</a>
+        <a href="products.html?category=Aksesuar" class="category">Aksesuar</a>
+        <a href="products.html?category=Çanta" class="category">Çanta</a>
+        <a href="products.html?category=Ayakkabı" class="category">Ayakkabı</a>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2025 VELORA | Admin</p>
+</footer>
+
+<script>
+    // 1. GÜVENLİK KONTROLÜ (En başta çalışmalı)
+    (function checkAuth() {
+        const token = localStorage.getItem("token");
+        const role = localStorage.getItem("role");
+
+        if (!token || role !== "admin") {
+            alert("Bu sayfaya erişim yetkiniz yok!");
+            window.location.href = "login.html";
+        }
+    })();
+
+    // 2. ELEMENT SEÇİCİLER
+    const hamburger = document.getElementById("hamburger");
+    const nav = document.getElementById("navMenu");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const logoutConfirm = document.getElementById("logoutConfirm");
+    const yesBtn = document.getElementById("confirmYes");
+    const noBtn = document.getElementById("confirmNo");
+
+    // 3. MENÜ İŞLEMLERİ
+    if (hamburger) {
+        hamburger.addEventListener("click", () => {
+            nav.classList.toggle("active");
+        });
+    }
+
+    // 4. ÇIKIŞ İŞLEMLERİ
+    if (localStorage.getItem("token")) {
+        logoutBtn.style.display = "inline-block";
+    }
+
+    logoutBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        logoutConfirm.style.display = "block";
+    });
+
+    noBtn.addEventListener("click", () => {
+        logoutConfirm.style.display = "none";
+    });
+
+    yesBtn.addEventListener("click", () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        logoutConfirm.innerHTML = "<p>Çıkış yapıldı, yönlendiriliyorsunuz...</p>";
+        setTimeout(() => {
+            window.location.href = "login.html";
+        }, 1000);
+    });
+</script>
+
+</body>
+</html>
