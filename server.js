@@ -1,4 +1,4 @@
-
+// server.js - DEBUG VERSION
 require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
@@ -8,9 +8,15 @@ const app = express();
 
 console.log('\n🚀 VELORA Server Başlatılıyor...\n');
 
+// ========================================
+// MIDDLEWARE - SIRALAMA ÇOK ÖNEMLİ!
+// ========================================
+
+// 1. JSON Parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// 2. CORS (gerekirse)
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
@@ -18,6 +24,7 @@ app.use((req, res, next) => {
     next();
 });
 
+// 3. Request Logging - HER İSTEĞİ LOGLA
 app.use((req, res, next) => {
     console.log('\n' + '='.repeat(60));
     console.log(`📨 ${req.method} ${req.path}`);
@@ -35,10 +42,13 @@ app.use((req, res, next) => {
     next();
 });
 
-
+// ========================================
+// API ROTALARI - ÖNCE BUNLAR!
+// ========================================
 
 console.log('📁 Rotalar yükleniyor...\n');
 
+// Auth rotalarını yükle
 try {
     const authRoutes = require("./routes/auth");
     app.use("/api/auth", authRoutes);
@@ -48,6 +58,7 @@ try {
     process.exit(1);
 }
 
+// Cart rotalarını yükle
 try {
     const cartRoutes = require("./routes/cart");
     app.use("/api/cart", cartRoutes);
@@ -56,6 +67,7 @@ try {
     console.error('❌ /api/cart YÜKLENEMEDI:', err.message);
 }
 
+// Favorite rotalarını yükle
 try {
     const favoriteRoutes = require("./routes/favorite");
     app.use("/api/favorite", favoriteRoutes);
@@ -64,7 +76,7 @@ try {
     console.error('❌ /api/favorite YÜKLENEMEDI:', err.message);
 }
 
-
+// Products rotalarını yükle
 try {
     const productRoutes = require("./routes/products");
     app.use("/api/products", productRoutes);
@@ -73,6 +85,7 @@ try {
     console.error('❌ /api/products YÜKLENEMEDI:', err.message);
 }
 
+// Admin rotalarını yükle
 try {
     const adminRoutes = require("./routes/admin");
     app.use("/api/admin", adminRoutes);
@@ -92,9 +105,15 @@ console.log('   POST /api/favorite/add');
 console.log('   GET  /api/favorite');
 console.log('   GET  /api/admin/products');
 
+// ========================================
+// STATIC FILES - API'den SONRA!
+// ========================================
 app.use(express.static(path.join(__dirname, "public")));
 console.log('\n✅ Static files ayarlandı (public klasörü)\n');
 
+// ========================================
+// HTML SAYFALAR - Fallback Routes
+// ========================================
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
@@ -110,11 +129,19 @@ app.get("/register.html", (req, res) => {
 app.get("/admin.html", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "admin.html"));
 });
-
+app.get("/stockupdate.html", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "stockupdate.html"));
+});
 app.get("/test-api.html", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "test-api.html"));
 });
 
+// ========================================
+// ERROR HANDLERS
+// ========================================
+// server.js içinde 404 handler'ın hemen üstüne ekle
+
+// 404 Handler
 app.use((req, res) => {
     console.log('\n❌ 404 - Rota bulunamadı:', req.path);
     res.status(404).json({ 
@@ -135,7 +162,7 @@ app.use((req, res) => {
     });
 });
 
-
+// Error Handler
 app.use((err, req, res, next) => {
     console.error('\n💥 SUNUCU HATASI:', err);
     console.error('Stack:', err.stack);
@@ -146,7 +173,9 @@ app.use((err, req, res, next) => {
     });
 });
 
-
+// ========================================
+// MONGODB BAĞLANTISI
+// ========================================
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/velora";
 
 console.log('🔌 MongoDB\'ye bağlanılıyor...');
@@ -164,6 +193,9 @@ mongoose.connect(MONGODB_URI)
         process.exit(1);
     });
 
+// ========================================
+// SUNUCUYU BAŞLAT
+// ========================================
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {

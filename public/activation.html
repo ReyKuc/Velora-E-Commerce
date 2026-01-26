@@ -101,13 +101,13 @@ const productList = document.getElementById("productList");
 const token = localStorage.getItem("token");
 const role = localStorage.getItem("role");
 
-// 1. Güvenlik Kontrolü
+
 if (!token || role !== "admin") {
     alert("Yetkisiz erişim!");
     window.location.href = "login.html";
 }
 
-// 2. Ürünleri Backend'den Çekme
+
 async function loadProducts() {
     try {
         const res = await fetch("/api/admin/products", {
@@ -119,7 +119,7 @@ async function loadProducts() {
         
         const data = await res.json();
 
-        // Backend { success: true, products: [] } döndürdüğü için data.products kullanıyoruz
+       
         if (data.success && data.products) {
             renderProducts(data.products);
         } else {
@@ -132,7 +132,7 @@ async function loadProducts() {
     }
 }
 
-// 3. Ürünleri Ekrana Basma
+
 function renderProducts(products) {
     productList.innerHTML = "";
 
@@ -165,10 +165,10 @@ function renderProducts(products) {
     });
 }
 
-// 4. Durum Değiştirme (Backend Entegrasyonu)
+
 async function toggleStatus(productId, btn) {
     try {
-        // Butonu geçici olarak kilitle (çift tıklamayı önlemek için)
+      
         btn.disabled = true;
         btn.style.opacity = "0.5";
 
@@ -183,7 +183,7 @@ async function toggleStatus(productId, btn) {
         const data = await res.json();
 
         if (data.success) {
-            // Görsel durumu güncelle
+           
             const currentlyActive = btn.classList.contains("active");
             
             if (currentlyActive) {
@@ -207,7 +207,7 @@ async function toggleStatus(productId, btn) {
     }
 }
 
-// Sayfa açıldığında yükle
+
 loadProducts();
 </script>
 

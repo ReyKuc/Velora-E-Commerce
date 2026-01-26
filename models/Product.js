@@ -7,6 +7,7 @@ const ProductSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
+    
     price: {
         type: Number,
         required: true,
@@ -15,7 +16,7 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    // Kategori listesi güncellendi
+   
    category: {
         type: String,
         required: true, 
@@ -28,6 +29,11 @@ const ProductSchema = new mongoose.Schema({
     isActive: {
         type: Boolean,
         default: true  // Varsayılan olarak tüm ürünler aktif
+    },
+    stock: {
+        type: Number,
+        required: true,
+        default: 0
     }
 });
 

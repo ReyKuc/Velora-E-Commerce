@@ -2,18 +2,16 @@ const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/authController");
 
-// 1. Test Rotası (Test panelindeki 1. buton için)
+// TEST: GET http://localhost:3000/api/auth/test
 router.get("/test", (req, res) => {
-    res.json({ 
-        success: true, 
-        message: "Auth API route erişilebilir durumda!" 
-    });
+    res.json({ success: true, message: "Auth Route Calisiyor" });
 });
 
-// 2. Kayıt Rotası
-router.post("/register", authController.register);
-
-// 3. Giriş Rotası
+// LOGIN: POST http://localhost:3000/api/auth/login
+// NOT: Buradaki virgüllere ve fonksiyon isimlerine dikkat edin
 router.post("/login", authController.login);
+
+// REGISTER: POST http://localhost:3000/api/auth/register
+router.post("/register", authController.register);
 
 module.exports = router;

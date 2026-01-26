@@ -131,6 +131,7 @@
     <nav id="navMenu">
         <a href="priceupdate.html">FİYAT YÖNETİMİ</a>
         <a href="activation.html">ÜRÜN AKTİFLEŞTİRME</a>
+        <a href="stockupdate.html">STOK YÖNETİMİ</a>
         <a href="#" id="logoutBtn" style="display:none; color: #d4af37;">ÇIKIŞ (->)</a>
     </nav>
     <div class="hamburger" id="hamburger">
@@ -168,7 +169,7 @@
 </footer>
 
 <script>
-    // 1. GÜVENLİK KONTROLÜ (En başta çalışmalı)
+    
     (function checkAuth() {
         const token = localStorage.getItem("token");
         const role = localStorage.getItem("role");
@@ -179,7 +180,7 @@
         }
     })();
 
-    // 2. ELEMENT SEÇİCİLER
+   
     const hamburger = document.getElementById("hamburger");
     const nav = document.getElementById("navMenu");
     const logoutBtn = document.getElementById("logoutBtn");
@@ -187,14 +188,14 @@
     const yesBtn = document.getElementById("confirmYes");
     const noBtn = document.getElementById("confirmNo");
 
-    // 3. MENÜ İŞLEMLERİ
+    
     if (hamburger) {
         hamburger.addEventListener("click", () => {
             nav.classList.toggle("active");
         });
     }
 
-    // 4. ÇIKIŞ İŞLEMLERİ
+    
     if (localStorage.getItem("token")) {
         logoutBtn.style.display = "inline-block";
     }

@@ -20,34 +20,34 @@ router.get("/", async (req, res) => {
         if ((await Product.countDocuments()) === 0) {
             const sampleProducts = [
                 // Kadın Kategorisi
-                { name: "Yazlık Çiçekli Elbise", price: 1100, description: "Hafif kumaş, canlı renkli yazlık elbise.", category: "Kadın", image: "/resimler/elbise.jpeg", isActive: true },
-                { name: "Yüksek Bel Pantolon", price: 1050, description: "Ofis ve günlük kullanım için ideal.", category: "Kadın", image: "/resimler/pantolon.jpg", isActive: true },
-                { name: "Kadın Kaban", price: 1300, description: "Şık ve zarif tasarım.", category: "Kadın", image: "/resimler/kaban.jpeg", isActive: true },
+                { name: "Yazlık Çiçekli Elbise", price: 1100, description: "Hafif kumaş, canlı renkli yazlık elbise.", category: "Kadın", image: "/resimler/elbise.jpeg", isActive: true, stock: 50 },
+                { name: "Yüksek Bel Pantolon", price: 1050, description: "Ofis ve günlük kullanım için ideal.", category: "Kadın", image: "/resimler/pantolon.jpg", isActive: true, stock: 30 },
+                { name: "Kadın Kaban", price: 1300, description: "Şık ve zarif tasarım.", category: "Kadın", image: "/resimler/kaban.jpeg", isActive: true, stock: 20 },
 
                 // Erkek Kategorisi
-                { name: "Slim Fit Gömlek", price: 950, description: "Özel dokulu, dar kesim gömlek.", category: "Erkek", image: "/resimler/gomlek.png", isActive: true },
-                { name: "Regular-Fit Keten Pantalon", price: 1020, description: "Rahat kesim, günlük kanvas pantolon.", category: "Erkek", image: "/resimler/erkekpant.png", isActive: true },
-                { name: "Polo Yaka T-shirt", price: 870, description: "Yazlık, nefes alabilen kumaş.", category: "Erkek", image: "/resimler/polo.png", isActive: true },
+                { name: "Slim Fit Gömlek", price: 950, description: "Özel dokulu, dar kesim gömlek.", category: "Erkek", image: "/resimler/gomlek.png", isActive: true, stock: 40 },
+                { name: "Regular-Fit Keten Pantalon", price: 1020, description: "Rahat kesim, günlük kanvas pantolon.", category: "Erkek", image: "/resimler/erkekpant.png", isActive: true, stock: 25 },
+                { name: "Polo Yaka T-shirt", price: 870, description: "Yazlık, nefes alabilen kumaş.", category: "Erkek", image: "/resimler/polo.png", isActive: true, stock: 60 },
                 
                 // Kozmetik Kategorisi
-                { name: "Nemlendirici Yüz Kremi", price: 450, description: "Hassas ciltler için günlük nemlendirici.", category: "Kozmetik", image: "/resimler/kremi.jpg", isActive: true },
-                { name: "Mat Ruj Seti", price: 380, description: "Uzun süre kalıcı 3'lü mat ruj seti.", category: "Kozmetik", image: "/resimler/ruj.jpg", isActive: true },
-                { name: "Premium Parfüm (50ml)", price: 1800, description: "Unisex, odunsu ve ferahlatıcı koku.", category: "Kozmetik", image: "/resimler/parfum.webp", isActive: true },
+                { name: "Nemlendirici Yüz Kremi", price: 450, description: "Hassas ciltler için günlük nemlendirici.", category: "Kozmetik", image: "/resimler/kremi.jpg", isActive: true, stock: 100 },
+                { name: "Mat Ruj Seti", price: 380, description: "Uzun süre kalıcı 3'lü mat ruj seti.", category: "Kozmetik", image: "/resimler/ruj.jpg", isActive: true, stock: 75 },
+                { name: "Premium Parfüm (50ml)", price: 1800, description: "Unisex, odunsu ve ferahlatıcı koku.", category: "Kozmetik", image: "/resimler/parfum.webp", isActive: true, stock: 50 },
                 
                 // Aksesuar Kategorisi
-                { name: "Gümüş Kolye", price: 1500, description: "El yapımı, 925 ayar gümüş kolye.", category: "Aksesuar", image: "/resimler/kolye.jpg", isActive: true },
-                { name: "Spor Saat", price: 950, description: "Su geçirmez, dijital spor saat.", category: "Aksesuar", image: "/resimler/saat.jpg", isActive: true },
-                { name: "Kadın bere", price: 300, description: "Kış ayları için sıcak tutan yün şapka.", category: "Aksesuar", image: "/resimler/sapka.webp", isActive: true },
+                { name: "Gümüş Kolye", price: 1500, description: "El yapımı, 925 ayar gümüş kolye.", category: "Aksesuar", image: "/resimler/kolye.jpg", isActive: true, stock: 100 },
+                { name: "Spor Saat", price: 950, description: "Su geçirmez, dijital spor saat.", category: "Aksesuar", image: "/resimler/saat.jpg", isActive: true, stock: 80 },
+                { name: "Kadın bere", price: 300, description: "Kış ayları için sıcak tutan yün şapka.", category: "Aksesuar", image: "/resimler/sapka.webp", isActive: true, stock: 120 },
                 
                 // Çanta Kategorisi
-                { name: "Büyük Deri Omuz Çantası", price: 2500, description: "Hakiki deriden, büyük boy günlük çanta.", category: "Çanta", image: "/resimler/canta.webp", isActive: true },
-                { name: "Mini Sırt Çantası", price: 1400, description: "Şık ve fonksiyonel mini sırt çantası.", category: "Çanta", image: "/resimler/sirt.jpg", isActive: true },
-                { name: "Erkek Evrak Çantası", price: 1900, description: "İş hayatı için profesyonel evrak çantası.", category: "Çanta", image: "/resimler/evrak.webp", isActive: true },
+                { name: "Büyük Deri Omuz Çantası", price: 2500, description: "Hakiki deriden, büyük boy günlük çanta.", category: "Çanta", image: "/resimler/canta.webp", isActive: true, stock: 30 },
+                { name: "Mini Sırt Çantası", price: 1400, description: "Şık ve fonksiyonel mini sırt çantası.", category: "Çanta", image: "/resimler/sirt.jpg", isActive: true, stock: 45 },
+                { name: "Erkek Evrak Çantası", price: 1900, description: "İş hayatı için profesyonel evrak çantası.", category: "Çanta", image: "/resimler/evrak.webp", isActive: true, stock: 25 },
 
                 // Ayakkabı Kategorisi
-                { name: "Günlük Siyah Sneaker", price: 1200, description: "Konforlu, unisex spor ayakkabı.", category: "Ayakkabı", image: "/resimler/spor.webp", isActive: true },
-                { name: "Klasik Topuklu Ayakkabı", price: 1600, description: "Özel günler için süet topuklu ayakkabı.", category: "Ayakkabı", image: "/resimler/topuklu.webp", isActive: true },
-                { name: "Erkek Bot", price: 1800, description: "Kışlık, sağlam deri erkek botu.", category: "Ayakkabı", image: "/resimler/bot.webp", isActive: true },
+                { name: "Günlük Siyah Sneaker", price: 1200, description: "Konforlu, unisex spor ayakkabı.", category: "Ayakkabı", image: "/resimler/spor.webp", isActive: true, stock: 50 },
+                { name: "Klasik Topuklu Ayakkabı", price: 1600, description: "Özel günler için süet topuklu ayakkabı.", category: "Ayakkabı", image: "/resimler/topuklu.webp", isActive: true, stock: 30 },
+                { name: "Erkek Bot", price: 1800, description: "Kışlık, sağlam deri erkek botu.", category: "Ayakkabı", image: "/resimler/bot.webp", isActive: true, stock: 20 },
             ];
             await Product.insertMany(sampleProducts);
             products = await Product.find(filter);

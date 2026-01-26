@@ -27,7 +27,7 @@ router.put("/products/:id/price", async (req, res) => {
         const { price } = req.body;
 
         // Sayı kontrolü
-        if (price === undefined || price <= 0) {
+        if (price === undefined || price < 0) {
             return res.status(400).json({ success: false, message: "Geçerli bir fiyat giriniz" });
         }
 
@@ -56,5 +56,21 @@ router.put("/products/:id/toggle-active", async (req, res) => {
     res.json({ success: true });
 });
 
+router.put("/products/:id/stock", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { stock } = req.body;
+        const updatedProduct = await Product.findByIdAndUpdate(
+            id, 
+            { stock: Number(stock) }, 
+            { new: true }
+        );
+        res.json({ success: true, product: updatedProduct });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
 
 module.exports = router;
+
+

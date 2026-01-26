@@ -93,7 +93,19 @@ nav a:hover {
         <button id="confirmNo">Hayır</button>
     </div>
 
-</nav>
+</nav><div class="container">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('cart')">Sepetim</button>
+        <button class="tab-btn" onclick="showTab('orders')">Siparişlerim</button>
+    </div>
+
+    <div id="cart-section">
+        </div>
+
+    <div id="orders-section" style="display:none;">
+        </div>
+</div>
+
  <div class="hamburger" id="hamburger">
         <span></span>
         <span></span>
@@ -133,17 +145,16 @@ if (!token) {
     messageDiv.textContent = "Lütfen giriş yapın";
 }
 
-// Sepeti getir
 async function loadCart() {
     if (!token) return;
     try {
-        const res = await fetch("/api/cart", { // /api/cart olarak düzeltildi
+        const res = await fetch("/api/cart", { 
             method: "GET",
             headers: { "Authorization": "Bearer " + token }
         });
         const cart = await res.json();
         
-        // Hata kontrolü eklendi
+       
         if (cart.success === false) {
              messageDiv.style.display = "block";
              messageDiv.className = "message error";
@@ -185,11 +196,11 @@ async function loadCart() {
             cartItemsDiv.appendChild(div);
         });
 
-        // Artır butonları
+       
         document.querySelectorAll(".incBtn").forEach(btn => {
             btn.addEventListener("click", async () => {
                 const id = btn.getAttribute("data-id");
-                await fetch("/api/cart/add", { // /api/cart/add olarak düzeltildi
+                await fetch("/api/cart/add", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -201,11 +212,10 @@ async function loadCart() {
             });
         });
 
-        // Sil butonları
         document.querySelectorAll(".removeBtn").forEach(btn => {
             btn.addEventListener("click", async () => {
                 const id = btn.getAttribute("data-id");
-                await fetch("/api/cart/remove/" + id, { // /api/cart/remove/ olarak düzeltildi
+                await fetch("/api/cart/remove/" + id, { 
                     method: "DELETE",
                     headers: { "Authorization": "Bearer " + token }
                 });
@@ -220,10 +230,10 @@ async function loadCart() {
     }
 }
 
-// Satın al
+
 checkoutBtn.addEventListener("click", async () => {
     try {
-        const res = await fetch("/api/cart/checkout", { // /api/cart/checkout olarak düzeltildi
+        const res = await fetch("/api/cart/checkout", {
             method: "POST",
             headers: { "Authorization": "Bearer " + token }
         });
@@ -254,23 +264,23 @@ const yesBtn = document.getElementById("confirmYes");
 const noBtn = document.getElementById("confirmNo");
 
 logoutConfirm.style.display = "none";
-// giriş kontrolü
+
 if (localStorage.getItem("token")) {
     logoutBtn.style.display = "inline-block";
 }
 
-// tıkla → sor
+
 logoutBtn.addEventListener("click", (e) => {
     e.preventDefault();
     logoutConfirm.style.display = "block";
 });
 
-// hayır
+
 noBtn.addEventListener("click", () => {
     logoutConfirm.style.display = "none";
 });
 
-// evet
+
 yesBtn.addEventListener("click", () => {
     localStorage.removeItem("token");
     logoutConfirm.innerHTML = "<p>Çıkış yapıldı</p>";
@@ -292,6 +302,46 @@ if (localStorage.getItem("token")) {
     loginLink.style.display = "inline-block";
     registerLink.style.display = "inline-block";
     logoutBtn.style.display = "none";
+}
+function showTab(tabName) {
+    const cartSec = document.getElementById('cart-section');
+    const orderSec = document.getElementById('orders-section');
+    const tabs = document.querySelectorAll('.tab-btn');
+
+    tabs.forEach(t => t.classList.remove('active'));
+    
+    if (tabName === 'cart') {
+        cartSec.style.display = 'block';
+        orderSec.style.display = 'none';
+        document.querySelector('[onclick="showTab(\'cart\')"]').classList.add('active');
+    } else {
+        cartSec.style.display = 'none';
+        orderSec.style.display = 'block';
+        document.querySelector('[onclick="showTab(\'orders\')"]').classList.add('active');
+        loadMyOrders(); // Siparişleri sunucudan çek
+    }
+}
+
+async function loadMyOrders() {
+    const res = await fetch('/api/orders/my-orders', {
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+    });
+    const orders = await res.json();
+    const container = document.getElementById('orders-section');
+    
+    container.innerHTML = orders.map(order => `
+        <div class="order-card">
+            <h4>Sipariş Tarihi: ${new Date(order.createdAt).toLocaleString()}</h4>
+            ${order.items.map(item => `
+                <div style="display:flex; align-items:center; gap:10px; margin:10px 0;">
+                    <img src="${item.image}" width="50">
+                    <span>${item.name} - ${item.price} ₺</span>
+                    <button onclick="openReviewModal('${item.product}')" class="update-btn" style="padding:5px 10px; font-size:12px;">Değerlendir</button>
+                </div>
+            `).join('')}
+            <p><strong>Toplam: ${order.totalAmount} ₺</strong></p>
+        </div>
+    `).join('');
 }
 
 </script>
