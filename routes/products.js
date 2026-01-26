@@ -2,14 +2,14 @@
 const express = require("express");
 const router = express.Router();
 const Product = require("../models/Product");
+const Review = require("../models/Review");
+const auth = require("../middleware/auth");
 
 // Ürün listesi
 router.get("/", async (req, res) => {
     try {
-        // HATA DÜZELTME: isActive alanı false olmayanları (yani true olanları ve henüz tanımlanmamış olanları) getirir
         let filter = { isActive: { $ne: false } };
         
-        // Kategori filtresi varsa sorguya ekle (Daha performanslı olması için find içine aldık)
         if (req.query.category) {
             filter.category = req.query.category;
         }
@@ -57,6 +57,83 @@ router.get("/", async (req, res) => {
     } catch(err) {
         console.error(err);
         res.status(500).json({ error:"Ürünler yüklenemedi" });
+    }
+});
+
+// ÜRÜNE YORUM EKLE (Auth gerekli)
+router.post("/:id/review", auth, async (req, res) => {
+    try {
+        const { rating, comment } = req.body;
+        
+        // Kullanıcı adını token'dan al
+        const User = require("../models/User");
+        const user = await User.findById(req.user.id);
+        
+        if (!user) {
+            return res.status(404).json({ 
+                success: false, 
+                message: "Kullanıcı bulunamadı" 
+            });
+        }
+        
+        // Ürünün varlığını kontrol et
+        const product = await Product.findById(req.params.id);
+        if (!product) {
+            return res.status(404).json({ 
+                success: false, 
+                message: "Ürün bulunamadı" 
+            });
+        }
+        
+        // Yorum oluştur
+        const newReview = new Review({
+            product: req.params.id,
+            user: req.user.id,
+            userName: user.name,
+            rating: Number(rating),
+            comment: comment.trim()
+        });
+        
+        await newReview.save();
+        
+        res.json({ 
+            success: true, 
+            message: "Yorumunuz başarıyla kaydedildi!",
+            review: newReview
+        });
+    } catch (err) {
+        console.error("Yorum ekleme hatası:", err);
+        res.status(500).json({ 
+            success: false, 
+            message: "Yorum eklenirken hata oluştu: " + err.message 
+        });
+    }
+});
+
+// ÜRÜNÜN YORUMLARINI GETİR
+router.get("/:id/reviews", async (req, res) => {
+    try {
+        const reviews = await Review.find({ product: req.params.id })
+            .sort({ createdAt: -1 })
+            .limit(100); // Maksimum 100 yorum
+        
+        // Ortalama puanı hesapla
+        const avgRating = reviews.length > 0
+            ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+            : 0;
+        
+        res.json({ 
+            success: true, 
+            reviews,
+            totalReviews: reviews.length,
+            averageRating: avgRating
+        });
+    } catch (err) {
+        console.error("Yorum getirme hatası:", err);
+        res.status(500).json({ 
+            success: false, 
+            message: "Yorumlar yüklenirken hata oluştu: " + err.message 
+        });
     }
 });
 

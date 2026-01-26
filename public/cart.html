@@ -73,6 +73,62 @@ nav a:hover {
         background: #ffffff;
     }
 }
+ .order-card {
+    border: 1px solid #d4af37;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 40px;
+    background-color: #0d0d0d;
+     display: flex;
+     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    flex-direction: column;
+    gap: 15px;
+
+}
+
+
+.order-items-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+.order-product-row {
+    display: grid;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px; /* Her ürün satırı arası boşluk */
+    padding: 20px;
+    width: 100%;
+    background: #151515;
+    border-radius: 8px;
+}
+.order-product-image {
+    width: 80px !important;
+    height: 80px !important;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0; /* Resmin daralmasını önler */
+}
+.product-info-box {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.order-total {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #333;
+    text-align: right;
+    font-weight: bold;
+    color: #d4af37;
+}
+#ordersList {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
 </style>
 </head>
 <body>
@@ -82,6 +138,7 @@ nav a:hover {
     <a href="index.html">ANA SAYFA</a>
     <a href="products.html">ÜRÜNLER</a>
     <a href="favorites.html">FAVORİLER</a>
+    <a href="orders.html">SİPARİŞLERİM</a>
      <a href="login.html" id="loginLink">GİRİŞ YAP</a>
             <a href="register.html" id="registerLink">KAYIT OL</a>
            <a href="#" id="logoutBtn" class="logout-btn" style="display:none; ">
@@ -93,18 +150,7 @@ nav a:hover {
         <button id="confirmNo">Hayır</button>
     </div>
 
-</nav><div class="container">
-    <div class="tabs">
-        <button class="tab-btn active" onclick="showTab('cart')">Sepetim</button>
-        <button class="tab-btn" onclick="showTab('orders')">Siparişlerim</button>
-    </div>
-
-    <div id="cart-section">
-        </div>
-
-    <div id="orders-section" style="display:none;">
-        </div>
-</div>
+</nav>
 
  <div class="hamburger" id="hamburger">
         <span></span>
@@ -183,10 +229,14 @@ async function loadCart() {
             div.style.alignItems = "center";
 
             div.innerHTML = `
+              <div class="order-product-row">
+                                    <img src="${item.product.image}" alt="${item.product.name}" class="order-product-image">
+
                 <span>${item.product.name} x ${item.quantity}</span>
                 <span>${(item.product.price * item.quantity).toFixed(2)} ₺</span>
                 
                 <div>
+                    
                     <button class="incBtn" data-id="${item.product._id}">+</button>
                     <button class="removeBtn" data-id="${item.product._id}">Sil</button>
                 </div>
@@ -206,6 +256,7 @@ async function loadCart() {
                         "Content-Type": "application/json",
                         "Authorization": "Bearer " + token
                     },
+
                     body: JSON.stringify({ productId: id, quantity: 1 })
                 });
                 loadCart();
@@ -322,27 +373,6 @@ function showTab(tabName) {
     }
 }
 
-async function loadMyOrders() {
-    const res = await fetch('/api/orders/my-orders', {
-        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
-    });
-    const orders = await res.json();
-    const container = document.getElementById('orders-section');
-    
-    container.innerHTML = orders.map(order => `
-        <div class="order-card">
-            <h4>Sipariş Tarihi: ${new Date(order.createdAt).toLocaleString()}</h4>
-            ${order.items.map(item => `
-                <div style="display:flex; align-items:center; gap:10px; margin:10px 0;">
-                    <img src="${item.image}" width="50">
-                    <span>${item.name} - ${item.price} ₺</span>
-                    <button onclick="openReviewModal('${item.product}')" class="update-btn" style="padding:5px 10px; font-size:12px;">Değerlendir</button>
-                </div>
-            `).join('')}
-            <p><strong>Toplam: ${order.totalAmount} ₺</strong></p>
-        </div>
-    `).join('');
-}
 
 </script>
 

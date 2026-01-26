@@ -1,484 +1,375 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Velora | Ürünler</title>
-<link rel="stylesheet" href="css/style.css">
-<style>
-header {
-    background-color: #000;
-    padding: 20px 0 10px;
-    border-bottom: 2px solid #d4af37;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velora | Ürünler</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* === HEADER VE NAV (ORDERS.HTML İLE UYUMLU) === */
+        header {
+            background-color: #000;
+            padding: 20px 0 10px;
+            border-bottom: 2px solid #d4af37;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-}
+        nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
 
-nav a {
-    color: #f5f5f5;
-    text-decoration: none;
-    font-weight: 600;
-    letter-spacing: 1px;
-}
+        nav a {
+            color: #f5f5f5;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
 
-nav a:hover {
-    color: #d4af37;
-}
+        nav a:hover { color: #d4af37; }
 
-@media (max-width: 768px) {
-    header {
-        position: relative;
-        border-bottom: none;
-    }
+        /* === ÜRÜN LİSTESİ TASARIMI === */
+        .product-item {
+            border: 1px solid #d4af37;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #0d0d0d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+        }
 
-    nav {
-        display: none;
-        position: absolute;
-        top: 70px;
-        right: 20px;
-        background: black;
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1rem;
-        border: 1px solid #d4af37;
-        z-index: 1000;
-    }
+        .product-item.out-of-stock {
+            opacity: 0.6;
+            border-color: #444;
+        }
 
-    nav.active {
-        display: flex;
-    }
+        .product-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
 
-    .hamburger {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        position: absolute;
-        top: 25px;
-        right: 20px;
-        z-index: 1100;
-        cursor: pointer;
-    }
+        .product-info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-left: 20px;
+        }
 
-    .hamburger span {
-        width: 28px;
-        height: 3px;
-        background: #ffffff;
-    }
-}
+        .price-tag {
+            font-size: 1.3em;
+            color: #d4af37;
+            font-weight: bold;
+        }
 
-#categoryFilter {
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    border: 1px solid #d4af37;
-    background-color: #1a1a1a;
-    color: #f5f5f5;
-    cursor: pointer;
-}
+        /* Stok Rozetleri */
+        .stock-badge {
+            font-size: 0.75em;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            width: fit-content;
+        }
+        .stock-high { background-color: #2ecc71; color: #000; }
+        .stock-medium { background-color: #f39c12; color: #000; }
+        .stock-low { background-color: #e74c3c; color: #fff; }
+        .stock-out { background-color: #444; color: #fff; }
 
-.product-item {
-    border: 1px solid #d4af37;
-    border-radius: 12px;
-    padding: 12px;
-    margin-bottom: 10px;
-    background-color: #0d0d0d;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative; 
-}
+        .reviews-btn {
+            background-color: transparent;
+            color: #2ecc71;
+            border: 1px solid #2ecc71;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85em;
+            width: fit-content;
+            margin-top: 5px;
+        }
 
-.product-item.out-of-stock {
-    opacity: 0.6;
-    border-color: #666;
-}
+        .reviews-btn:hover { background-color: #2ecc71; color: #fff; }
 
-.product-image {
-    width: 100px; 
-    height: 100px; 
-    object-fit: cover; 
-    border-radius: 8px;
-    margin-right: 15px;
-}
+        .product-actions-inline {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
-.product-info {
-    flex-grow: 1; 
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
+        .add-to-cart-btn {
+            background-color: #d4af37;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
 
-.stock-badge {
-    display: inline-block;
-    width: fit-content;
-    padding: 5px 9px !important; 
-    border-radius: 40px;          
-    font-size: 10px;             
-    font-weight: 60;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-top: 5px;
-    font-weight: bold;
-}
+        .add-to-cart-btn:hover:not(:disabled) { background-color: #e0b84f; transform: scale(1.05); }
 
-.stock-high   { background-color: #2ecc71; color: #000; }
-.stock-medium { background-color: #f39c12; color: #000; }
-.stock-low    { background-color: #e74c3c; color: #fff; }
-.stock-out    { background-color: #95a5a6; color: #fff; }
+        .add-to-cart-btn:disabled {
+            background-color: #444;
+            color: #888;
+            cursor: not-allowed;
+        }
 
-.stock-out {
-    background-color: #95a5a6;
-    color: #fff;
-}
+        .fav-btn {
+            background: none;
+            border: none;
+            color: #f5f5f5;
+            font-size: 32px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
 
-.product-actions-inline {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-left: 20px;
-}
+        .fav-btn.active { color: #ff4c4c; }
 
-.add-to-cart-btn {
-    background-color: #d4af37; 
-    color: #0d0d0d;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-}
+        /* === MODAL (DEĞERLENDİRMELER) === */
+        .reviews-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            padding: 20px;
+            overflow-y: auto;
+        }
 
-.add-to-cart-btn:hover:not(:disabled) {
-    background-color: #e0b84f;
-}
+        .reviews-modal.active { display: flex; justify-content: center; }
 
-.add-to-cart-btn:disabled {
-    background-color: #666;
-    cursor: not-allowed;
-    opacity: 0.5;
-}
+        .modal-content {
+            background: #1a1a1a;
+            width: 100%;
+            max-width: 600px;
+            margin: 50px auto;
+            border: 1px solid #d4af37;
+            border-radius: 15px;
+            padding: 30px;
+            position: relative;
+        }
 
-.fav-btn {
-    background: none !important; 
-    border: none !important; 
-    cursor: pointer;
-    font-size: 30px !important; 
-    padding: 0; 
-    line-height: 1; 
-    color: #f5f5f5; 
-    transition: all 0.2s ease;
-}
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 35px;
+            color: #d4af37;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
 
-.fav-btn:hover {
-    transform: scale(1.1);
-    color: #ff4c4c;
-}
+        .review-card {
+            background: #252525;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #d4af37;
+        }
 
-.fav-btn.active {
-    color: #ff4c4c; 
-}
-</style>
+        .review-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+        }
+
+        .reviewer-name { color: #d4af37; font-weight: bold; }
+        .stars { color: #ffd700; font-size: 1.1em; margin-bottom: 5px; }
+    </style>
 </head>
 <body>
+
 <header>
-<h1 style="color: #d4af37;">VELORA</h1>
-<nav id="navMenu">
-    <a href="index.html">ANA SAYFA</a>
-    <a href="products.html">ÜRÜNLER</a>
-    <a href="cart.html">SEPETİM</a>
-    <a href="favorites.html">FAVORİLER</a>
-    <a href="login.html" id="loginLink">GİRİŞ YAP</a>
-    <a href="register.html" id="registerLink">KAYIT OL</a>
-    <a href="#" id="logoutBtn" class="logout-btn" style="display:none;">→</a>
-    <div id="logoutConfirm" class="logout-confirm">
-        <p>Çıkış yapmak istediğine emin misin?</p>
-        <button id="confirmYes">Evet</button>
-        <button id="confirmNo">Hayır</button>
-    </div>
-</nav>
-<div class="hamburger" id="hamburger">
-    <span></span>
-    <span></span>
-    <span></span>
-</div>
+    <h1 style="color: #d4af37; text-align: center; margin-bottom: 10px;">VELORA</h1>
+    <nav id="navMenu">
+        <a href="index.html">ANA SAYFA</a>
+        <a href="products.html">ÜRÜNLER</a>
+        <a href="cart.html">SEPETİM</a>
+        <a href="favorites.html">FAVORİLER</a>
+        <a href="login.html" id="loginLink">GİRİŞ YAP</a>
+        <a href="register.html" id="registerLink">KAYIT OL</a>
+        <a href="#" id="logoutBtn" style="display:none;">ÇIKIŞ</a>
+    </nav>
 </header>
 
-<div class="form-container">
-<h2>Ürünler</h2>
-
-<select id="categoryFilter" onchange="loadProducts()">
-    <option value="">Tüm Kategoriler</option>
-    <option value="Kadın">Kadın</option>
-    <option value="Erkek">Erkek</option>
-    <option value="Kozmetik">Kozmetik</option>
-    <option value="Aksesuar">Aksesuar</option>
-    <option value="Çanta">Çanta</option>
-    <option value="Ayakkabı">Ayakkabı</option>
-</select>
-
-<div id="productsList"></div>
+<div class="form-container" style="padding: 40px 20px; max-width: 1000px; margin: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h2 style="color: #d4af37;">Ürün Koleksiyonu</h2>
+        <select id="categoryFilter" onchange="loadProducts()" style="padding: 10px; background: #000; color: #fff; border: 1px solid #d4af37; border-radius: 5px;">
+            <option value="">Tüm Kategoriler</option>
+            <option value="Kadın">Kadın</option>
+            <option value="Erkek">Erkek</option>
+            <option value="Kozmetik">Kozmetik</option>
+            <option value="Aksesuar">Aksesuar</option>
+        </select>
+    </div>
+    
+    <div id="productsList">Yükleniyor...</div>
 </div>
 
-<footer>
-<p>&copy; 2025 VELORA</p>
-</footer>
+<div id="reviewsModal" class="reviews-modal">
+    <div class="modal-content">
+        <button class="close-modal" onclick="closeModal()">&times;</button>
+        <h3 id="modalTitle" style="color: #d4af37; margin-bottom: 25px;">Değerlendirmeler</h3>
+        <div id="reviewsContainer"></div>
+    </div>
+</div>
 
 <script>
-const productsDiv = document.getElementById("productsList");
-const categoryFilter = document.getElementById("categoryFilter");
-const token = localStorage.getItem("token");
-const role = localStorage.getItem("role");
+    const token = localStorage.getItem("token");
+    const productsDiv = document.getElementById("productsList");
+    let userFavorites = new Set();
 
-// Admin kontrolü
-if (role === "admin") {
-    window.location.href = "admin.html";
-}
-
-let userFavorites = new Set();
-
-// Stock badge oluştur
-function getStockBadge(stock) {
-    if (stock === undefined || stock === null) {
-        return '<span class="stock-badge stock-out">Stok Bilgisi Yok</span>';
+    function getStockBadge(stock) {
+        if (stock === undefined || stock === null) return '<span class="stock-badge stock-out">Bilgi Yok</span>';
+        if (stock <= 0) return '<span class="stock-badge stock-out">Tükendi</span>';
+        if (stock <= 10) return `<span class="stock-badge stock-low">Son ${stock} adet!</span>`;
+        if (stock <= 30) return `<span class="stock-badge stock-medium">Sınırlı Stok: ${stock}</span>`;
+        return `<span class="stock-badge stock-high">Stokta Var (${stock})</span>`;
     }
-    
-    if (stock <= 0) {
-        return '<span class="stock-badge stock-out">Stokta Yok</span>';
-    } else if (stock <= 10) {
-        return `<span class="stock-badge stock-low">Son ${stock} adet!</span>`;
-    } else if (stock <= 30) {
-        return `<span class="stock-badge stock-medium">Stok: ${stock}</span>`;
-    } else {
-        return `<span class="stock-badge stock-high">Stok: ${stock}</span>`;
-    }
-}
 
-async function loadUserFavorites() {
-    if (!token || role === "admin") return; 
-    try {
-        const res = await fetch("/api/favorite", {
-            headers: { "Authorization": "Bearer " + token }
-        });
-        const data = await res.json();
-        if (data.items) {
-            userFavorites.clear();
-            data.items.forEach(item => { 
-                if(item.product) userFavorites.add(item.product._id); 
-            });
-        }
-    } catch (err) { 
-        console.error("Favori yükleme hatası:", err); 
-    }
-}
-
-async function loadProducts() {
-    // Önce kullanıcının favorilerini yükle (mevcut işleyiş)
-    await loadUserFavorites();
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    let selectedCategory = categoryFilter.value || urlParams.get('category') || "";
-
-    const apiUrl = selectedCategory ? `/api/products?category=${selectedCategory}` : "/api/products";
-
-    try {
-        const res = await fetch(apiUrl);
-        const products = await res.json();
-        
-        productsDiv.innerHTML = "";
-        
-        // Eğer backend'den bir obje içinde "products" dizisi geliyorsa onu al, yoksa direkt diziyi kullan
-        const productsArray = Array.isArray(products) ? products : (products.products || []);
-
-        if (productsArray.length === 0) {
-            productsDiv.innerHTML = "<p>Ürün bulunamadı.</p>";
-            return;
-        }
-
-        productsArray.forEach(product => {
-            const div = document.createElement("div");
-            div.classList.add('product-item');
-            
-            // STOK KONTROLÜ: Verinin sayı olduğundan ve var olduğundan emin oluyoruz
-            const currentStock = (product.stock !== undefined && product.stock !== null) ? Number(product.stock) : 0;
-            
-            // Tasarımındaki stokta yoksa grileştirme efekti
-            if (currentStock <= 0) {
-                div.classList.add('out-of-stock');
+    async function loadUserFavorites() {
+        if (!token) return;
+        try {
+            const res = await fetch("/api/favorite", { headers: { "Authorization": "Bearer " + token } });
+            const data = await res.json();
+            if (data.items) {
+                userFavorites.clear();
+                data.items.forEach(item => { if(item.product) userFavorites.add(item.product._id); });
             }
-            
-            let actionButtons = "";
+        } catch (err) { console.error("Favori yükleme hatası:", err); }
+    }
 
-            if (role === "admin") {
-                // Mevcut ADMIN tasarımı
-                const btnClass = product.isActive ? "status-active" : "status-inactive";
-                const btnText = product.isActive ? "Aktif (Yayında)" : "Pasif (Gizli)";
+    async function loadProducts() {
+        await loadUserFavorites();
+        const category = document.getElementById("categoryFilter").value;
+        const url = category ? `/api/products?category=${category}` : "/api/products";
+
+        try {
+            const res = await fetch(url);
+            const products = await res.json();
+            productsDiv.innerHTML = "";
+
+            if (products.length === 0) {
+                productsDiv.innerHTML = "<p style='color: #888;'>Bu kategoride ürün bulunamadı.</p>";
+                return;
+            }
+
+            products.forEach(p => {
+                const isFav = userFavorites.has(p._id);
+                const outOfStock = p.stock <= 0;
+                const div = document.createElement("div");
+                div.className = `product-item ${outOfStock ? 'out-of-stock' : ''}`;
                 
-                actionButtons = `
+                div.innerHTML = `
+                    <img src="${p.image}" class="product-image" onerror="this.src='https://via.placeholder.com/120'">
+                    <div class="product-info">
+                        <strong style="font-size: 1.1em; color: #fff;">${p.name}</strong>
+                        <span class="price-tag">${p.price}₺</span>
+                        ${getStockBadge(p.stock)}
+                        <button class="reviews-btn" onclick="openReviews('${p._id}', '${p.name}')">
+                            ★ Yorumları Gör
+                        </button>
+                    </div>
                     <div class="product-actions-inline">
-                        <button class="admin-status-btn ${btnClass}" data-id="${product._id}">
-                            ${btnText}
+                        <button class="add-to-cart-btn" onclick="addToCart('${p._id}')" ${outOfStock ? 'disabled' : ''}>
+                            ${outOfStock ? 'Tükendi' : 'Sepete Ekle'}
+                        </button>
+                        <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${p._id}')">
+                            ${isFav ? '♥' : '♡'}
                         </button>
                     </div>
                 `;
-            } else {
-                // Mevcut USER tasarımı: Sepet ve Favori
-                const isFavorite = userFavorites.has(product._id);
-                const isOutOfStock = currentStock <= 0;
-                
-                actionButtons = `
-                    <div class="product-actions-inline">
-                        <button 
-                            class="add-to-cart-btn" 
-                            data-id="${product._id}"
-                            ${isOutOfStock ? 'disabled' : ''}>
-                            ${isOutOfStock ? 'Stokta Yok' : 'Sepete Ekle'}
-                        </button>
-                        <button class="fav-btn ${isFavorite ? 'active' : ''}" data-id="${product._id}">
-                            ${isFavorite ? '♥' : '♡'}
-                        </button> 
-                    </div> 
-                `;
+                productsDiv.appendChild(div);
+            });
+        } catch (err) { 
+            console.error("Ürün yükleme hatası:", err);
+            productsDiv.innerHTML = "Ürünler şu an yüklenemiyor.";
+        }
+    }
+
+    async function openReviews(productId, productName) {
+        const modal = document.getElementById("reviewsModal");
+        const container = document.getElementById("reviewsContainer");
+        document.getElementById("modalTitle").innerText = productName + " - Yorumlar";
+        container.innerHTML = "<p>Yükleniyor...</p>";
+        modal.classList.add("active");
+
+        try {
+            const res = await fetch(`/api/products/${productId}/reviews`);
+            const data = await res.json();
+
+            if (!data.reviews || data.reviews.length === 0) {
+                container.innerHTML = "<p style='color:#888; text-align:center;'>Bu ürün için henüz yorum yapılmamış.</p>";
+                return;
             }
 
-            // Mevcut HTML Yapısı (Değiştirilmedi)
-            div.innerHTML = `
-                <img src="${product.image}" alt="${product.name}" class="product-image">
-                <div class="product-info">
-                   <strong>${product.name}</strong>
-                   <small style="color:#aaa;">Kategori: ${product.category}</small>
-                   <span style="font-size: 1.2em; color: #d4af37; margin-top: 5px;">${product.price}₺</span>
-                   ${getStockBadge(currentStock)}
+            container.innerHTML = data.reviews.map(r => `
+                <div class="review-card">
+                    <div class="review-meta">
+                        <span class="reviewer-name">${r.userName || 'Değerli Müşterimiz'}</span>
+                        <span class="review-date">${new Date(r.createdAt).toLocaleDateString('tr-TR')}</span>
+                    </div>
+                    <div class="stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+                    <div class="comment-text" style="color:#eee;">${r.comment || 'Puan verildi, yorum yapılmadı.'}</div>
                 </div>
-                ${actionButtons}
-            `;
-            productsDiv.appendChild(div);
-        });
-
-        attachEventListeners();
-
-    } catch(err) {
-        console.error("Ürün yükleme hatası:", err);
-        productsDiv.innerHTML = "<p>Ürünler yüklenirken hata oluştu.</p>";
+            `).join('');
+        } catch (err) { container.innerHTML = "<p>Hata oluştu.</p>"; }
     }
-}
 
-function attachEventListeners() {
-    // Sepete Ekle
-    document.querySelectorAll(".add-to-cart-btn").forEach(btn => {
-        btn.onclick = async () => {
-            if (!token) return alert("Önce giriş yapın!");
-            if (btn.disabled) return; // Stokta yoksa işlem yapma
-            
+    function closeModal() { document.getElementById("reviewsModal").classList.remove("active"); }
+
+    async function addToCart(productId) {
+        if (!token) return alert("Alışverişe devam etmek için giriş yapmalısınız!");
+        try {
             const res = await fetch("/api/cart/add", {
                 method: "POST",
-                headers: { 
-                    "Content-Type": "application/json", 
-                    "Authorization": "Bearer " + token 
-                },
-                body: JSON.stringify({ productId: btn.dataset.id, quantity: 1 })
+                headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+                body: JSON.stringify({ productId, quantity: 1 })
             });
-            const data = await res.json();
-            
-            if (data.success) {
-                alert("Sepete eklendi!");
-                loadProducts(); // Stok güncellenebilir
-            } else {
-                alert(data.message || "Hata!");
-            }
-        };
-    });
+            if (res.ok) alert("Ürün başarıyla sepete eklendi!");
+        } catch (err) { alert("Bir hata oluştu."); }
+    }
 
-    // Favori Toggle
-    document.querySelectorAll(".fav-btn").forEach(btn => {
-        btn.onclick = async () => {
-            if (!token) return alert("Önce giriş yapın!");
-            const isFav = btn.classList.contains('active');
-            const res = await fetch(`/api/favorite/${isFav ? 'remove' : 'add'}`, {
+    async function toggleFavorite(productId) {
+        if (!token) return alert("Favorilerinize eklemek için giriş yapmalısınız!");
+        const isFav = userFavorites.has(productId);
+        try {
+            await fetch(`/api/favorite/${isFav ? 'remove' : 'add'}`, {
                 method: "POST",
-                headers: { 
-                    "Content-Type": "application/json", 
-                    "Authorization": "Bearer " + token 
-                },
-                body: JSON.stringify({ productId: btn.dataset.id })
+                headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+                body: JSON.stringify({ productId })
             });
-            const data = await res.json();
-            if(data.success) loadProducts();
-        };
-    });
+            loadProducts();
+        } catch (err) { console.error(err); }
+    }
 
-    // ADMIN: Active/Inactive Toggle
-    document.querySelectorAll(".admin-status-btn").forEach(btn => {
-        btn.onclick = async () => {
-            try {
-                const res = await fetch(`/api/admin/products/toggle/${btn.dataset.id}`, {
-                    method: "PATCH",
-                    headers: { "Authorization": "Bearer " + token }
-                });
-                const data = await res.json();
-                if(data.success) loadProducts();
-            } catch(err) { 
-                console.error("Toggle hatası:", err); 
-            }
-        };
-    });
-}
+    // Başlangıç
+    loadProducts();
 
-loadProducts();
+    if (token) {
+        document.getElementById("logoutBtn").style.display = "block";
+        document.getElementById("loginLink").style.display = "none";
+        document.getElementById("registerLink").style.display = "none";
+    }
 
-// Hamburger Menü
-const hamburger = document.getElementById("hamburger");
-const nav = document.getElementById("navMenu");
-if (hamburger) {
-    hamburger.onclick = () => nav.classList.toggle("active");
-}
-
-// Logout Mantığı
-const logoutBtn = document.getElementById("logoutBtn");
-const logoutConfirm = document.getElementById("logoutConfirm");
-const yesBtn = document.getElementById("confirmYes");
-const noBtn = document.getElementById("confirmNo");
-
-if (logoutConfirm) logoutConfirm.style.display = "none";
-
-if (token) {
-    if (logoutBtn) logoutBtn.style.display = "inline-block";
-    const loginLink = document.getElementById("loginLink");
-    const registerLink = document.getElementById("registerLink");
-    if (loginLink) loginLink.style.display = "none";
-    if (registerLink) registerLink.style.display = "none";
-}
-
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        if (logoutConfirm) logoutConfirm.style.display = "block";
-    });
-}
-
-if (noBtn) {
-    noBtn.addEventListener("click", () => {
-        if (logoutConfirm) logoutConfirm.style.display = "none";
-    });
-}
-
-if (yesBtn) {
-    yesBtn.addEventListener("click", () => {
+    document.getElementById("logoutBtn").onclick = () => {
         localStorage.clear();
-        if (logoutConfirm) {
-            logoutConfirm.innerHTML = "<p>Çıkış yapıldı</p>";
-            setTimeout(() => {
-                window.location.href = "index.html";
-            }, 1000);
-        }
-    });
-}
+        window.location.href = "index.html";
+    };
 </script>
-
 </body>
 </html>

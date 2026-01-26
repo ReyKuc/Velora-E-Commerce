@@ -250,3 +250,20 @@ footer {
     display: inline-block;
     margin-top: 5px;
 }
+/* Sekme butonları */
+.tab-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.tab-btn {
+    padding: 10px 20px;
+    background: #1a1a1a;
+    color: #d4af37;
+    border: 1px solid #d4af37;
+    cursor: pointer;
+}
+.tab-btn.active {
+    background: #d4af37;
+    color: #000;
+}
