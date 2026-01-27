@@ -25,7 +25,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 40px auto;
             padding: 20px;
         }
@@ -82,15 +82,24 @@
         .toggle-btn:hover {
             opacity: 0.85;
         }
+        nav { display: flex; justify-content: center; align-items: center; gap: 30px; }
+        nav a { color: #f5f5f5; text-decoration: none; font-weight: 600;font-size:small; transition: 0.3s; }
+        nav a:hover { color: #d4af37; }
     </style>
 </head>
 
 <body>
 
 <header>
-    <h1>ÜRÜN AKTİVASYON PANELİ</h1>
-    <a href="admin.html" style="color: #d4af37; text-decoration: none;">← Admin Paneline Dön</a>
-</header>
+    <h1 style="color: #d4af37; text-align: center; margin-bottom: 10px;">VELORA</h1>
+    <nav>
+        <a href="admin.html">ADMİN PANELİ</a>
+        <a href="stockupdate.html">STOK GÜNCELLEME</a>
+        <a href="priceupdate.html">FİYAT GÜNCELLEME</a>
+        <a href="activation.html"style="color: #d4af37;">AKTİVASYON</a>
+        <a href="review.html" >YORUMLAR</a>
+        <a href="#" id="logoutBtn">ÇIKIŞ</a>
+    </nav></header>
 
 <div class="container">
     <div id="productList">Ürünler yükleniyor...</div>

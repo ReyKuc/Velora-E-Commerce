@@ -2,11 +2,10 @@
 const express = require("express");
 const router = express.Router();
 const Cart = require("../models/Cart");
-const Product = require("../models/Product"); // Stok güncelleme için eklendi
+const Product = require("../models/Product");
 const Order = require("../models/Order");
 const auth = require("../middleware/auth");
 
-// SEPETİ GETİR
 router.get("/", auth, async (req, res) => {
     try {
         let cart = await Cart.findOne({ user: req.user.id }).populate("items.product");
@@ -17,7 +16,6 @@ router.get("/", auth, async (req, res) => {
     }
 });
 
-// SEPETE EKLE
 router.post("/add", auth, async (req, res) => {
     try {
         const { productId, quantity } = req.body;
@@ -35,7 +33,6 @@ router.post("/add", auth, async (req, res) => {
     }
 });
 
-// ÜRÜNÜ SEPETTEN SİL
 router.delete("/remove/:id", auth, async (req, res) => {
     try {
         const cart = await Cart.findOne({ user: req.user.id });
@@ -49,9 +46,6 @@ router.delete("/remove/:id", auth, async (req, res) => {
     }
 });
 
-// SATIN ALMA (CHECKOUT) - STOK DÜŞÜRME EKLENDİ
-const Order = require("../models/Order");
-
 router.post("/checkout", auth, async (req, res) => {
     try {
         const cart = await Cart.findOne({ user: req.user.id }).populate("items.product");
@@ -63,15 +57,19 @@ router.post("/checkout", auth, async (req, res) => {
         for (const item of cart.items) {
             if (!item.product) continue;
 
+            // Hata tespiti için konsola yazdırıyoruz (Terminalden kontrol edebilirsin)
+            console.log("İşlenen Ürün ID:", item.product._id);
+
             orderItems.push({
-                product: item.product._id.toString,
+                // EN GARANTİ YÖNTEM: .toString() kullanmadan direkt ID'yi atıyoruz.
+                // Eğer hata devam ederse item.product._id yerine direkt item.product kullanın.
+                product: item.product._id, 
                 name: item.product.name,
                 price: item.product.price,
                 image: item.product.image,
                 quantity: item.quantity
             });
 
-            // Stok düşürme
             const product = await Product.findById(item.product._id);
             if (product) {
                 product.stock -= item.quantity;
@@ -86,12 +84,13 @@ router.post("/checkout", auth, async (req, res) => {
         });
 
         await newOrder.save();
-        cart.items = []; // Sepeti temizle
+        cart.items = []; 
         await cart.save();
 
         res.json({ success: true, message: "Sipariş başarılı!" });
     } catch (err) {
-        res.status(500).json({ success: false, message: err.message });
+        console.error("KRİTİK HATA:", err.message);
+        res.status(500).json({ success: false, message: "Sipariş oluşturulamadı: " + err.message });
     }
 });
 

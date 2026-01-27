@@ -26,7 +26,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 40px auto;
             padding: 20px;
         }
@@ -63,7 +63,7 @@
             text-align: left;
         }
 
-        /* === Fiyat Kontrol Alanı === */
+      
         .price-controls {
             display: flex;
             align-items: center;
@@ -117,15 +117,26 @@
             padding: 5px;
             text-align: center;
             border-radius: 5px;
-            display: none; /* Varsayılan gizli */
+            display: none; 
         }
+        nav { display: flex; justify-content: center; align-items: center; gap: 30px; }
+        nav a { color: #f5f5f5; text-decoration: none;font-size:small; font-weight: 600; transition: 0.3s; }
+        nav a:hover { color: #d4af37; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>FİYAT YÖNETİM PANELİ</h1>
-    <a href="admin.html" style="color: #d4af37; text-decoration: none;">← Admin Paneline Dön</a>
+   
+    <h1 style="color: #d4af37; text-align: center; margin-bottom: 10px;">VELORA</h1>
+    <nav>
+        <a href="admin.html">ADMİN PANELİ</a>
+        <a href="stockupdate.html">STOK GÜNCELLEME</a>
+        <a href="priceupdate.html"style="color: #d4af37;">FİYAT GÜNCELLEME</a>
+        <a href="activation.html">AKTİVASYON</a>
+        <a href="review.html" >YORUMLAR</a>
+        <a href="#" id="logoutBtn">ÇIKIŞ</a>
+    </nav>
 </header>
 
 <div class="container">
@@ -133,7 +144,7 @@
 </div>
 
 <script>
-// 1. Değişkenler ve Güvenlik Kontrolü
+
 const productList = document.getElementById("productList");
 const statusMessage = document.getElementById("statusMessage");
 const token = localStorage.getItem("token");
@@ -144,7 +155,6 @@ if (!token || role !== "admin") {
     window.location.href = "login.html";
 }
 
-// 2. Ürünleri Yükleme Fonksiyonu
 async function loadProducts() {
     try {
         const res = await fetch("/api/admin/products", {
@@ -156,14 +166,13 @@ async function loadProducts() {
         });
 
         const data = await res.json();
-        console.log("Gelen Veri:", data); // Tarayıcı konsolunda kontrol et
+        console.log("Gelen Veri:", data); 
 
         if (res.status === 401 || res.status === 403) {
             productList.innerHTML = "<p style='color:red;'>Oturum süresi dolmuş. Lütfen tekrar giriş yapın.</p>";
             return;
         }
 
-        // Backend yapısına göre kontrol: { success: true, products: [...] }
         if (data.success && Array.isArray(data.products)) {
             renderProducts(data.products);
         } else {
@@ -176,7 +185,7 @@ async function loadProducts() {
     }
 }
 
-// 3. Ürünleri DOM'a Yazma
+
 function renderProducts(products) {
     if (products.length === 0) {
         productList.innerHTML = "<p>Veritabanında ürün yok.</p>";
@@ -214,7 +223,6 @@ function renderProducts(products) {
     });
 }
 
-// 4. Fiyat Güncelleme Mantığı
 async function adjustPrice(id, amount) {
     const display = document.getElementById(`display-${id}`);
     const currentPrice = parseInt(display.innerText);

@@ -1,3 +1,4 @@
+<!--public/cart.html-->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -98,11 +99,14 @@
             let total = 0;
 
             cart.items.forEach(item => {
+                // Hata önleme: Ürün silinmişse veya gelmiyorsa atla
+                if (!item.product) return;
+
                 total += item.product.price * item.quantity;
                 const div = document.createElement("div");
                 div.className = "cart-item";
                 div.innerHTML = `
-                    <img src="${item.product.image}">
+                    <img src="${item.product.image || '/resimler/default.png'}">
                     <div class="item-details">
                         <strong>${item.product.name}</strong>
                         <span style="color:#d4af37;">(x${item.quantity})</span>
@@ -138,18 +142,32 @@
 
     document.getElementById("checkoutBtn").onclick = async () => {
         try {
+            // Butonu geçici olarak devre dışı bırak (çift tıklamayı önlemek için)
+            const btn = document.getElementById("checkoutBtn");
+            btn.disabled = true;
+            btn.innerText = "İŞLENİYOR...";
+
             const res = await fetch("/api/cart/checkout", {
                 method: "POST",
-                headers: { "Authorization": "Bearer " + token }
+                headers: { 
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": "application/json"
+                }
             });
+            
             const data = await res.json();
             if (data.success) {
-                alert("Siparişiniz alındı! Siparişlerim sayfasına yönlendiriliyorsunuz.");
+                alert("Siparişiniz başarıyla alındı!");
                 window.location.href = "orders.html";
             } else {
-                alert(data.message || "Satın alma işlemi başarısız.");
+                alert(data.message || "Hata: " + (data.error || "Bilinmeyen hata"));
+                btn.disabled = false;
+                btn.innerText = "SEPETİ ONAYLA";
             }
-        } catch (err) { alert("Sistem hatası!"); }
+        } catch (err) { 
+            alert("Sistem hatası oluştu!"); 
+            console.error(err);
+        }
     };
 
     document.getElementById("logoutBtn").onclick = () => {

@@ -5,7 +5,7 @@ const Product = require("../models/Product");
 const Review = require("../models/Review");
 const auth = require("../middleware/auth");
 
-// Ürün listesi
+
 router.get("/", async (req, res) => {
     try {
         let filter = { isActive: { $ne: false } };
@@ -16,12 +16,12 @@ router.get("/", async (req, res) => {
 
         let products = await Product.find(filter);
         
-        // Eğer veritabanı tamamen boşsa örnek ürünler ekle
+        
         if ((await Product.countDocuments()) === 0) {
             const sampleProducts = [
                 // Kadın Kategorisi
                 { name: "Yazlık Çiçekli Elbise", price: 1100, description: "Hafif kumaş, canlı renkli yazlık elbise.", category: "Kadın", image: "/resimler/elbise.jpeg", isActive: true, stock: 50 },
-                { name: "Yüksek Bel Pantolon", price: 1050, description: "Ofis ve günlük kullanım için ideal.", category: "Kadın", image: "/resimler/pantolon.jpg", isActive: true, stock: 30 },
+                { name: "Yüksek Bel Pantolon", price: 1050, description: "Ofis ve günlük kullanım için ideal.", category: "Kadın", image: "/resimler/pantolon.jpg", color:" #ffffff", isActive: true, stock: 30 },
                 { name: "Kadın Kaban", price: 1300, description: "Şık ve zarif tasarım.", category: "Kadın", image: "/resimler/kaban.jpeg", isActive: true, stock: 20 },
 
                 // Erkek Kategorisi
@@ -60,7 +60,6 @@ router.get("/", async (req, res) => {
     }
 });
 
-// ÜRÜNE YORUM EKLE (Auth gerekli)
 router.post("/:id/review", auth, async (req, res) => {
     try {
         const { rating, comment } = req.body;

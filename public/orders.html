@@ -93,7 +93,7 @@
                 card.className = "order-card";
                 
                 const productsHTML = order.items.map(i => {
-                    // ID'nin nesne mi string mi olduğunu kontrol edip string'e çeviriyoruz
+                   
                     const prodId = (typeof i.product === 'object' && i.product !== null) ? i.product._id : i.product;
                     
                     return `
@@ -102,7 +102,7 @@
                                 <img src="${i.image}" class="order-product-image">
                                 <div>
                                     <div style="color:#fff; font-weight:bold;">${i.name}</div>
-                                    <div style="color:#888; font-size:0.9em;">Adet: ${i.quantity} | Birim: ${i.price} ₺</div>
+                                    <div style="color:#888; font-size:0.9em;">Adet: ${i.quantity} <br> Fiyat: ${i.price} ₺</div>
                                 </div>
                             </div>
                             <span style="color:#fff; font-weight:bold; margin: 0 15px;">${(i.price * (i.quantity || 1)).toFixed(2)} ₺</span>
@@ -125,7 +125,7 @@
     }
 
     function openModal(id, name) {
-        // Eğer ID hala [object Object] geliyorsa temizle
+      
         if (id.includes("object Object")) {
             alert("Ürün bilgisi hatalı, lütfen sayfayı yenileyip tekrar deneyin.");
             return;

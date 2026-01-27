@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VELORA | Yorum Yönetimi</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #000;
+            color: #fff;
+        }
+
+        header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #d4af37;
+        }
+
+        h1 {
+            color: #d4af37;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        nav { display: flex; justify-content: center; align-items: center; gap: 30px; margin-top: 10px; }
+        nav a { color: #f5f5f5; text-decoration: none; font-weight: 600; font-size:small;transition: 0.3s; }
+        nav a:hover { color: #d4af37; }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .product-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #d4af37;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #0d0d0d;
+            transition: transform 0.2s;
+        }
+
+        .product-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .product-image {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .reviews-btn {
+            background: none;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            padding: 8px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .reviews-btn:hover {
+            background: #d4af37;
+            color: #000;
+        }
+
+        /* Modal Tasarımı */
+        .reviews-modal {
+            display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9);
+            z-index: 9999; padding: 20px; overflow-y: auto; align-items: center;
+        }
+        .reviews-modal.active { display: flex; justify-content: center; }
+        .modal-content {
+            background: #1a1a1a; width: 100%; max-width: 600px; margin: auto;
+            border: 1px solid #d4af37; border-radius: 15px; padding: 30px; position: relative;
+        }
+
+        .review-card {
+            background: #0d0d0d; padding: 15px; border-radius: 10px; margin-bottom: 15px;
+            border: 1px solid #333; border-left: 4px solid #d4af37; display: flex; 
+            justify-content: space-between; align-items: flex-start;
+        }
+
+        .stars { color: #ffd700; margin-bottom: 5px; }
+        .delete-review-btn {
+            background: #e74c3c; color: white; border: none; padding: 5px 12px;
+            border-radius: 5px; cursor: pointer; font-size: 0.75rem;
+        }
+        .delete-review-btn:hover { background: #c0392b; }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 30px; color: #d4af37; cursor: pointer; background:none; border:none;}
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>VELORA</h1>
+    <nav>
+        <a href="admin.html">ADMİN PANELİ</a>
+        <a href="stockupdate.html">STOK GÜNCELLEME</a>
+        <a href="priceupdate.html">FİYAT GÜNCELLEME</a>
+        <a href="activation.html">AKTİVASYON</a>
+        <a href="review.html" style="color: #d4af37;">YORUMLAR</a>
+        <a href="#" id="logoutBtn">ÇIKIŞ</a>
+    </nav>
+</header>
+
+<div class="container">
+
+    <div id="productList">Ürünler yükleniyor...</div>
+</div>
+
+<div id="reviewsModal" class="reviews-modal">
+    <div class="modal-content">
+        <button class="close-modal" onclick="closeModal()">&times;</button>
+        <h3 id="modalTitle" style="color: #d4af37; margin-bottom: 20px;">Yorumlar</h3>
+        <div id="reviewsContainer"></div>
+    </div>
+</div>
+
+<script>
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+
+    if (!token || role !== "admin") {
+        window.location.href = "login.html";
+    }
+
+    async function loadProducts() {
+        try {
+            const res = await fetch("/api/products");
+            const products = await res.json();
+            const list = document.getElementById("productList");
+            list.innerHTML = "";
+
+            products.forEach(p => {
+                const div = document.createElement("div");
+                div.className = "product-item";
+                div.innerHTML = `
+                    <div class="product-left">
+                        <img src="${p.image}" class="product-image">
+                        <div class="product-info">
+                            <strong>${p.name}</strong>
+                            <small style="color:#888">${p.category} | ${p.price}₺</small>
+                        </div>
+                    </div>
+                    <button class="reviews-btn" onclick="openReviews('${p._id}', '${p.name}')">Yorumları Gör</button>
+                `;
+                list.appendChild(div);
+            });
+        } catch (err) { console.error("Yükleme hatası:", err); }
+    }
+
+    async function openReviews(productId, productName) {
+        const modal = document.getElementById("reviewsModal");
+        const container = document.getElementById("reviewsContainer");
+        document.getElementById("modalTitle").innerText = productName;
+        container.innerHTML = "<p>Yükleniyor...</p>";
+        modal.classList.add("active");
+
+        try {
+            const res = await fetch(`/api/products/${productId}/reviews`);
+            const data = await res.json();
+
+            if (!data.reviews || data.reviews.length === 0) {
+                container.innerHTML = "<p style='color:#888; text-align:center;'>Bu ürün için henüz yorum yok.</p>";
+                return;
+            }
+
+            container.innerHTML = data.reviews.map(r => `
+                <div class="review-card" id="review-${r._id}">
+                    <div style="flex:1">
+                        <div style="color:#d4af37; font-weight:600; font-size:0.9rem;">${r.userName}</div>
+                        <div class="stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+                        <div style="color:#ddd; font-size:0.85rem; margin-bottom:5px;">${r.comment}</div>
+                        <small style="color:#555">${new Date(r.createdAt).toLocaleDateString('tr-TR')}</small>
+                    </div>
+                    <button class="delete-review-btn" onclick="deleteReview('${productId}', '${r._id}')">Sil</button>
+                </div>
+            `).join('');
+        } catch (err) { container.innerHTML = "<p>Hata oluştu.</p>"; }
+    }
+
+    async function deleteReview(productId, reviewId) {
+        if (!confirm("Bu yorumu silmek istediğinize emin misiniz?")) return;
+
+        try {
+            const res = await fetch(`/api/admin/products/${productId}/reviews/${reviewId}`, {
+                method: "DELETE",
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                document.getElementById(`review-${reviewId}`).remove();
+                if (document.getElementById("reviewsContainer").children.length === 0) {
+                    document.getElementById("reviewsContainer").innerHTML = "<p style='color:#888;'>Yorum kalmadı.</p>";
+                }
+            } else { alert("Hata: " + data.message); }
+        } catch (err) { alert("Sistem hatası!"); }
+    }
+
+    function closeModal() { document.getElementById("reviewsModal").classList.remove("active"); }
+
+    document.getElementById("logoutBtn").onclick = () => {
+        localStorage.clear();
+        window.location.href = "index.html";
+    };
+
+    loadProducts();
+</script>
+</body>
+</html>

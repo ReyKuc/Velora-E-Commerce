@@ -1,118 +1,90 @@
-// routes/favorite.js
 const express = require("express");
 const router = express.Router();
-const Favorite = require("../models/Favorite");
+const Cart = require("../models/Cart");
 const Product = require("../models/Product");
-const authMiddleware = require("../middleware/auth");
-const mongoose = require("mongoose");
+const Order = require("../models/Order");
+const auth = require("../middleware/auth");
 
-
-router.use(authMiddleware);
-
-
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
     try {
-        const userId = req.user.id;
-        const favorite = await Favorite.findOne({ user: userId }).populate("items.product");
-        res.json(favorite || { items: [] });
+        let cart = await Cart.findOne({ user: req.user.id }).populate("items.product");
+        if (!cart) cart = { items: [] };
+        res.json(cart);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Favoriler yüklenemedi" });
+        res.status(500).json({ success: false, message: "Sepet yüklenemedi" });
     }
 });
 
-
-router.get("/check", async (req, res) => {
+router.post("/add", auth, async (req, res) => {
     try {
-        const userId = req.user.id;
-        const { productId } = req.query;
+        const { productId, quantity } = req.body;
+        let cart = await Cart.findOne({ user: req.user.id });
+        if (!cart) cart = new Cart({ user: req.user.id, items: [] });
 
-        if (!mongoose.Types.ObjectId.isValid(productId)) {
-            return res.status(400).json({ success: false, message: "Geçersiz ürün id" });
-        }
+        const item = cart.items.find(i => i.product.toString() === productId);
+        if (item) item.quantity += quantity;
+        else cart.items.push({ product: productId, quantity });
 
-        const favorite = await Favorite.findOne({ user: userId });
-        
-        if (!favorite) {
-            return res.json({ success: true, isFavorite: false });
-        }
-
-        const isFavorite = favorite.items.some(item => item.product.toString() === productId);
-        res.json({ success: true, isFavorite });
+        await cart.save();
+        res.json({ success: true, message: "Ürün eklendi", cart });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ success: false, message: "Kontrol yapılamadı" });
+        res.status(500).json({ success: false, message: err.message });
     }
 });
 
-
-router.post("/add", async (req, res) => {
-    const { productId } = req.body;
-    const userId = req.user.id;
-
-    if (!mongoose.Types.ObjectId.isValid(productId)) {
-        return res.status(400).json({ success: false, message: "Geçersiz ürün id" });
-    }
-    
-    const productExists = await Product.findById(productId);
-    if (!productExists) {
-        return res.status(404).json({ success: false, message: "Ürün bulunamadı" });
-    }
-
+router.delete("/remove/:id", auth, async (req, res) => {
     try {
-        let favorite = await Favorite.findOne({ user: userId });
-        if (!favorite) {
-            favorite = new Favorite({ user: userId, items: [] });
+        const cart = await Cart.findOne({ user: req.user.id });
+        if (cart) {
+            cart.items = cart.items.filter(i => i.product.toString() !== req.params.id);
+            await cart.save();
         }
-
-        if (favorite.items.find(item => item.product.toString() === productId)) {
-            return res.status(200).json({ success: true, message: "Ürün zaten favorilerde" });
-        }
-
-        favorite.items.push({ product: productId });
-        await favorite.save();
-        res.json({ success: true, message: "Ürün favorilere eklendi!", favorite });
+        res.json({ success: true });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ success: false, message: "Favorilere ekleme başarısız" });
+        res.status(500).json({ success: false, message: err.message });
     }
 });
 
-router.post("/remove", async (req, res) => {
+router.post("/checkout", auth, async (req, res) => {
     try {
-        const userId = req.user.id;
-        const { productId } = req.body;
-
-        const favorite = await Favorite.findOne({ user: userId });
-        if (!favorite) {
-            return res.status(404).json({ success: false, message: "Favori listesi bulunamadı!" });
+        const cart = await Cart.findOne({ user: req.user.id }).populate("items.product");
+        if (!cart || cart.items.length === 0) {
+            return res.status(400).json({ success: false, message: "Sepetiniz boş." });
         }
 
-        favorite.items = favorite.items.filter(item => item.product.toString() !== productId);
-        await favorite.save();
-        res.json({ success: true, message: "Ürün favorilerden çıkarıldı!", favorite });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ success: false, message: "Sunucu hatası!" });
-    }
-});
+        const orderItems = [];
+        for (const item of cart.items) {
+            if (!item.product) continue;
 
-router.delete("/remove/:productId", async (req, res) => {
-    try {
-        const userId = req.user.id;
-        const { productId } = req.params;
+            orderItems.push({
+                product: item.product._id, // DÜZELTME: .toString demeye gerek yok, direkt ID'yi veriyoruz
+                name: item.product.name,
+                price: item.product.price,
+                image: item.product.image,
+                quantity: item.quantity
+            });
 
-        const favorite = await Favorite.findOne({ user: userId });
-        if (!favorite) {
-            return res.status(404).json({ success: false, message: "Favori listesi bulunamadı!" });
+            const product = await Product.findById(item.product._id);
+            if (product) {
+                product.stock -= item.quantity;
+                await product.save();
+            }
         }
 
-        favorite.items = favorite.items.filter(item => item.product.toString() !== productId);
-        await favorite.save();
-        res.json({ success: true, message: "Ürün favorilerden çıkarıldı!", favorite });
+        const newOrder = new Order({
+            user: req.user.id,
+            items: orderItems,
+            totalAmount: orderItems.reduce((total, i) => total + (i.price * i.quantity), 0)
+        });
+
+        await newOrder.save();
+        cart.items = []; 
+        await cart.save();
+
+        res.json({ success: true, message: "Sipariş başarılı!" });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ success: false, message: "Sunucu hatası!" });
+        console.error("Checkout hatası:", err); // Hatayı konsolda daha detaylı görmek için
+        res.status(500).json({ success: false, message: err.message });
     }
 });
 

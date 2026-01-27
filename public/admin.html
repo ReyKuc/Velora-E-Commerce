@@ -6,181 +6,185 @@
     <title>VELORA | Admin Paneli</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
     <style>
-        
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
             background-color: #000;
             color: #fff;
             text-align: center;
-            overflow-x: hidden;
         }
 
         header {
-            background-color: #000;
-            padding: 20px 0 10px;
+            padding: 20px;
+            text-align: center;
             border-bottom: 2px solid #d4af37;
         }
 
-        nav {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 30px;
-            flex-wrap: wrap;
-            position: relative;
-        }
-
-        nav a {
-            color: #f5f5f5;
-            text-decoration: none;
-            font-weight: 600;
-            letter-spacing: 1px;
-            transition: color 0.3s ease, transform 0.3s ease;
-        }
-
-        nav a:hover {
+        h1 {
             color: #d4af37;
-            transform: scale(1.05);
+            letter-spacing: 2px;
+            margin-bottom: 5px;
         }
 
+        nav { display: flex; justify-content: center; align-items: center; gap: 30px; margin-top: 10px; }
+        nav a { color: #f5f5f5; text-decoration: none; font-weight: 600; transition: 0.3s; font-size: small; }
+        nav a:hover { color: #d4af37; }
+
+        /* Logout Modal */
         .logout-confirm {
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #1a1a1a;
-            padding: 20px;
+            background: #0d0d0d;
+            padding: 30px;
             border: 1px solid #d4af37;
+            border-radius: 15px;
             z-index: 2000;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
         }
 
-        .hero { margin-top: 80px; }
-        .hero h1 {
-            font-size: 4rem;
+        .logout-confirm button {
+            background: transparent;
+            border: 1px solid #d4af37;
             color: #d4af37;
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
-            animation: glow 2s ease-in-out infinite alternate;
+            padding: 8px 25px;
+            margin: 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
         }
 
-        @keyframes glow {
-            from { text-shadow: 0 0 100px #d4af37; }
-            to { text-shadow: 0 0 250px #f5c542; }
+        .logout-confirm button#confirmYes {
+            background: #d4af37;
+            color: #000;
+        }
+
+        .hero { margin-top: 60px; }
+        .hero p {
+            color: #d4af37;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            opacity: 0.8;
         }
 
         .categories-container {
-            margin: 80px auto;
-            max-width: 1000px;
-            background-color: #000;
-            border: 2px solid #d4af37;
+            margin: 50px auto;
+            max-width: 900px;
+            background-color: #0d0d0d;
+            border: 1px solid #d4af37;
             border-radius: 20px;
-            padding: 40px 30px;
+            padding: 40px;
+        }
+
+        .categories-container h2 {
+            color: #d4af37;
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
         }
 
         .categories {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 20px;
         }
 
         .category {
-            background-color: #d4af37;
-            color: #000;
-            border-radius: 15px;
-            width: 150px;
-            padding: 20px;
+            background-color: transparent;
+            color: #d4af37;
+            border: 1px solid #d4af37;
+            border-radius: 12px;
+            padding: 20px 10px;
             font-weight: 600;
             text-decoration: none;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .category:hover { transform: scale(1.08); background-color: #c39b31; }
+        .category:hover { 
+            transform: translateY(-5px); 
+            background-color: #d4af37; 
+            color: #000; 
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
 
         footer {
             margin-top: 50px;
-            padding: 15px 0;
-            border-top: 1px solid rgba(212,175,55,0.3);
+            padding: 20px 0;
+            color: #555;
+            font-size: 0.8rem;
+            border-top: 1px solid #1a1a1a;
         }
 
+        /* Hamburger (Mobil İçin) */
+        .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; position: absolute; right: 20px; top: 30px; }
+        .hamburger span { width: 25px; height: 2px; background: #d4af37; }
+
         @media (max-width: 768px) {
-            nav {
-                display: none;
-                flex-direction: column;
-                background: black;
-                padding: 1rem;
-            }
+            nav { display: none; flex-direction: column; gap: 15px; padding: 20px; }
             nav.active { display: flex; }
-            .hamburger {
-                display: flex;
-                flex-direction: column;
-                gap: 6px;
-                position: absolute;
-                top: 25px;
-                right: 20px;
-                cursor: pointer;
-            }
-            .hamburger span { width: 28px; height: 3px; background: #fff; }
+            .hamburger { display: flex; }
         }
     </style>
 </head>
 <body>
 
 <header>
+    <h1>VELORA</h1>
     <nav id="navMenu">
-        <a href="priceupdate.html">FİYAT YÖNETİMİ</a>
-        <a href="activation.html">ÜRÜN AKTİFLEŞTİRME</a>
-        <a href="stockupdate.html">STOK YÖNETİMİ</a>
-        <a href="#" id="logoutBtn" style="display:none; color: #d4af37;">ÇIKIŞ (->)</a>
+        <a href="admin.html" style="color: #d4af37;">ADMİN PANELİ</a>
+        <a href="stockupdate.html">STOK GÜNCELLEME</a>
+        <a href="priceupdate.html">FİYAT GÜNCELLEME</a>
+        <a href="activation.html">AKTİVASYON</a>
+        <a href="review.html">YORUMLAR</a>
+        <a href="#" id="logoutBtn">ÇIKIŞ</a>
     </nav>
     <div class="hamburger" id="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span>
     </div>
 </header>
 
 <div id="logoutConfirm" class="logout-confirm">
-    <p>Çıkış yapmak istediğine emin misin?</p>
-    <button id="confirmYes">Evet</button>
+    <p style="margin-bottom: 20px;">Oturumu kapatmak istediğinize emin misiniz?</p>
+    <button id="confirmYes">Evet, Çıkış Yap</button>
     <button id="confirmNo">Hayır</button>
 </div>
 
 <section class="hero">
-    <h1>VELORA</h1>
-    <p>Admin Paneline Hoş Geldiniz</p>
+    <p>Admin Kontrol Paneli</p>
 </section>
 
-<section id="categories" class="categories-container">
-    <h2>KATEGORİLER</h2>
+<!--<section id="categories" class="categories-container">
+    <h2>ÜRÜN KATEGORİLERİ</h2>
     <div class="categories">
-        <a href="products.html?category=Kadın" class="category">Kadın</a>
-        <a href="products.html?category=Erkek" class="category">Erkek</a>
-        <a href="products.html?category=Kozmetik" class="category">Kozmetik</a>
-        <a href="products.html?category=Aksesuar" class="category">Aksesuar</a>
-        <a href="products.html?category=Çanta" class="category">Çanta</a>
-        <a href="products.html?category=Ayakkabı" class="category">Ayakkabı</a>
+        <a href="products.html?category=Kadın" class="category">KADIN</a>
+        <a href="products.html?category=Erkek" class="category">ERKEK</a>
+        <a href="products.html?category=Kozmetik" class="category">KOZMETİK</a>
+        <a href="products.html?category=Aksesuar" class="category">AKSESUAR</a>
+        <a href="products.html?category=Çanta" class="category">ÇANTA</a>
+        <a href="products.html?category=Ayakkabı" class="category">AYAKKABI</a>
     </div>
 </section>
-
+-->
 <footer>
-    <p>&copy; 2025 VELORA | Admin</p>
+    <p>&copy; 2026 VELORA | Yönetim Sistemi</p>
 </footer>
 
 <script>
-    
+    // Yetki Kontrolü
     (function checkAuth() {
         const token = localStorage.getItem("token");
         const role = localStorage.getItem("role");
-
         if (!token || role !== "admin") {
-            alert("Bu sayfaya erişim yetkiniz yok!");
             window.location.href = "login.html";
         }
     })();
 
-   
     const hamburger = document.getElementById("hamburger");
     const nav = document.getElementById("navMenu");
     const logoutBtn = document.getElementById("logoutBtn");
@@ -188,18 +192,10 @@
     const yesBtn = document.getElementById("confirmYes");
     const noBtn = document.getElementById("confirmNo");
 
-    
-    if (hamburger) {
-        hamburger.addEventListener("click", () => {
-            nav.classList.toggle("active");
-        });
-    }
+    // Mobil Menü
+    hamburger.addEventListener("click", () => nav.classList.toggle("active"));
 
-    
-    if (localStorage.getItem("token")) {
-        logoutBtn.style.display = "inline-block";
-    }
-
+    // Çıkış İşlemleri
     logoutBtn.addEventListener("click", (e) => {
         e.preventDefault();
         logoutConfirm.style.display = "block";
@@ -210,9 +206,8 @@
     });
 
     yesBtn.addEventListener("click", () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("role");
-        logoutConfirm.innerHTML = "<p>Çıkış yapıldı, yönlendiriliyorsunuz...</p>";
+        localStorage.clear();
+        logoutConfirm.innerHTML = "<p style='color:#d4af37'>Güvenli çıkış yapıldı...</p>";
         setTimeout(() => {
             window.location.href = "login.html";
         }, 1000);

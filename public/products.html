@@ -6,31 +6,9 @@
     <title>Velora | Ürünler</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-      
-        header {
-            background-color: #000;
-            padding: 20px 0 10px;
-            border-bottom: 2px solid #d4af37;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        nav {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 30px;
-        }
-
-        nav a {
-            color: #f5f5f5;
-            text-decoration: none;
-            font-weight: 600;
-            letter-spacing: 1px;
-            transition: 0.3s;
-        }
-
+        header { background-color: #000; padding: 20px 0 10px; border-bottom: 2px solid #d4af37; position: sticky; top: 0; z-index: 1000; }
+        nav { display: flex; justify-content: center; align-items: center; gap: 30px; }
+        nav a { color: #f5f5f5; text-decoration: none; font-weight: 600; letter-spacing: 1px; transition: 0.3s; }
         nav a:hover { color: #d4af37; }
 
         .product-item {
@@ -45,40 +23,19 @@
             transition: 0.3s;
         }
 
-        .product-item.out-of-stock {
-            opacity: 0.6;
-            border-color: #444;
-        }
+        .product-item.out-of-stock { opacity: 0.6; border-color: #444; }
+        .product-image { width: 120px; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid #333; }
+        .product-info { flex-grow: 1; display: flex; flex-direction: column; gap: 5px; padding-left: 20px; }
+        .price-tag { font-size: 1.3em; color: #d4af37; font-weight: bold; }
 
-        .product-image {
-            width: 120px;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid #333;
-        }
+        /* Yıldız Derecelendirme CSS */
+        .rating-container { display: flex; align-items: center; gap: 8px; margin: 2px 0; cursor: help; width: fit-content; }
+        .stars-outer { position: relative; display: inline-block; font-size: 18px; color: #444; }
+        .stars-inner { position: absolute; top: 0; left: 0; white-space: nowrap; overflow: hidden; width: 0; color: #ffd700; }
+        .stars-outer::before { content: "★★★★★"; }
+        .stars-inner::before { content: "★★★★★"; }
 
-        .product-info {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            padding-left: 20px;
-        }
-
-        .price-tag {
-            font-size: 1.3em;
-            color: #d4af37;
-            font-weight: bold;
-        }
-
-        .stock-badge {
-            font-size: 0.75em;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: bold;
-            width: fit-content;
-        }
+        .stock-badge { font-size: 0.75em; padding: 4px 10px; border-radius: 20px; font-weight: bold; width: fit-content; }
         .stock-high { background-color: #2ecc71; color: #000; }
         .stock-medium { background-color: #f39c12; color: #000; }
         .stock-low { background-color: #e74c3c; color: #fff; }
@@ -94,97 +51,26 @@
             font-size: 0.85em;
             width: fit-content;
             margin-top: 5px;
-        }
-
-        .reviews-btn:hover { background-color: #2ecc71; color: #fff; }
-
-        .product-actions-inline {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .add-to-cart-btn {
-            background-color: #d4af37;
-            color: #000;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
             transition: 0.3s;
         }
+        .reviews-btn:hover { background-color: #2ecc71; color: #fff; }
 
+        .product-actions-inline { display: flex; align-items: center; gap: 15px; }
+        .add-to-cart-btn { background-color: #d4af37; color: #000; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .add-to-cart-btn:hover:not(:disabled) { background-color: #e0b84f; transform: scale(1.05); }
+        .add-to-cart-btn:disabled { background-color: #444; color: #888; cursor: not-allowed; }
 
-        .add-to-cart-btn:disabled {
-            background-color: #444;
-            color: #888;
-            cursor: not-allowed;
-        }
-
-        .fav-btn {
-            background: none;
-            border: none;
-            color: #f5f5f5;
-            font-size: 32px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
+        .fav-btn { background: none; border: none; color: #f5f5f5; font-size: 32px; cursor: pointer; transition: 0.2s; }
         .fav-btn.active { color: #ff4c4c; }
 
-        .reviews-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 9999;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
+        .reviews-modal { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); z-index: 9999; padding: 20px; overflow-y: auto; }
         .reviews-modal.active { display: flex; justify-content: center; }
-
-        .modal-content {
-            background: #1a1a1a;
-            width: 100%;
-            max-width: 600px;
-            margin: 50px auto;
-            border: 1px solid #d4af37;
-            border-radius: 15px;
-            padding: 30px;
-            position: relative;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 35px;
-            color: #d4af37;
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
-
-        .review-card {
-            background: #252525;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            border-left: 4px solid #d4af37;
-        }
-
-        .review-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85em;
-            margin-bottom: 10px;
-        }
-
+        .modal-content { background: #1a1a1a; width: 100%; max-width: 600px; margin: 50px auto; border: 1px solid #d4af37; border-radius: 15px; padding: 30px; position: relative; }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 35px; color: #d4af37; cursor: pointer; background: none; border: none; }
+        .review-card { background: #252525; padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid #d4af37; }
+        .review-meta { display: flex; justify-content: space-between; font-size: 0.85em; margin-bottom: 10px; }
         .reviewer-name { color: #d4af37; font-weight: bold; }
-        .stars { color: #ffd700; font-size: 1.1em; margin-bottom: 5px; }
+        .stars-fixed { color: #ffd700; font-size: 1.1em; }
     </style>
 </head>
 <body>
@@ -238,6 +124,15 @@
         return `<span class="stock-badge stock-high">Stokta Var (${stock})</span>`;
     }
 
+    // Yıldızları Orana Göre Hesaplayan Fonksiyon
+    function calculateRating(reviews) {
+        if (!reviews || reviews.length === 0) return { avg: 0, count: 0, percent: 0 };
+        const total = reviews.reduce((sum, r) => sum + r.rating, 0);
+        const avg = (total / reviews.length).toFixed(1);
+        const percent = (avg / 5) * 100;
+        return { avg, count: reviews.length, percent };
+    }
+
     async function loadUserFavorites() {
         if (!token) return;
         try {
@@ -265,22 +160,36 @@
                 return;
             }
 
-            products.forEach(p => {
+            // Her ürün için yorumları çekip ortalama hesaplamalıyız
+            for (const p of products) {
                 const isFav = userFavorites.has(p._id);
                 const outOfStock = p.stock <= 0;
+                
+                // Yorum bilgilerini al
+                const revRes = await fetch(`/api/products/${p._id}/reviews`);
+                const revData = await revRes.json();
+                const ratingInfo = calculateRating(revData.reviews);
+
                 const div = document.createElement("div");
                 div.className = `product-item ${outOfStock ? 'out-of-stock' : ''}`;
                 
-            
                 div.innerHTML = `
                     <img src="${p.image}" class="product-image" onerror="this.src='https://via.placeholder.com/120'">
                     <div class="product-info">
                         <strong style="font-size: 1.1em; color: #fff;">${p.name}</strong>
+                        
+                        <div class="rating-container">
+                            <div class="stars-outer">
+                                <div class="stars-inner" style="width: ${ratingInfo.percent}%"></div>
+                            </div>
+                            <span style="color: #888; font-size: 0.8em;">(${ratingInfo.avg})</span>
+                        </div>
+
                         <span class="price-tag">${p.price}₺</span>
                         ${getStockBadge(p.stock)}
                     
                         <button class="reviews-btn" onclick="openReviews('${p._id}', '${p.name}')">
-                            ★ Yorumları Gör
+                            ★ Yorumları Gör (${ratingInfo.count})
                         </button>
                     </div>
                     <div class="product-actions-inline">
@@ -293,7 +202,7 @@
                     </div>
                 `;
                 productsDiv.appendChild(div);
-            });
+            }
         } catch (err) { 
             console.error("Ürün yükleme hatası:", err);
             productsDiv.innerHTML = "Ürünler şu an yüklenemiyor.";
@@ -322,7 +231,7 @@
                         <span class="reviewer-name">${r.userName || 'Değerli Müşterimiz'}</span>
                         <span class="review-date">${new Date(r.createdAt).toLocaleDateString('tr-TR')}</span>
                     </div>
-                    <div class="stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+                    <div class="stars-fixed">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
                     <div class="comment-text" style="color:#eee;">${r.comment || 'Puan verildi, yorum yapılmadı.'}</div>
                 </div>
             `).join('');
@@ -355,7 +264,6 @@
             loadProducts();
         } catch (err) { console.error(err); }
     }
-
 
     loadProducts();
 

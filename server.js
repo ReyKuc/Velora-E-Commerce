@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 console.log('📁 Rotalar yükleniyor...\n');
 require("./models/Product");
 require("./models/Review");
-require("./models/Order");
+//require("./models/Order");
 require("./models/User");
 
 try {

@@ -154,6 +154,9 @@ h1 {
     border-radius: 20px;
     font-weight: bold;
 }
+nav { display: flex; justify-content: center; align-items: center; gap: 30px; }
+        nav a { color: #f5f5f5; text-decoration: none; font-weight: 600;font-size:small; transition: 0.3s; }
+        nav a:hover { color: #d4af37; }
 
 .back-btn:hover {
     background-color: #c39b31;
@@ -162,9 +165,17 @@ h1 {
 </head>
 <body>
 
+
 <header>
-    <h1>STOK YÖNETİMİ PANELİ</h1>
-    <a href="admin.html" class="back-btn">← Admin Paneline Dön</a>
+    <h1 style="color: #d4af37; text-align: center; margin-bottom: 10px;">VELORA</h1>
+    <nav>
+        <a href="admin.html">ADMİN PANELİ</a>
+        <a href="stockupdate.html"style="color: #d4af37;">STOK GÜNCELLEME</a>
+        <a href="priceupdate.html">FİYAT GÜNCELLEME</a>
+        <a href="activation.html">AKTİVASYON</a>
+        <a href="review.html" >YORUMLAR</a>
+        <a href="#" id="logoutBtn">ÇIKIŞ</a>
+    </nav>
 </header>
 
 <div class="container">

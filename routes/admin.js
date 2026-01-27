@@ -3,13 +3,14 @@ const express = require("express");
 const router = express.Router();
 const Product = require("../models/Product");
 const adminAuth = require("../middleware/adminAuth");
+const auth = require("../middleware/auth");
+const Review = require("../models/Review");
 
 
-
-// Tüm admin rotaları için yetki kontrolü
+// Tüm admin rotaları için admin kontrolünü başlat
 router.use(adminAuth);
 
-// Tüm ürünleri getir (Admin için - inactive olanlar da dahil)
+// Ürünleri Getir
 router.get("/products", async (req, res) => {
     try {
         const products = await Product.find({});
@@ -20,13 +21,12 @@ router.get("/products", async (req, res) => {
     }
 });
 
-
+// Fiyat Güncelle
 router.put("/products/:id/price", async (req, res) => {
     try {
         const { id } = req.params;
         const { price } = req.body;
 
-        // Sayı kontrolü
         if (price === undefined || price < 0) {
             return res.status(400).json({ success: false, message: "Geçerli bir fiyat giriniz" });
         }
@@ -48,14 +48,20 @@ router.put("/products/:id/price", async (req, res) => {
     }
 });
 
-
+// Aktif/Pasif Yap
 router.put("/products/:id/toggle-active", async (req, res) => {
-    const product = await Product.findById(req.params.id);
-    product.isActive = !product.isActive;
-    await product.save();
-    res.json({ success: true });
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) return res.status(404).json({ success: false, message: "Ürün bulunamadı" });
+        product.isActive = !product.isActive;
+        await product.save();
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
 });
 
+// Stok Güncelle
 router.put("/products/:id/stock", async (req, res) => {
     try {
         const { id } = req.params;
@@ -71,6 +77,28 @@ router.put("/products/:id/stock", async (req, res) => {
     }
 });
 
+// Admin için belirli bir yorumu silme rotası
+// routes/admin.js içindeki silme rotasını BU ŞEKİLDE GÜNCELLE:
+
+router.delete("/products/:productId/reviews/:reviewId", async (req, res) => {
+    try {
+        const { reviewId } = req.params;
+        console.log("🗑️ Review Modelinden siliniyor. ID:", reviewId);
+
+        // Product modelinde reviews dizisi OLMADIĞI için 
+        // direkt Review modeline gidip ID ile siliyoruz.
+        const deletedReview = await Review.findByIdAndDelete(reviewId);
+
+        if (!deletedReview) {
+            return res.status(404).json({ success: false, message: "Yorum zaten silinmiş veya bulunamadı." });
+        }
+
+        res.json({ success: true, message: "Yorum başarıyla silindi." });
+        
+    } catch (err) {
+        console.error("❌ Silme Hatası:", err);
+        res.status(500).json({ success: false, message: "Sunucu hatası: " + err.message });
+    }
+});
+
 module.exports = router;
-
-

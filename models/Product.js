@@ -1,4 +1,3 @@
-// models/Product.js
 const mongoose = require("mongoose");
 
 const ProductSchema = new mongoose.Schema({
@@ -7,7 +6,6 @@ const ProductSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    
     price: {
         type: Number,
         required: true,
@@ -16,8 +14,7 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-   
-   category: {
+    category: {
         type: String,
         required: true, 
         enum: ['Kadın', 'Erkek', 'Kozmetik', 'Aksesuar', 'Çanta', 'Ayakkabı'], 

@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const orderSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     items: [{
-        product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+        product: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
         name: String,
         price: Number,
         image: String,
@@ -13,5 +13,4 @@ const orderSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
-// module.exports = Order; <--- BU YANLIŞ, HATA VERDİRİR
-module.exports = mongoose.model("Order", orderSchema); // DOĞRUSU BU
+module.exports = mongoose.model("Order", orderSchema);
