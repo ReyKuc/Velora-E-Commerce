@@ -13,4 +13,5 @@ const orderSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model("Order", orderSchema);
+// module.exports = Order; <--- BU YANLIŞ, HATA VERDİRİR
+module.exports = mongoose.model("Order", orderSchema); // DOĞRUSU BU

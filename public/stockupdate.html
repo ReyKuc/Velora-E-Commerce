@@ -79,7 +79,7 @@ h1 {
     font-weight: bold;
 }
 
-/* Mevcut .stock-badge ve altındaki .stock-high vb. sınıfları silip bunu yapıştır */
+
 .stock-badge {
     display: inline-block;
     width: fit-content;
@@ -181,7 +181,7 @@ const errorMessage = document.getElementById("errorMessage");
 const token = localStorage.getItem("token");
 const role = localStorage.getItem("role");
 
-// Güvenlik kontrolü
+
 if (role !== "admin") {
     alert("Yetkisiz erişim!");
     window.location.href = "index.html";
@@ -296,7 +296,7 @@ async function updateStock(productId, productName) {
         
         if (data.success) {
             showMessage(`${productName} stoğu ${newStock} olarak güncellendi!`, true);
-            loadProducts(); // Sayfayı yenile
+            loadProducts(); 
         } else {
             showMessage(data.message || "Güncelleme başarısız!", false);
         }

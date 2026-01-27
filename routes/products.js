@@ -65,7 +65,6 @@ router.post("/:id/review", auth, async (req, res) => {
     try {
         const { rating, comment } = req.body;
         
-        // Kullanıcı adını token'dan al
         const User = require("../models/User");
         const user = await User.findById(req.user.id);
         
@@ -75,8 +74,7 @@ router.post("/:id/review", auth, async (req, res) => {
                 message: "Kullanıcı bulunamadı" 
             });
         }
-        
-        // Ürünün varlığını kontrol et
+      
         const product = await Product.findById(req.params.id);
         if (!product) {
             return res.status(404).json({ 
@@ -85,7 +83,7 @@ router.post("/:id/review", auth, async (req, res) => {
             });
         }
         
-        // Yorum oluştur
+  
         const newReview = new Review({
             product: req.params.id,
             user: req.user.id,
@@ -110,14 +108,14 @@ router.post("/:id/review", auth, async (req, res) => {
     }
 });
 
-// ÜRÜNÜN YORUMLARINI GETİR
+
 router.get("/:id/reviews", async (req, res) => {
     try {
         const reviews = await Review.find({ product: req.params.id })
             .sort({ createdAt: -1 })
-            .limit(100); // Maksimum 100 yorum
+            .limit(100); 
         
-        // Ortalama puanı hesapla
+       
         const avgRating = reviews.length > 0
             ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
             : 0;

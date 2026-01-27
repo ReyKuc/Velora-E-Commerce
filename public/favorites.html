@@ -126,14 +126,14 @@ async function loadFavorites() {
             return;
         }
 
-        const res = await fetch("/api/favorite", { // /api/favorite olarak düzeltildi
+        const res = await fetch("/api/favorite", { 
             method: "GET",
             headers: { "Authorization": "Bearer " + token }
         });
 
         const fav = await res.json();
         
-        // Hata kontrolü
+       
         if (fav.success === false) {
              messageDiv.style.display = "block";
              messageDiv.className = "message error";
@@ -179,7 +179,7 @@ async function loadFavorites() {
         document.querySelectorAll(".removeFavBtn").forEach(btn => {
             btn.addEventListener("click", async () => {
                 const id = btn.getAttribute("data-id");
-                const res = await fetch("/api/favorite/remove/" + id, { // /api/favorite/remove/ olarak düzeltildi
+                const res = await fetch("/api/favorite/remove/" + id, { 
                     method: "DELETE",
                     headers: { "Authorization": "Bearer " + token }
                 });
@@ -196,7 +196,7 @@ async function loadFavorites() {
         document.querySelectorAll(".addToCartBtn").forEach(btn => {
             btn.addEventListener("click", async () => {
                 const productId = btn.getAttribute("data-id");
-                const res = await fetch("/api/cart/add", { // /api/cart/add olarak düzeltildi
+                const res = await fetch("/api/cart/add", { 
                     method: "POST",
                     headers: { 
                         "Content-Type": "application/json",
@@ -239,23 +239,23 @@ const yesBtn = document.getElementById("confirmYes");
 const noBtn = document.getElementById("confirmNo");
 
 logoutConfirm.style.display = "none";
-// giriş kontrolü
+
 if (localStorage.getItem("token")) {
     logoutBtn.style.display = "inline-block";
 }
 
-// tıkla → sor
+
 logoutBtn.addEventListener("click", (e) => {
     e.preventDefault();
     logoutConfirm.style.display = "block";
 });
 
-// hayır
+
 noBtn.addEventListener("click", () => {
     logoutConfirm.style.display = "none";
 });
 
-// evet
+
 yesBtn.addEventListener("click", () => {
     localStorage.removeItem("token");
     logoutConfirm.innerHTML = "<p>Çıkış yapıldı</p>";

@@ -1,339 +1,186 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Velora | Siparişlerim</title>
-<link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velora | Siparişlerim</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        header { background-color: #000; padding: 20px 0 10px; border-bottom: 2px solid #d4af37; position: sticky; top:0; z-index:1000; }
+        nav { display: flex; justify-content: center; align-items: center; gap: 30px; }
+        nav a { color: #f5f5f5; text-decoration: none; font-weight: 600; }
 
-<style>
-/* === PRODUCTS.HTML İLE AYNI HEADER === */
-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-}
+        .form-container { max-width: 950px; margin: 40px auto; padding: 20px; }
+        .order-card {
+            border: 1px solid #d4af37; border-radius: 15px; padding: 25px;
+            margin-bottom: 30px; background-color: #0d0d0d; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .order-date { 
+            display: block; color: #d4af37; font-weight: bold; border-bottom: 1px solid #333; 
+            padding-bottom: 10px; margin-bottom: 15px; font-size: 1.1em;
+        }
+        .order-product-row {
+            display: flex; align-items:center; justify-content: space-between;
+            background: #151515; padding: 15px; border-radius: 10px; margin-bottom: 12px;
+        }
+        .product-info { display: flex; align-items: center; gap: 15px; flex: 2; }
+        .order-product-image { width: 65px; height: 65px; object-fit: cover; border-radius: 8px; }
+        
+        .review-btn {
+            background: #d4af37; color: #000; border: none; padding: 8px 10px;
+            border-radius: 6px; font-weight: bold; font-size: 0.8em; cursor: pointer; transition: 0.3s;
+        }
+        .review-btn:hover { background: #fff; }
+        .order-total { text-align: right; font-size: 1.1em; color: #ffffff; font-weight: bold; margin-top: 20px; }
 
-
-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-}
-
-nav a {
-    color: #f5f5f5;
-    text-decoration: none;
-    font-weight: 600;
-    letter-spacing: 1px;
-}
-
-nav a:hover {
-    color: #d4af37;
-}
-
-@media (max-width: 768px) {
-   header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-}
-
-
-    nav {
-        display: none;
-        position: absolute;
-        top: 70px;
-        right: 20px;
-        background: black;
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1rem;
-        border: 1px solid #d4af37;
-        z-index: 1000;
-    }
-
-    nav.active {
-        display: flex;
-    }
-
-    .hamburger {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        position: absolute;
-        top: 25px;
-        right: 20px;
-        z-index: 1100;
-        cursor: pointer;
-    }
-
-    .hamburger span {
-        width: 28px;
-        height: 3px;
-        background: #ffffff;
-    }
-}
-
-/* === SAYFA GÖVDESİ === */
-.order-card {
-    border: 1px solid #d4af37;
-    border-radius: 15px;
-    padding: 25px;
-    margin-bottom: 20px;
-    background-color: #0d0d0d;
-     display: flex;
-    flex-direction: column;
-    gap: 15px;
-
-}
-
-.order-date {
-    color: #aaa;
-    margin-bottom: 15px;
-    display: block;
-    border-bottom: 1px solid #333;
-    padding-bottom: 10px;
-}
-.order-items-container {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
-}
-.order-product-row {
-    display: grid;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px; /* Her ürün satırı arası boşluk */
-    padding: 10px;
-    background: #151515;
-    border-radius: 8px;
-}
-.order-product-image {
-    width: 80px !important;
-    height: 80px !important;
-    object-fit: cover;
-    border-radius: 8px;
-    flex-shrink: 0; /* Resmin daralmasını önler */
-}
-.product-info-box {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.order-total {
-    margin-top: 15px;
-    padding-top: 10px;
-    border-top: 1px solid #333;
-    text-align: right;
-    font-weight: bold;
-    color: #d4af37;
-}
-#ordersList {
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-
-/* === GOLD BUTON (VELORA STYLE) === */
-.review-btn {
-    background-color: #d4af37;
-    color: #000;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.review-btn:hover {
-    background-color: #e0b84f;
-    transform: scale(1.05);
-}
-
-
-/* === MODAL === */
-.modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.9);
-    z-index: 2000;
-}
-
-.modal-content {
-    background: #1f1f1f;
-    border: 2px solid #d4af37;
-    border-radius: 15px;
-    padding: 30px;
-    max-width: 400px;
-    margin: 10% auto;
-    text-align: center;
-}
-
-.stars span {
-    font-size: 28px;
-    cursor: pointer;
-    color: #ffd700;
-}
-
-textarea {
-    width: 100%;
-    height: 90px;
-    background: #000;
-    color: #fff;
-    border: 1px solid #d4af37;
-    border-radius: 8px;
-    padding: 10px;
-    margin-top: 10px;
-}
-
-.submit-btn {
-    margin-top: 15px;
-    width: 100%;
-    padding: 10px;
-    background: #d4af37;
-    color: #000;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 6px;
-}
-  
-</style>
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; }
+        .modal-content { background: #1f1f1f; border: 2px solid #d4af37; border-radius: 15px; padding: 30px; max-width: 400px; margin: 10% auto; text-align: center; }
+        .stars span { font-size: 30px; cursor: pointer; color: #ffd700; margin: 0 5px; }
+        textarea { width: 100%; height: 80px; margin-top: 15px; background: #000; color: #fff; border: 1px solid #d4af37; border-radius: 8px; padding: 10px; font-family: sans-serif; resize: none; }
+    </style>
 </head>
-
 <body>
 
 <header>
-<h1 style="color:#d4af37;">VELORA</h1>
-<nav id="navMenu">
-    <a href="index.html">ANA SAYFA</a>
-    <a href="products.html">ÜRÜNLER</a>
-    <a href="cart.html">SEPETİM</a>
-  
-    <a href="favorites.html">FAVORİLER</a>
-    <a href="#" id="logoutBtn" style="display:none;">→</a>
-</nav>
-<div class="hamburger" id="hamburger">
-    <span></span><span></span><span></span>
-</div>
+    <h1 style="color: #d4af37; text-align: center;">VELORA</h1>
+    <nav>
+        <a href="index.html">ANA SAYFA</a>
+        <a href="products.html">ÜRÜNLER</a>
+        <a href="cart.html">SEPETİM</a>
+        <a href="favorites.html">FAVORİLER</a>
+    </nav>
 </header>
 
 <div class="form-container">
-<h2>Sipariş Geçmişim</h2>
-<div id="ordersList">Yükleniyor...</div>
+    <h2 style="color: #fff; text-align: center; margin-bottom: 30px;">Sipariş Geçmişim</h2>
+    <div id="ordersList">Yükleniyor...</div>
 </div>
 
-<!-- MODAL -->
 <div id="reviewModal" class="modal">
-<div class="modal-content">
-<h3 id="modalProductName" style="color:#d4af37;">Değerlendir</h3>
-<div class="stars" id="stars">
-<span onclick="setRating(1)">☆</span>
-<span onclick="setRating(2)">☆</span>
-<span onclick="setRating(3)">☆</span>
-<span onclick="setRating(4)">☆</span>
-<span onclick="setRating(5)">☆</span>
-</div>
-<textarea id="reviewComment" style="font-family: Arial, Helvetica, sans-serif;" placeholder="Yorumunuzu yazın..."></textarea>
-<button class="submit-btn" onclick="submitReview()">GÖNDER</button>
-<button onclick="closeModal()" style="margin-top:10px;background:none;border:none;color:#aaa;cursor:pointer;">Kapat</button>
-</div>
+    <div class="modal-content">
+        <h3 id="modalProductName" style="color:#d4af37;">Değerlendir</h3>
+        <div class="stars" id="stars">
+            <span onclick="setRating(1)">☆</span><span onclick="setRating(2)">☆</span><span onclick="setRating(3)">☆</span><span onclick="setRating(4)">☆</span><span onclick="setRating(5)">☆</span>
+        </div>
+        <textarea id="reviewComment" placeholder="Ürün hakkındaki düşünceleriniz..."></textarea>
+        <button class="review-btn" style="width:100%; margin-top:15px; height: 40px;" onclick="submitReview()">GÖNDER</button>
+        <button onclick="closeModal()" style="background:none; border:none; color:#888; margin-top:15px; cursor:pointer;">Vazgeç</button>
+    </div>
 </div>
 
 <script>
-const token = localStorage.getItem("token");
-let currentProductId = null;
-let rating = 0;
+    const token = localStorage.getItem("token");
+    let currentProductId = null, rating = 0;
 
-if(!token) window.location.href = "login.html";
+    if(!token) window.location.href = "login.html";
 
-async function loadOrders() {
-    const list = document.getElementById("ordersList");
-    const res = await fetch("/api/orders/my-orders", {
-        headers:{ "Authorization":"Bearer "+token }
-    });
-    const orders = await res.json();
-    list.innerHTML = "";
+    async function loadOrders() {
+        try {
+            const res = await fetch(`/api/orders/my-orders?t=${new Date().getTime()}`, {
+                headers: { "Authorization": "Bearer " + token }
+            });
+            const orders = await res.json();
+            const list = document.getElementById("ordersList");
+            list.innerHTML = "";
 
-    if(orders.length === 0){
-        list.innerHTML = "<p>Henüz sipariş yok.</p>";
-        return;
+            if (!orders || orders.length === 0) {
+                list.innerHTML = "<p style='color:#888; text-align:center;'>Henüz bir siparişiniz bulunmuyor.</p>";
+                return;
+            }
+
+            orders.forEach(order => {
+                const card = document.createElement("div");
+                card.className = "order-card";
+                
+                const productsHTML = order.items.map(i => {
+                    // ID'nin nesne mi string mi olduğunu kontrol edip string'e çeviriyoruz
+                    const prodId = (typeof i.product === 'object' && i.product !== null) ? i.product._id : i.product;
+                    
+                    return `
+                        <div class="order-product-row">
+                            <div class="product-info">
+                                <img src="${i.image}" class="order-product-image">
+                                <div>
+                                    <div style="color:#fff; font-weight:bold;">${i.name}</div>
+                                    <div style="color:#888; font-size:0.9em;">Adet: ${i.quantity} | Birim: ${i.price} ₺</div>
+                                </div>
+                            </div>
+                            <span style="color:#fff; font-weight:bold; margin: 0 15px;">${(i.price * (i.quantity || 1)).toFixed(2)} ₺</span>
+                            <button class="review-btn" onclick="openModal('${prodId}','${i.name.replace(/'/g, "\\'")}')">DEĞERLENDİR</button>
+                        </div>
+                    `;
+                }).join("");
+
+                card.innerHTML = `
+                    <span class="order-date">📦 Sipariş Tarihi: ${new Date(order.createdAt).toLocaleDateString('tr-TR')}</span>
+                    ${productsHTML}
+                    <div class="order-total">Toplam Ödenen: ${order.totalAmount.toFixed(2)} ₺</div>
+                `;
+                list.appendChild(card);
+            });
+        } catch (err) { 
+            console.error("Siparişler yüklenemedi:", err);
+            document.getElementById("ordersList").innerHTML = "Yükleme hatası.";
+        }
     }
 
-    orders.reverse().forEach(order=>{
-        const div = document.createElement("div");
-        div.className="order-card";
+    function openModal(id, name) {
+        // Eğer ID hala [object Object] geliyorsa temizle
+        if (id.includes("object Object")) {
+            alert("Ürün bilgisi hatalı, lütfen sayfayı yenileyip tekrar deneyin.");
+            return;
+        }
+        currentProductId = id;
+        document.getElementById("modalProductName").innerText = name;
+        document.getElementById("reviewModal").style.display = "block";
+        rating = 0; 
+        updateStars();
+        document.getElementById("reviewComment").value = "";
+    }
 
-        let products = order.items.map(i=>`
+    function closeModal() { document.getElementById("reviewModal").style.display = "none"; }
+    
+    function setRating(n) { rating = n; updateStars(); }
+    
+    function updateStars() {
+        const starElements = document.getElementById("stars").children;
+        for(let i=0; i<starElements.length; i++) {
+            starElements[i].innerText = i < rating ? "★" : "☆";
+        }
+    }
 
-<div class="order-product-row">
-                <div class="product-info-box">
-                    <img src="${i.product.image}" alt="${i.product.name}" class="order-product-image">
-                <span>${i.product.name} - ${i.price}₺</span>
-                <button class="review-btn" onclick="openModal('${i.product._id}','${i.product.name}')">Değerlendir</button>
-            </div>
-        `).join("");
+    async function submitReview() {
+        if(!rating) return alert("Lütfen puan seçin!");
+        if(!currentProductId || currentProductId === "undefined") return alert("Ürün ID hatası!");
 
-        div.innerHTML=`
-            <span class="order-date">${new Date(order.createdAt).toLocaleDateString()}</span>
-            ${products}
-            <div class="order-total">Toplam: ${order.totalAmount}₺</div>
-        `;
-        list.appendChild(div);
-    });
-}
+        try {
+            const res = await fetch(`/api/products/${currentProductId}/review`, {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json", 
+                    "Authorization": "Bearer " + token 
+                },
+                body: JSON.stringify({ 
+                    rating: Number(rating), 
+                    comment: document.getElementById("reviewComment").value 
+                })
+            });
+            
+            const data = await res.json();
+            
+            if(res.ok && data.success !== false) {
+                alert("Yorumunuz iletildi, teşekkürler!");
+                closeModal();
+            } else {
+                alert("Yorum yapılamadı: " + (data.message || "Bilinmeyen hata"));
+            }
+        } catch (err) { 
+            console.error("Yorum hatası:", err);
+            alert("Sunucu hatası!"); 
+        }
+    }
 
-function openModal(id,name){
-    currentProductId=id;
-    document.getElementById("modalProductName").innerText=name;
-    document.getElementById("reviewModal").style.display="block";
-    rating=0; updateStars();
-}
-
-function closeModal(){ document.getElementById("reviewModal").style.display="none"; }
-
-function setRating(n){ rating=n; updateStars(); }
-
-function updateStars(){
-    [...document.getElementById("stars").children]
-    .forEach((s,i)=>s.innerText=i<rating?"★":"☆");
-}
-
-async function submitReview(){
-    if(!rating) return alert("Puan seç!");
-    const comment=document.getElementById("reviewComment").value;
-    await fetch(`/api/products/${currentProductId}/review`,{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json",
-            "Authorization":"Bearer "+token
-        },
-        body:JSON.stringify({rating,comment})
-    });
-    closeModal();
-    alert("Teşekkürler!");
-}
-
-const hamburger=document.getElementById("hamburger");
-const nav=document.getElementById("navMenu");
-hamburger.onclick=()=>nav.classList.toggle("active");
-
-const logoutBtn=document.getElementById("logoutBtn");
-logoutBtn.style.display="inline";
-logoutBtn.onclick=()=>{localStorage.clear();window.location.href="index.html";};
-
-loadOrders();
+    loadOrders();
 </script>
-
 </body>
 </html>

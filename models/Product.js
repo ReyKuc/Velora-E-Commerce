@@ -28,7 +28,7 @@ const ProductSchema = new mongoose.Schema({
     },
     isActive: {
         type: Boolean,
-        default: true  // Varsayılan olarak tüm ürünler aktif
+        default: true  
     },
     stock: {
         type: Number,

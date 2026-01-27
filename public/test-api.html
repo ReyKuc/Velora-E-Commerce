@@ -157,12 +157,10 @@
 
         const data = await res.json();
         
-        // SONUCU EKRANA YAZDIR (Boş kalmaması için)
         if (data.success) {
             log('✅ Admin login BAŞARILI!', 'success');
             log(JSON.stringify(data, null, 2));
             
-            // Test panelindeyken otomatik yönlendirmeyi engelleyelim
             log('ℹ️ Not: Test panelinde olduğunuz için admin.html sayfasına otomatik yönlendirme yapılmadı.');
         } else {
             log('⚠️ Admin login BAŞARISIZ!', 'error');
@@ -194,7 +192,6 @@
             }
         }
 
-        // Sayfa yüklendiğinde otomatik test
         window.onload = () => {
             log('🚀 Test paneli hazır!');
             log('💡 İpucu: Önce "Auth Route Test" butonuna tıklayın');

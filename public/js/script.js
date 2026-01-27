@@ -1,10 +1,9 @@
 /* public/js/script.js */
 console.log("SCRIPT JS YÜKLENDİ");
 
-// ===== COMMON ELEMENTS =====
 const messageDiv = document.getElementById("message");
 
-// ===== LOGIN =====
+
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
@@ -42,7 +41,7 @@ if (loginForm) {
     });
 }
 
-// ===== REGISTER =====
+
 const registerForm = document.getElementById("registerForm");
 
 if (registerForm) {
@@ -90,14 +89,13 @@ if (registerForm) {
     });
 }
 
-// ===== LOGOUT =====
+
 function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     window.location.href = "/login.html";
 }
 
-// ===== ROLE GÖRE MENÜ GİZLEME =====
 document.addEventListener("DOMContentLoaded", () => {
     const role = localStorage.getItem("role");
 

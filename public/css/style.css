@@ -241,16 +241,16 @@ footer {
     display: flex;
     gap: 10px;
 }
-/* stockupdate.html içindeki bu kısmı güncelle */
+
 .stock-badge {
-    padding: 2px 8px;    /* Üst-alt 2px, sağ-sol 8px yaparak daralttık */
-    border-radius: 4px;  /* Köşeleri biraz daha keskin yaparak küçülttük */
-    font-size: 0.75em;   /* Yazı tipini küçülttük */
+    padding: 2px 8px;   
+    border-radius: 4px;  
+    font-size: 0.75em;  
     font-weight: 600;
     display: inline-block;
     margin-top: 5px;
 }
-/* Sekme butonları */
+
 .tab-container {
     display: flex;
     gap: 10px;

@@ -180,7 +180,7 @@ const messageDiv = document.getElementById("message");
 loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // trim() kullanarak olası boşluk hatalarını temizliyoruz
+    
     const usernameOrEmail = document.getElementById("usernameOrEmail").value.trim();
     const password = document.getElementById("password").value;
     const role = document.querySelector('input[name="role"]:checked').value;
@@ -197,7 +197,6 @@ loginForm.addEventListener("submit", async (e) => {
             body: JSON.stringify({ usernameOrEmail, password, role })
         });
 
-        // Yanıt durumunu kontrol et
         console.log("📡 Yanıt Durumu:", res.status);
         
         const data = await res.json();
@@ -209,13 +208,13 @@ loginForm.addEventListener("submit", async (e) => {
             messageDiv.textContent = data.message || "Giriş başarılı!";
             messageDiv.className = "message success";
 
-            // Verileri kaydet
+            
             localStorage.setItem("token", data.token);
             localStorage.setItem("role", data.role);
             localStorage.setItem("userEmail", usernameOrEmail);
 
             setTimeout(() => {
-                // Admin veya User yönlendirmesi
+            
                 if (data.role === "admin") {
                     window.location.href = "/admin.html";
                 } else {
@@ -226,7 +225,7 @@ loginForm.addEventListener("submit", async (e) => {
             messageDiv.textContent = data.message || "Giriş başarısız!";
             messageDiv.className = "message error";
             
-            // Eğer "Kullanıcı bulunamadı" diyorsa konsola bir uyarı daha basalım
+          
             if(data.message === "Kullanıcı bulunamadı") {
                 console.warn("DİKKAT: Veritabanında bu kullanıcı yok veya gönderilen string hatalı.");
             }

@@ -20,7 +20,7 @@ router.get("/products", async (req, res) => {
     }
 });
 
-// Ürün fiyatını güncelle
+
 router.put("/products/:id/price", async (req, res) => {
     try {
         const { id } = req.params;

@@ -1,4 +1,4 @@
-// server.js - VELORA FINAL STABLE VERSION
+// server.js 
 require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
@@ -9,13 +9,8 @@ const app = express();
 
 console.log('\n🚀 VELORA Server Başlatılıyor...\n');
 
-// ========================================
-// MIDDLEWARE
-// ========================================
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// Tarayıcı favicon ve sistem isteklerini sessizce karşıla
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 app.use('/.well-known', (req, res) => res.status(204).end());
 
@@ -27,18 +22,12 @@ app.use((req, res, next) => {
     next();
 });
 
-// Gelen istekleri terminale yazdır
+
 app.use((req, res, next) => {
     console.log(`📨 ${req.method} ${req.path} - ${new Date().toLocaleTimeString()}`);
     next();
 });
-
-// ========================================
-// API ROTALARI
-// ========================================
 console.log('📁 Rotalar yükleniyor...\n');
-
-// Modelleri önceden yükle (Review is not a constructor hatasını önlemek için)
 require("./models/Product");
 require("./models/Review");
 require("./models/Order");
@@ -56,13 +45,9 @@ try {
     console.error('❌ Rotalar yüklenirken KRİTİK HATA:', err.message);
 }
 
-// ========================================
-// STATIC FILES & HTML (Sıralama Önemli)
-// ========================================
-// Önce static klasörü tanımla
 app.use(express.static(path.join(__dirname, "public")));
 
-// Özel sayfa yönlendirmeleri
+
 const pages = ["login", "register", "admin", "cart", "orders", "products", "stockupdate"];
 pages.forEach(page => {
     app.get(`/${page}.html`, (req, res) => {
@@ -70,20 +55,16 @@ pages.forEach(page => {
     });
 });
 
-// Ana sayfa
+
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// ========================================
-// ERROR HANDLERS
-// ========================================
 app.use((req, res) => {
     if (req.path.startsWith('/api/')) {
         console.log('⚠️ 404 API bulunamadı:', req.path);
         return res.status(404).json({ success: false, message: "API Endpoint bulunamadı" });
     }
-    // HTML sayfaları için 404 gelirse index'e atabilir veya hata dönebilirsin
     res.status(404).send("Sayfa bulunamadı");
 });
 
@@ -91,10 +72,6 @@ app.use((err, req, res, next) => {
     console.error('💥 SUNUCU HATASI:', err.stack);
     res.status(500).json({ success: false, message: "Bir sunucu hatası oluştu" });
 });
-
-// ========================================
-// MONGODB & START
-// ========================================
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/velora";
 const PORT = process.env.PORT || 3000;
 

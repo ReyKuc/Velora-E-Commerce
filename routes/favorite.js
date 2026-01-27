@@ -6,10 +6,10 @@ const Product = require("../models/Product");
 const authMiddleware = require("../middleware/auth");
 const mongoose = require("mongoose");
 
-// Tüm rotalar için authMiddleware uygulandı
+
 router.use(authMiddleware);
 
-// Favorileri getir
+
 router.get("/", async (req, res) => {
     try {
         const userId = req.user.id;
@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-// YENİ: Belirli bir ürünün favorilerde olup olmadığını kontrol et
+
 router.get("/check", async (req, res) => {
     try {
         const userId = req.user.id;
@@ -45,7 +45,7 @@ router.get("/check", async (req, res) => {
     }
 });
 
-// Favoriye ürün ekleme
+
 router.post("/add", async (req, res) => {
     const { productId } = req.body;
     const userId = req.user.id;
@@ -78,7 +78,6 @@ router.post("/add", async (req, res) => {
     }
 });
 
-// YENİ: Favoriden çıkar (POST olarak)
 router.post("/remove", async (req, res) => {
     try {
         const userId = req.user.id;
@@ -98,7 +97,6 @@ router.post("/remove", async (req, res) => {
     }
 });
 
-// Favoriden çıkar (DELETE - Eski versiyon, geriye dönük uyumluluk için)
 router.delete("/remove/:productId", async (req, res) => {
     try {
         const userId = req.user.id;

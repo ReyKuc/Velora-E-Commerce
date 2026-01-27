@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const Cart = require("../models/Cart");
 const Product = require("../models/Product"); // Stok güncelleme için eklendi
+const Order = require("../models/Order");
 const auth = require("../middleware/auth");
 
 // SEPETİ GETİR
@@ -54,25 +55,23 @@ const Order = require("../models/Order");
 router.post("/checkout", auth, async (req, res) => {
     try {
         const cart = await Cart.findOne({ user: req.user.id }).populate("items.product");
-        if (!cart || cart.items.length === 0) return res.status(400).json({ success: false });
+        if (!cart || cart.items.length === 0) {
+            return res.status(400).json({ success: false, message: "Sepetiniz boş." });
+        }
 
-        // 1. Sipariş kaydı oluştur
-        const orderItems = cart.items.map(item => ({
-            product: item.product._id,
-            name: item.product.name,
-            price: item.product.price,
-            image: item.product.image,
-            quantity: item.quantity
-        }));
+        const orderItems = [];
+        for (const item of cart.items) {
+            if (!item.product) continue;
 
-        const newOrder = new Order({
-            user: req.user.id,
-            items: orderItems,
-            totalAmount: orderItems.reduce((total, item) => total + (item.price * item.quantity), 0)
-        });
+            orderItems.push({
+                product: item.product._id.toString,
+                name: item.product.name,
+                price: item.product.price,
+                image: item.product.image,
+                quantity: item.quantity
+            });
 
-        // 2. Stokları düşür
-        for (let item of cart.items) {
+            // Stok düşürme
             const product = await Product.findById(item.product._id);
             if (product) {
                 product.stock -= item.quantity;
@@ -80,11 +79,17 @@ router.post("/checkout", auth, async (req, res) => {
             }
         }
 
+        const newOrder = new Order({
+            user: req.user.id,
+            items: orderItems,
+            totalAmount: orderItems.reduce((total, i) => total + (i.price * i.quantity), 0)
+        });
+
         await newOrder.save();
-        cart.items = []; // Sepeti boşalt
+        cart.items = []; // Sepeti temizle
         await cart.save();
 
-        res.json({ success: true, message: "Siparişiniz 'Siparişlerim' sekmesine eklendi!" });
+        res.json({ success: true, message: "Sipariş başarılı!" });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
     }

@@ -1,17 +1,14 @@
-// routes/orders.js içeriği bu şekilde OLMALI:
 const express = require("express");
 const router = express.Router();
 const Order = require("../models/Order");
-const auth = require("../middleware/auth"); // 'auth' olarak al
+const auth = require("../middleware/auth");
 
-router.get("/my-orders", auth, async (req, res) => { // 'protect' değil 'auth' kullan
+router.get("/my-orders", auth, async (req, res) => {
     try {
-        const orders = await Order.find({ user: req.user.id })
-                                  .populate('items.product')
-                                  .sort({ createdAt: -1 });
+        const orders = await Order.find({ user: req.user.id }).sort({ createdAt: -1 });
         res.json(orders);
     } catch (err) {
-        res.status(500).json({ message: "Hata oluştu" });
+        res.status(500).json({ message: "Siparişler çekilirken bir hata oluştu." });
     }
 });
 
