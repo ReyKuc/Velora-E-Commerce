@@ -1,3 +1,4 @@
+<!--public/priceupdate.html-->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -135,6 +136,7 @@
         <a href="priceupdate.html"style="color: #d4af37;">FİYAT GÜNCELLEME</a>
         <a href="activation.html">AKTİVASYON</a>
         <a href="review.html" >YORUMLAR</a>
+        <a href="addProduct.html">ÜRÜN EKLE</a>
         <a href="#" id="logoutBtn">ÇIKIŞ</a>
     </nav>
 </header>
@@ -277,6 +279,10 @@ async function updatePriceOnServer(id, newPrice) {
         alert("Bağlantı hatası!");
     }
 }
+document.getElementById("logoutBtn").onclick = () => {
+        localStorage.clear();
+        window.location.href = "index.html";
+    };
 
 loadProducts();
 </script>

@@ -1,3 +1,4 @@
+<!--public/stockupdate.html-->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -168,12 +169,13 @@ nav { display: flex; justify-content: center; align-items: center; gap: 30px; }
 
 <header>
     <h1 style="color: #d4af37; text-align: center; margin-bottom: 10px;">VELORA</h1>
-    <nav>
+       <nav>
         <a href="admin.html">ADMİN PANELİ</a>
         <a href="stockupdate.html"style="color: #d4af37;">STOK GÜNCELLEME</a>
         <a href="priceupdate.html">FİYAT GÜNCELLEME</a>
         <a href="activation.html">AKTİVASYON</a>
         <a href="review.html" >YORUMLAR</a>
+        <a href="addProduct.html">ÜRÜN EKLE</a>
         <a href="#" id="logoutBtn">ÇIKIŞ</a>
     </nav>
 </header>
@@ -318,6 +320,10 @@ async function updateStock(productId, productName) {
     }
 }
 
+ document.getElementById("logoutBtn").onclick = () => {
+        localStorage.clear();
+        window.location.href = "index.html";
+    };
 loadProducts();
 </script>
 

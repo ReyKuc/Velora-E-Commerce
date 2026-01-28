@@ -6,11 +6,9 @@ const adminAuth = require("../middleware/adminAuth");
 const auth = require("../middleware/auth");
 const Review = require("../models/Review");
 
-
-// Tüm admin rotaları için admin kontrolünü başlat
 router.use(adminAuth);
 
-// Ürünleri Getir
+
 router.get("/products", async (req, res) => {
     try {
         const products = await Product.find({});
@@ -21,7 +19,6 @@ router.get("/products", async (req, res) => {
     }
 });
 
-// Fiyat Güncelle
 router.put("/products/:id/price", async (req, res) => {
     try {
         const { id } = req.params;
@@ -48,7 +45,6 @@ router.put("/products/:id/price", async (req, res) => {
     }
 });
 
-// Aktif/Pasif Yap
 router.put("/products/:id/toggle-active", async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
@@ -61,32 +57,95 @@ router.put("/products/:id/toggle-active", async (req, res) => {
     }
 });
 
-// Stok Güncelle
 router.put("/products/:id/stock", async (req, res) => {
     try {
         const { id } = req.params;
         const { stock } = req.body;
-        const updatedProduct = await Product.findByIdAndUpdate(
-            id, 
-            { stock: Number(stock) }, 
+
+        if (stock === undefined || stock === null || stock < 0) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "Geçerli bir stok değeri giriniz (0 veya üzeri)" 
+            });
+        }
+
+        const product = await Product.findByIdAndUpdate(
+            id,
+            { stock: parseInt(stock) },
             { new: true }
         );
-        res.json({ success: true, product: updatedProduct });
+
+        if (!product) {
+            return res.status(404).json({ 
+                success: false, 
+                message: "Ürün bulunamadı" 
+            });
+        }
+
+        res.json({ 
+            success: true, 
+            message: "Stok güncellendi", 
+            product 
+        });
     } catch (err) {
-        res.status(500).json({ success: false, message: err.message });
+        console.error(err);
+        res.status(500).json({ 
+            success: false, 
+            message: "Stok güncellenemedi" 
+        });
     }
 });
 
-// Admin için belirli bir yorumu silme rotası
-// routes/admin.js içindeki silme rotasını BU ŞEKİLDE GÜNCELLE:
+router.post("/products/add", async (req, res) => {
+    try {
+        const { name, price, stock, category, description, image, isActive } = req.body;
+
+        
+        if (!name || !price || stock === undefined || !category || !description || !image) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "Tüm alanları doldurun!" 
+            });
+        }
+
+       
+        const newProduct = new Product({
+            name: name.trim(),
+            price: Number(price),
+            stock: Number(stock),
+            category,
+            description: description.trim(),
+            image: image.trim(),
+            isActive: isActive !== undefined ? isActive : true
+        });
+
+        await newProduct.save();
+
+        res.status(201).json({ 
+            success: true, 
+            message: "Ürün başarıyla eklendi!",
+            product: newProduct
+        });
+
+    } catch (err) {
+        console.error("Ürün ekleme hatası:", err);
+        res.status(500).json({ 
+            success: false, 
+            message: "Ürün eklenirken hata oluştu: " + err.message 
+        });
+    }
+});
+
+
+
+
 
 router.delete("/products/:productId/reviews/:reviewId", async (req, res) => {
     try {
         const { reviewId } = req.params;
         console.log("🗑️ Review Modelinden siliniyor. ID:", reviewId);
 
-        // Product modelinde reviews dizisi OLMADIĞI için 
-        // direkt Review modeline gidip ID ile siliyoruz.
+      
         const deletedReview = await Review.findByIdAndDelete(reviewId);
 
         if (!deletedReview) {

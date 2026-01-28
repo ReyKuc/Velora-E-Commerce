@@ -85,8 +85,9 @@ nav a:hover {
         <a href="cart.html">SEPETİM</a>
          <a href="login.html" id="loginLink">GİRİŞ YAP</a>
             <a href="register.html" id="registerLink">KAYIT OL</a>
-           <a href="#" id="logoutBtn" class="logout-btn" style="display:none; ">
-    ->
+           <a href="#" id="logoutBtn" class="logout-btn" style="display:none; font-size: medium; "
+           >
+    ÇIKIŞ
 </a>
 <div id="logoutConfirm" class="logout-confirm">
         <p>Çıkış yapmak istediğine emin misin?</p>
@@ -115,7 +116,7 @@ nav a:hover {
 const favoriteItemsDiv = document.getElementById("favoriteItems");
 const messageDiv = document.getElementById("message");
 
-// Favorileri getir
+
 async function loadFavorites() {
     try {
         const token = localStorage.getItem("token");
@@ -175,7 +176,6 @@ async function loadFavorites() {
             favoriteItemsDiv.appendChild(div);
         });
 
-        // Favori sil
         document.querySelectorAll(".removeFavBtn").forEach(btn => {
             btn.addEventListener("click", async () => {
                 const id = btn.getAttribute("data-id");
@@ -192,7 +192,7 @@ async function loadFavorites() {
             });
         });
 
-        // Sepete ekle
+        
         document.querySelectorAll(".addToCartBtn").forEach(btn => {
             btn.addEventListener("click", async () => {
                 const productId = btn.getAttribute("data-id");

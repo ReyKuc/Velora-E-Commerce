@@ -1,3 +1,4 @@
+<!--public/admin.html-->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -121,9 +122,9 @@
             border-top: 1px solid #1a1a1a;
         }
 
-        /* Hamburger (Mobil İçin) */
+       
         .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; position: absolute; right: 20px; top: 30px; }
-        .hamburger span { width: 25px; height: 2px; background: #d4af37; }
+        .hamburger span { width: 27px; height: 3px; background: #ffffff; }
 
         @media (max-width: 768px) {
             nav { display: none; flex-direction: column; gap: 15px; padding: 20px; }
@@ -142,10 +143,13 @@
         <a href="priceupdate.html">FİYAT GÜNCELLEME</a>
         <a href="activation.html">AKTİVASYON</a>
         <a href="review.html">YORUMLAR</a>
+         <a href="addProduct.html">ÜRÜN EKLE</a>
         <a href="#" id="logoutBtn">ÇIKIŞ</a>
     </nav>
     <div class="hamburger" id="hamburger">
-        <span></span><span></span><span></span>
+        <span></span>
+        <span></span>
+        <span></span>
     </div>
 </header>
 
@@ -176,7 +180,7 @@
 </footer>
 
 <script>
-    // Yetki Kontrolü
+    
     (function checkAuth() {
         const token = localStorage.getItem("token");
         const role = localStorage.getItem("role");
@@ -192,10 +196,9 @@
     const yesBtn = document.getElementById("confirmYes");
     const noBtn = document.getElementById("confirmNo");
 
-    // Mobil Menü
     hamburger.addEventListener("click", () => nav.classList.toggle("active"));
 
-    // Çıkış İşlemleri
+ 
     logoutBtn.addEventListener("click", (e) => {
         e.preventDefault();
         logoutConfirm.style.display = "block";

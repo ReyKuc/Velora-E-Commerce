@@ -57,12 +57,11 @@ router.post("/checkout", auth, async (req, res) => {
         for (const item of cart.items) {
             if (!item.product) continue;
 
-            // Hata tespiti için konsola yazdırıyoruz (Terminalden kontrol edebilirsin)
+       
             console.log("İşlenen Ürün ID:", item.product._id);
 
             orderItems.push({
-                // EN GARANTİ YÖNTEM: .toString() kullanmadan direkt ID'yi atıyoruz.
-                // Eğer hata devam ederse item.product._id yerine direkt item.product kullanın.
+        
                 product: item.product._id, 
                 name: item.product.name,
                 price: item.product.price,

@@ -109,3 +109,24 @@ document.addEventListener("DOMContentLoaded", () => {
         if (adminPanelBtn) adminPanelBtn.style.display = "block";
     }
 });
+const themeToggle = document.getElementById("themeToggle");
+const currentTheme = localStorage.getItem("theme");
+
+if (currentTheme === "light") {
+    document.body.classList.add("light-mode");
+    themeToggle.textContent = "☀️ Mod";
+}
+
+themeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("light-mode");
+    
+    let theme = "dark";
+    if (document.body.classList.contains("light-mode")) {
+        theme = "light";
+        themeToggle.textContent = "☀️ Mod";
+    } else {
+        themeToggle.textContent = "🌙 Mod";
+    }
+    
+    localStorage.setItem("theme", theme);
+});

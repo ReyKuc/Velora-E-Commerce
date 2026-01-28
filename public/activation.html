@@ -1,3 +1,4 @@
+<!--public/activation.html-->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -215,6 +216,10 @@ async function toggleStatus(productId, btn) {
         btn.style.opacity = "1";
     }
 }
+document.getElementById("logoutBtn").onclick = () => {
+        localStorage.clear();
+        window.location.href = "index.html";
+    };
 
 
 loadProducts();

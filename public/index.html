@@ -1,4 +1,3 @@
-<!--public/index.html-->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -7,7 +6,6 @@
     <title>VELORA | Ana Sayfa</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
     <style>
-       
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
@@ -17,7 +15,6 @@
             overflow-x: hidden;
         }
 
-       
         header {
             background-color: #000;
             padding: 20px 0 10px;
@@ -31,8 +28,6 @@
             gap: 30px;
             flex-wrap: wrap;
             position: relative;
-
-
         }
 
         nav a {
@@ -42,18 +37,10 @@
             letter-spacing: 1px;
             transition: color 0.3s ease, transform 0.3s ease;
         }
-        
 
         nav a:hover {
             color: #d4af37;
             transform: scale(1.05);
-        }
-
-        hr {
-            width: 90%;
-            margin: 10px auto 0;
-            border: none;
-            border-top: 1.5px solid #d4af37;
         }
 
         .hero {
@@ -80,7 +67,126 @@
             opacity: 0.9;
         }
 
-        
+        /* Öneri Bölümü */
+        .recommendations-container {
+            margin: 60px auto;
+            max-width: 1400px;
+            padding: 40px 30px;
+        }
+
+        .recommendations-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #d4af37;
+        }
+
+        .recommendations-title {
+            color: #d4af37;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+        }
+
+        .personalized-badge {
+            background-color: #d4af37;
+            color: #000;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .products-grid {
+            display: grid;
+            /* Sayfayı doldurmak için grid yapısı optimize edildi */
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .product-card {
+            background-color: #0d0d0d;
+            border: 1px solid #d4af37;
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 320px; /* Daha dolgun görünüm için yükseklik artırıldı */
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .product-category {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            color: #d4af37;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-cart, .btn-fav {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-cart {
+            background-color: #d4af37;
+            color: #000;
+        }
+
+        .btn-cart:hover {
+            background-color: #e0b84f;
+        }
+
+        .btn-fav {
+            background-color: transparent;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+        }
+
+        .btn-fav:hover {
+            background-color: #d4af37;
+            color: #000;
+        }
+
+        /* Kategoriler Bölümü */
         .categories-container {
             margin: 80px auto;
             max-width: 1000px;
@@ -121,61 +227,55 @@
         .category:hover {
             transform: scale(1.08);
             background-color: #c39b31;
-            box-shadow: 0 0 25px rgba(212,175,55,0.7);
+            box-shadow: 0 0 250px rgba(212,175,55,0.7);
         }
 
-     
         footer {
             background-color: #000;
             color: #f5f5f5;
             text-align: center;
-            padding: 15px 0;
+            padding: 30px 0;
             border-top: 1px solid rgba(212,175,55,0.3);
         }
 
-     @media (max-width: 768px) {
+        .logout-confirm {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background: #111;
+            border: 1px solid #d4af37;
+            padding: 15px;
+            border-radius: 10px;
+            z-index: 2000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .logout-confirm button {
+            margin: 5px;
+            padding: 5px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+        }
+        #confirmYes { background: #d4af37; color: black; }
+        #confirmNo { background: #333; color: white; }
 
-    header {
-        position: relative;
-        border-bottom: none;
-    }
-
-    nav {
-        display: none;
-        position: relative;
-        top: 70px;
-        right: 20px;
-        background: black;
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1rem;
-        border: 1px solid #d4af37;
-        z-index: 1000;
-    }
-
-    nav.active {
-        display: flex;
-    }
-
-    .hamburger {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        position: absolute;
-        top: 25px;
-        right: 20px;
-        z-index: 1100;
-        cursor: pointer;
-    }
-
-    .hamburger span {
-        width: 28px;
-        height: 3px;
-        background: #ffffff;
-    }
-}
-
-
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            nav {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: #000;
+                padding: 20px;
+                border-bottom: 1px solid #d4af37;
+                z-index: 1000;
+            }
+            nav.active { display: flex; }
+            .products-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+        }
     </style>
 </head>
 <body>
@@ -189,23 +289,16 @@
             <a href="favorites.html">FAVORİLER</a>
             <a href="login.html" id="loginLink">GİRİŞ YAP</a>
             <a href="register.html" id="registerLink">KAYIT OL</a>
-           <a href="#" id="logoutBtn" class="logout-btn" style="display:none; ">
-    ->
-</a>
-<div id="logoutConfirm" class="logout-confirm">
-        <p>Çıkış yapmak istediğine emin misin?</p>
-        <button id="confirmYes">Evet</button>
-        <button id="confirmNo">Hayır</button>
-    </div>
-
+            <a href="#" id="logoutBtn" style="display:none; color: #d4af37; font-size: 1.2rem;">ÇIKIŞ</a><button id="themeToggle" class="theme-toggle">🌙 Mod</button>
+            
+            <div id="logoutConfirm" class="logout-confirm" style="display:none;">
+                <p style="font-size: 0.9rem; margin-bottom: 10px;">Çıkış yapılsın mı?</p>
+                <button id="confirmYes">Evet</button>
+                <button id="confirmNo">Hayır</button>
+            </div>
         </nav>
-         <div class="hamburger" id="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-        
-    </div>
-        
+        <div class="hamburger" id="hamburger" style="display: none;"> <span></span><span></span><span></span>
+        </div>
     </header>
 
     <section class="hero">
@@ -213,81 +306,137 @@
         <p>Velora İle Lüks Alışverişin Yeni Dünyasına Adım Atın</p>
     </section>
 
-   <section id="categories" class="categories-container">
-    <h2>KATEGORİLER</h2>
-    <div class="categories">
-        <a href="products.html?category=Kadın" class="category">Kadın</a>
-        <a href="products.html?category=Erkek" class="category">Erkek</a>
-        <a href="products.html?category=Kozmetik" class="category">Kozmetik</a>
-        <a href="products.html?category=Aksesuar" class="category">Aksesuar</a>
-        <a href="products.html?category=Çanta" class="category">Çanta</a>
-        <a href="products.html?category=Ayakkabı" class="category">Ayakkabı</a>
-    </div>
-   
-</section>
+    <section id="recommendations" class="recommendations-container" style="display:none;">
+        <div class="recommendations-header">
+            <h2 class="recommendations-title" id="recommendationsTitle">Bunlarda İlginizi Çekebilir</h2>
+            <span class="personalized-badge" id="personalizedBadge">Kişiselleştirilmiş</span>
+        </div>
+        <div class="products-grid" id="recommendedProducts"></div>
+    </section>
+
+    <section id="categories" class="categories-container">
+        <h2>KATEGORİLER</h2>
+        <div class="categories">
+            <a href="products.html?category=Kadın" class="category">Kadın</a>
+            <a href="products.html?category=Erkek" class="category">Erkek</a>
+            <a href="products.html?category=Kozmetik" class="category">Kozmetik</a>
+            <a href="products.html?category=Aksesuar" class="category">Aksesuar</a>
+            <a href="products.html?category=Çanta" class="category">Çanta</a>
+            <a href="products.html?category=Ayakkabı" class="category">Ayakkabı</a>
+        </div>
+    </section>
 
     <footer>
-        <p>&copy; 2025 VELORA</p>
+        <p>&copy; 2026 VELORA </p>
     </footer>
+
 <script>
-
-const hamburger = document.getElementById("hamburger");
-const nav = document.getElementById("navMenu");
-
-hamburger.addEventListener("click", () => {
-    nav.classList.toggle("active");
-});
+const token = localStorage.getItem("token");
 
 
-const logoutBtn = document.getElementById("logoutBtn");
-const logoutConfirm = document.getElementById("logoutConfirm");
-const yesBtn = document.getElementById("confirmYes");
-const noBtn = document.getElementById("confirmNo");
-
-logoutConfirm.style.display = "none";
-
-if (localStorage.getItem("token")) {
-    logoutBtn.style.display = "inline-block";
+if (token) {
+    document.getElementById("logoutBtn").style.display = "inline-block";
+    document.getElementById("loginLink").style.display = "none";
+    document.getElementById("registerLink").style.display = "none";
+    loadRecommendations();
 }
 
 
-logoutBtn.addEventListener("click", (e) => {
+document.getElementById("logoutBtn").onclick = (e) => {
     e.preventDefault();
-    logoutConfirm.style.display = "block";
-});
+    document.getElementById("logoutConfirm").style.display = "block";
+};
 
+document.getElementById("confirmNo").onclick = () => {
+    document.getElementById("logoutConfirm").style.display = "none";
+};
 
-noBtn.addEventListener("click", () => {
-    logoutConfirm.style.display = "none";
-});
+document.getElementById("confirmYes").onclick = () => {
+    localStorage.clear();
+    window.location.reload();
+};
 
+async function loadRecommendations() {
+    try {
+        const res = await fetch("/api/recommendations", {
+            headers: { "Authorization": "Bearer " + token }
+        });
 
-yesBtn.addEventListener("click", () => {
-    localStorage.removeItem("token");
-    logoutConfirm.innerHTML = "<p>Çıkış yapıldı</p>";
+        const data = await res.json();
 
-    setTimeout(() => {
-        logoutConfirm.style.display = "none";
-        logoutBtn.style.display = "none";
-    }, 1200);
-});
+        if (data.success && data.recommendations && data.recommendations.length > 0) {
+            const container = document.getElementById("recommendations");
+            const productsGrid = document.getElementById("recommendedProducts");
+            const title = document.getElementById("recommendationsTitle");
+            const badge = document.getElementById("personalizedBadge");
 
-const loginLink = document.getElementById("loginLink");
-const registerLink = document.getElementById("registerLink");
+         
+            if (data.isPersonalized) {
+                title.textContent = "Sana Özel Ürünler";
+                badge.style.display = "inline-block";
+            } else {
+                title.textContent = "Yeni Gelenleri Keşfedin";
+                badge.style.display = "none";
+            }
 
-if (localStorage.getItem("token")) {
-    loginLink.style.display = "none";
-    registerLink.style.display = "none";
-    logoutBtn.style.display = "inline-block";
-} else {
-    loginLink.style.display = "inline-block";
-    registerLink.style.display = "inline-block";
-    logoutBtn.style.display = "none";
+            productsGrid.innerHTML = "";
+            data.recommendations.forEach(product => {
+                const card = document.createElement("div");
+                card.className = "product-card";
+                card.onclick = () => window.location.href = `products.html?id=${product._id}`;
+
+                card.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}" class="product-image">
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-category">${product.category}</div>
+                    <div class="product-price">${product.price}₺</div>
+                    <div class="product-actions" onclick="event.stopPropagation()">
+                        <button class="btn-cart" onclick="addToCart('${product._id}')">Sepete Ekle</button>
+                        <button class="btn-fav" onclick="toggleFavorite('${product._id}')">♡</button>
+                    </div>
+                `;
+                productsGrid.appendChild(card);
+            });
+
+            container.style.display = "block";
+        }
+    } catch (err) {
+        console.error("Öneri hatası:", err);
+    }
 }
 
+async function addToCart(productId) {
+    try {
+        const res = await fetch("/api/cart/add", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json", 
+                "Authorization": "Bearer " + token 
+            },
+            body: JSON.stringify({ productId, quantity: 1 })
+        });
+        if (res.ok) alert("Ürün sepetinize eklendi.");
+    } catch (err) { alert("Hata oluştu."); }
+}
+
+async function toggleFavorite(productId) {
+    try {
+        const res = await fetch("/api/favorite/add", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json", 
+                "Authorization": "Bearer " + token 
+            },
+            body: JSON.stringify({ productId })
+        });
+        if (res.ok) alert("Favorilere güncellendi.");
+    } catch (err) { alert("Hata oluştu."); }
+}
+
+document.getElementById("hamburger").onclick = () => {
+    document.getElementById("navMenu").classList.toggle("active");
+};
 </script>
-
-
 
 </body>
 </html>
