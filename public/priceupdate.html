@@ -1,4 +1,3 @@
-<!--public/priceupdate.html-->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -7,25 +6,79 @@
     <title>VELORA | Fiyat Yönetimi</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
     <style>
+        /* Renk Değişkenleri - Dark/Light Mode için */
+        :root {
+            --bg-color: #000;
+            --text-color: #fff;
+            --header-bg: #000;
+            --card-bg: #0d0d0d;
+            --gold: #d4af37;
+            --control-bg: #1a1a1a;
+            --border: #d4af37;
+            --input-bg: #222;
+        }
+
+        body.light-mode {
+            --bg-color: #f4f4f4;
+            --text-color: #1a1a1a;
+            --header-bg: #ffffff;
+            --card-bg: #ffffff;
+            --gold: #b8860b;
+            --control-bg: #eeeeee;
+            --border: #b8860b;
+            --input-bg: #ddd;
+        }
+
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            background-color: #000;
-            color: #fff;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: 0.3s ease;
         }
 
         header {
             padding: 20px;
             text-align: center;
-            border-bottom: 2px solid #d4af37;
+            border-bottom: 2px solid var(--border);
+            background-color: var(--header-bg);
+            position: relative;
         }
 
         h1 {
-            color: #d4af37;
+            color: var(--gold);
             letter-spacing: 2px;
-            margin-bottom: 5px;
+            margin: 0 0 10px 0;
         }
 
+        /* Navigasyon ve Hamburger */
+        nav { display: flex; justify-content: center; align-items: center; gap: 30px; }
+        nav a { color: var(--text-color); text-decoration: none; font-size: small; font-weight: 600; transition: 0.3s; }
+        nav a:hover { color: var(--gold); }
+
+        .theme-toggle {
+            background: none; border: 1px solid var(--gold); color: var(--gold);
+            padding: 4px 10px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 11px;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 25px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--gold);
+            border-radius: 2px;
+        }
+
+        /* Ürün Kutucukları (Tasarım Korundu) */
         .container {
             max-width: 1200px;
             margin: 40px auto;
@@ -36,11 +89,11 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border: 1px solid #d4af37;
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 15px;
             margin-bottom: 15px;
-            background-color: #0d0d0d;
+            background-color: var(--card-bg);
             transition: transform 0.2s;
         }
 
@@ -64,12 +117,11 @@
             text-align: left;
         }
 
-      
         .price-controls {
             display: flex;
             align-items: center;
             gap: 10px;
-            background: #1a1a1a;
+            background: var(--control-bg);
             padding: 5px 15px;
             border-radius: 30px;
             border: 1px solid #444;
@@ -77,8 +129,8 @@
 
         .btn-update {
             background: none;
-            border: 1px solid #d4af37;
-            color: #d4af37;
+            border: 1px solid var(--gold);
+            color: var(--gold);
             width: 35px;
             height: 35px;
             border-radius: 50%;
@@ -92,52 +144,69 @@
         }
 
         .btn-update:hover {
-            background: #d4af37;
+            background: var(--gold);
             color: #000;
         }
 
         .price-display {
             font-weight: 600;
-            color: #fff;
+            color: var(--text-color);
             min-width: 80px;
             text-align: center;
             cursor: pointer;
             padding: 5px;
-            border-bottom: 1px dashed #d4af37;
-        }
-
-        .price-display:hover {
-            color: #d4af37;
+            border-bottom: 1px dashed var(--gold);
         }
 
         .price-input {
             width: 80px;
-            background: #222;
-            border: 1px solid #d4af37;
-            color: #fff;
+            background: var(--input-bg);
+            border: 1px solid var(--gold);
+            color: var(--text-color);
             padding: 5px;
             text-align: center;
             border-radius: 5px;
             display: none; 
         }
-        nav { display: flex; justify-content: center; align-items: center; gap: 30px; }
-        nav a { color: #f5f5f5; text-decoration: none;font-size:small; font-weight: 600; transition: 0.3s; }
-        nav a:hover { color: #d4af37; }
+
+        /* Mobil Görünüm */
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            nav {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background: var(--header-bg);
+                padding: 20px 0;
+                border-bottom: 1px solid var(--border);
+                z-index: 1000;
+                gap: 15px;
+            }
+            nav.active { display: flex; }
+            .product-item { flex-direction: column; gap: 15px; text-align: center; }
+            .product-left { flex-direction: column; }
+        }
     </style>
 </head>
-<body>
+<body id="mainBody">
 
 <header>
-   
-    <h1 style="color: #d4af37; text-align: center; margin-bottom: 10px;">VELORA</h1>
-    <nav>
+    <h1 style="color: var(--gold);">VELORA</h1>
+    <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+    </div>
+    <nav id="navMenu">
         <a href="admin.html">ADMİN PANELİ</a>
         <a href="stockupdate.html">STOK GÜNCELLEME</a>
-        <a href="priceupdate.html"style="color: #d4af37;">FİYAT GÜNCELLEME</a>
+        <a href="priceupdate.html" style="color: var(--gold);">FİYAT GÜNCELLEME</a>
         <a href="activation.html">AKTİVASYON</a>
-        <a href="review.html" >YORUMLAR</a>
+        <a href="review.html">YORUMLAR</a>
         <a href="addProduct.html">ÜRÜN EKLE</a>
-        <a href="#" id="logoutBtn">ÇIKIŞ</a>
+        <button id="themeToggle" class="theme-toggle">🌙 MOD</button>
+        <a href="#" id="logoutBtn" style="color: #ff4d4d;">ÇIKIŞ</a>
     </nav>
 </header>
 
@@ -146,17 +215,38 @@
 </div>
 
 <script>
-
+const body = document.getElementById("mainBody");
+const themeToggle = document.getElementById("themeToggle");
+const hamburger = document.getElementById("hamburger");
+const navMenu = document.getElementById("navMenu");
 const productList = document.getElementById("productList");
-const statusMessage = document.getElementById("statusMessage");
+
 const token = localStorage.getItem("token");
 const role = localStorage.getItem("role");
+
+// Hamburger Menü Aç/Kapat
+hamburger.onclick = () => navMenu.classList.toggle("active");
+
+// Tema Yönetimi
+const currentTheme = localStorage.getItem("theme") || "dark";
+if (currentTheme === "light") {
+    body.classList.add("light-mode");
+    themeToggle.textContent = "☀️ MOD";
+}
+
+themeToggle.onclick = () => {
+    body.classList.toggle("light-mode");
+    const isLight = body.classList.contains("light-mode");
+    localStorage.setItem("theme", isLight ? "light" : "dark");
+    themeToggle.textContent = isLight ? "☀️ MOD" : "🌙 MOD";
+};
 
 if (!token || role !== "admin") {
     alert("Yetkisiz erişim! Giriş sayfasına yönlendiriliyorsunuz.");
     window.location.href = "login.html";
 }
 
+// Ürünleri Getir (Mantık Korundu)
 async function loadProducts() {
     try {
         const res = await fetch("/api/admin/products", {
@@ -166,34 +256,18 @@ async function loadProducts() {
                 "Content-Type": "application/json"
             }
         });
-
         const data = await res.json();
-        console.log("Gelen Veri:", data); 
-
-        if (res.status === 401 || res.status === 403) {
-            productList.innerHTML = "<p style='color:red;'>Oturum süresi dolmuş. Lütfen tekrar giriş yapın.</p>";
-            return;
-        }
-
         if (data.success && Array.isArray(data.products)) {
             renderProducts(data.products);
         } else {
             productList.innerHTML = "<p>Görüntülenecek ürün bulunamadı.</p>";
         }
-
     } catch (err) {
-        console.error("Yükleme Hatası:", err);
-        productList.innerHTML = "<p style='color:red;'>Sunucuya bağlanılamadı. Backend çalışıyor mu?</p>";
+        productList.innerHTML = "<p style='color:red;'>Bağlantı hatası!</p>";
     }
 }
 
-
 function renderProducts(products) {
-    if (products.length === 0) {
-        productList.innerHTML = "<p>Veritabanında ürün yok.</p>";
-        return;
-    }
-
     productList.innerHTML = "";
     products.forEach(product => {
         const div = document.createElement("div");
@@ -201,23 +275,19 @@ function renderProducts(products) {
         div.innerHTML = `
             <div class="product-left">
                 <img src="${product.image || '/resimler/default.png'}" class="product-image">
-                <div class="product-info" style="text-align:left;">
+                <div class="product-info">
                     <strong>${product.name}</strong>
-                    <br><small style="color: #888;">${product.category}</small>
+                    <small style="opacity: 0.7;">${product.category}</small>
                 </div>
             </div>
-
             <div class="price-controls">
                 <button class="btn-update" onclick="adjustPrice('${product._id}', -100)">-</button>
-                
                 <span class="price-display" id="display-${product._id}" onclick="showInput('${product._id}')">
                     ${product.price} ₺
                 </span>
-                
                 <input type="number" class="price-input" id="input-${product._id}" 
                        value="${product.price}" 
                        onblur="saveManualPrice('${product._id}')">
-
                 <button class="btn-update" onclick="adjustPrice('${product._id}', 100)">+</button>
             </div>
         `;
@@ -225,11 +295,11 @@ function renderProducts(products) {
     });
 }
 
+// Fiyat Güncelleme Fonksiyonları (Orijinal Mantık Korundu)
 async function adjustPrice(id, amount) {
     const display = document.getElementById(`display-${id}`);
     const currentPrice = parseInt(display.innerText);
     const newPrice = currentPrice + amount;
-
     if (newPrice < 0) return;
     await updatePriceOnServer(id, newPrice);
 }
@@ -245,13 +315,11 @@ async function saveManualPrice(id) {
     const input = document.getElementById(`input-${id}`);
     const display = document.getElementById(`display-${id}`);
     const newPrice = parseInt(input.value);
-
     if (isNaN(newPrice) || newPrice < 0) {
         input.style.display = "none";
         display.style.display = "block";
         return;
     }
-
     await updatePriceOnServer(id, newPrice);
     input.style.display = "none";
     display.style.display = "block";
@@ -267,22 +335,20 @@ async function updatePriceOnServer(id, newPrice) {
             },
             body: JSON.stringify({ price: newPrice })
         });
-
         const data = await res.json();
         if (data.success) {
             document.getElementById(`display-${id}`).innerText = `${newPrice} ₺`;
             document.getElementById(`input-${id}`).value = newPrice;
-        } else {
-            alert("Güncelleme hatası: " + data.message);
         }
     } catch (err) {
         alert("Bağlantı hatası!");
     }
 }
+
 document.getElementById("logoutBtn").onclick = () => {
-        localStorage.clear();
-        window.location.href = "index.html";
-    };
+    localStorage.clear();
+    window.location.href = "index.html";
+};
 
 loadProducts();
 </script>

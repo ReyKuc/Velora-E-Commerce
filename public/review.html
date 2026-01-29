@@ -1,4 +1,3 @@
-<!--public/review.html-->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -7,133 +6,146 @@
     <title>VELORA | Yorum Yönetimi</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
     <style>
+        /* Tasarım Değişkenleri */
+        :root {
+            --bg-color: #000;
+            --text-color: #fff;
+            --header-bg: #000;
+            --card-bg: #0d0d0d;
+            --gold: #d4af37;
+            --border: #d4af37;
+            --modal-bg: #1a1a1a;
+            --review-card: #0d0d0d;
+        }
+
+        body.light-mode {
+            --bg-color: #f4f4f4;
+            --text-color: #1a1a1a;
+            --header-bg: #ffffff;
+            --card-bg: #ffffff;
+            --gold: #b8860b;
+            --border: #b8860b;
+            --modal-bg: #ffffff;
+            --review-card: #f9f9f9;
+        }
+
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            background-color: #000;
-            color: #fff;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: 0.3s ease;
         }
 
         header {
             padding: 20px;
             text-align: center;
-            border-bottom: 2px solid #d4af37;
+            border-bottom: 2px solid var(--border);
+            background-color: var(--header-bg);
+            position: relative;
         }
 
-        h1 {
-            color: #d4af37;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
-        }
+        h1 { color: var(--gold); letter-spacing: 2px; margin: 0 0 5px 0; }
 
+        /* Navigasyon & Hamburger */
         nav { display: flex; justify-content: center; align-items: center; gap: 30px; margin-top: 10px; }
-        nav a { color: #f5f5f5; text-decoration: none; font-weight: 600; font-size:small;transition: 0.3s; }
-        nav a:hover { color: #d4af37; }
+        nav a { color: var(--text-color); text-decoration: none; font-weight: 600; font-size: small; transition: 0.3s; }
+        nav a:hover { color: var(--gold); }
 
-        .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 20px;
+        .theme-toggle {
+            background: none; border: 1px solid var(--gold); color: var(--gold);
+            padding: 4px 10px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 11px;
         }
+
+        .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; position: absolute; right: 20px; top: 30px; }
+        .hamburger span { width: 27px; height: 3px; background: var(--gold); }
+
+        /* Konteyner ve Kartlar */
+        .container { max-width: 1200px; margin: 40px auto; padding: 20px; }
 
         .product-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 1px solid #d4af37;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background-color: #0d0d0d;
-            transition: transform 0.2s;
+            display: flex; align-items: center; justify-content: space-between;
+            border: 1px solid var(--border); border-radius: 12px; padding: 15px;
+            margin-bottom: 15px; background-color: var(--card-bg); transition: 0.2s;
         }
 
-        .product-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .product-image {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid #333;
-        }
-
-        .product-info {
-            display: flex;
-            flex-direction: column;
-            text-align: left;
-        }
+        .product-left { display: flex; align-items: center; gap: 15px; }
+        .product-image { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
 
         .reviews-btn {
-            background: none;
-            border: 1px solid #d4af37;
-            color: #d4af37;
-            padding: 8px 18px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
+            background: none; border: 1px solid var(--gold); color: var(--gold);
+            padding: 8px 18px; border-radius: 30px; cursor: pointer; font-weight: 600; transition: 0.2s;
         }
-
-        .reviews-btn:hover {
-            background: #d4af37;
-            color: #000;
-        }
+        .reviews-btn:hover { background: var(--gold); color: #000; }
 
         /* Modal Tasarımı */
         .reviews-modal {
-            display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9);
-            z-index: 9999; padding: 20px; overflow-y: auto; align-items: center;
+            display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
+            z-index: 9999; padding: 20px; overflow-y: auto; align-items: center; justify-content: center;
         }
-        .reviews-modal.active { display: flex; justify-content: center; }
+        .reviews-modal.active { display: flex; }
         .modal-content {
-            background: #1a1a1a; width: 100%; max-width: 600px; margin: auto;
-            border: 1px solid #d4af37; border-radius: 15px; padding: 30px; position: relative;
+            background: var(--modal-bg); width: 100%; max-width: 600px;
+            border: 1px solid var(--gold); border-radius: 15px; padding: 30px; position: relative;
+            color: var(--text-color);
         }
 
         .review-card {
-            background: #0d0d0d; padding: 15px; border-radius: 10px; margin-bottom: 15px;
-            border: 1px solid #333; border-left: 4px solid #d4af37; display: flex; 
-            justify-content: space-between; align-items: flex-start;
+            background: var(--review-card); padding: 15px; border-radius: 10px; margin-bottom: 15px;
+            border: 1px solid var(--border); border-left: 5px solid var(--gold);
+            display: flex; justify-content: space-between; align-items: flex-start;
         }
 
         .stars { color: #ffd700; margin-bottom: 5px; }
         .delete-review-btn {
-            background: #e74c3c; color: white; border: none; padding: 5px 12px;
-            border-radius: 5px; cursor: pointer; font-size: 0.75rem;
+            background: #e74c3c; color: white; border: none; padding: 6px 12px;
+            border-radius: 5px; cursor: pointer; font-size: 0.75rem; transition: 0.2s;
         }
-        .delete-review-btn:hover { background: #c0392b; }
-        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 30px; color: #d4af37; cursor: pointer; background:none; border:none;}
+        .delete-review-btn:hover { background: #c0392b; transform: scale(1.05); }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 30px; color: var(--gold); cursor: pointer; background:none; border:none; }
+
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            nav {
+                display: none; flex-direction: column; position: absolute; top: 85px; left: 0;
+                width: 100%; background: var(--header-bg); padding: 20px 0;
+                border-bottom: 1px solid var(--border); z-index: 1000; gap: 15px;
+            }
+            nav.active { display: flex; }
+            .product-item { flex-direction: column; text-align: center; gap: 15px; }
+            .product-left { flex-direction: column; }
+            .reviews-btn { width: 100%; }
+        }
     </style>
 </head>
-<body>
+<body id="mainBody">
 
 <header>
     <h1>VELORA</h1>
-    <nav>
+    <nav id="navMenu">
         <a href="admin.html">ADMİN PANELİ</a>
         <a href="stockupdate.html">STOK GÜNCELLEME</a>
         <a href="priceupdate.html">FİYAT GÜNCELLEME</a>
         <a href="activation.html">AKTİVASYON</a>
-        <a href="review.html" style="color: #d4af37;">YORUMLAR</a>
+        <a href="review.html" style="color: var(--gold);">YORUMLAR</a>
         <a href="addProduct.html">ÜRÜN EKLE</a>
-        <a href="#" id="logoutBtn">ÇIKIŞ</a>
+        <button id="themeToggle" class="theme-toggle">🌙 MOD</button>
+        <a href="#" id="logoutBtn" style="color: #ff4d4d;">ÇIKIŞ</a>
     </nav>
+    <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+    </div>
 </header>
 
 <div class="container">
-
+    <h2 style="color: var(--gold); text-align: center; margin-bottom: 30px;">Yorum Yönetimi</h2>
     <div id="productList">Ürünler yükleniyor...</div>
 </div>
 
-<div id="reviewsModal" class="reviews-modal">
+<div id="reviewsModal" class="reviews-modal" onclick="if(event.target === this) closeModal()">
     <div class="modal-content">
         <button class="close-modal" onclick="closeModal()">&times;</button>
-        <h3 id="modalTitle" style="color: #d4af37; margin-bottom: 20px;">Yorumlar</h3>
+        <h3 id="modalTitle" style="color: var(--gold); margin-bottom: 20px; padding-right: 30px;">Yorumlar</h3>
         <div id="reviewsContainer"></div>
     </div>
 </div>
@@ -141,10 +153,28 @@
 <script>
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
+    const body = document.getElementById("mainBody");
+    const themeToggle = document.getElementById("themeToggle");
+    const hamburger = document.getElementById("hamburger");
+    const navMenu = document.getElementById("navMenu");
 
-    if (!token || role !== "admin") {
-        window.location.href = "login.html";
+    if (!token || role !== "admin") { window.location.href = "login.html"; }
+
+    // Hamburger & Tema
+    hamburger.onclick = () => navMenu.classList.toggle("active");
+
+    const currentTheme = localStorage.getItem("theme") || "dark";
+    if (currentTheme === "light") {
+        body.classList.add("light-mode");
+        themeToggle.textContent = "☀️ MOD";
     }
+
+    themeToggle.onclick = () => {
+        body.classList.toggle("light-mode");
+        const isLight = body.classList.contains("light-mode");
+        localStorage.setItem("theme", isLight ? "light" : "dark");
+        themeToggle.textContent = isLight ? "☀️ MOD" : "🌙 MOD";
+    };
 
     async function loadProducts() {
         try {
@@ -161,14 +191,14 @@
                         <img src="${p.image}" class="product-image">
                         <div class="product-info">
                             <strong>${p.name}</strong>
-                            <small style="color:#888">${p.category} | ${p.price}₺</small>
+                            <small style="opacity: 0.7;">${p.category} | ${p.price}₺</small>
                         </div>
                     </div>
                     <button class="reviews-btn" onclick="openReviews('${p._id}', '${p.name}')">Yorumları Gör</button>
                 `;
                 list.appendChild(div);
             });
-        } catch (err) { console.error("Yükleme hatası:", err); }
+        } catch (err) { console.error(err); }
     }
 
     async function openReviews(productId, productName) {
@@ -183,17 +213,17 @@
             const data = await res.json();
 
             if (!data.reviews || data.reviews.length === 0) {
-                container.innerHTML = "<p style='color:#888; text-align:center;'>Bu ürün için henüz yorum yok.</p>";
+                container.innerHTML = "<p style='text-align:center; opacity:0.6;'>Henüz yorum yok.</p>";
                 return;
             }
 
             container.innerHTML = data.reviews.map(r => `
                 <div class="review-card" id="review-${r._id}">
                     <div style="flex:1">
-                        <div style="color:#d4af37; font-weight:600; font-size:0.9rem;">${r.userName}</div>
+                        <div style="color: var(--gold); font-weight:600; font-size:0.9rem;">${r.userName}</div>
                         <div class="stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
-                        <div style="color:#ddd; font-size:0.85rem; margin-bottom:5px;">${r.comment}</div>
-                        <small style="color:#555">${new Date(r.createdAt).toLocaleDateString('tr-TR')}</small>
+                        <div style="font-size:0.85rem; margin-bottom:5px;">${r.comment}</div>
+                        <small style="opacity:0.5; font-size: 0.75rem;">${new Date(r.createdAt).toLocaleDateString('tr-TR')}</small>
                     </div>
                     <button class="delete-review-btn" onclick="deleteReview('${productId}', '${r._id}')">Sil</button>
                 </div>
@@ -203,21 +233,19 @@
 
     async function deleteReview(productId, reviewId) {
         if (!confirm("Bu yorumu silmek istediğinize emin misiniz?")) return;
-
         try {
             const res = await fetch(`/api/admin/products/${productId}/reviews/${reviewId}`, {
                 method: "DELETE",
                 headers: { "Authorization": `Bearer ${token}` }
             });
-
             const data = await res.json();
             if (data.success) {
                 document.getElementById(`review-${reviewId}`).remove();
                 if (document.getElementById("reviewsContainer").children.length === 0) {
-                    document.getElementById("reviewsContainer").innerHTML = "<p style='color:#888;'>Yorum kalmadı.</p>";
+                    document.getElementById("reviewsContainer").innerHTML = "<p>Yorum kalmadı.</p>";
                 }
-            } else { alert("Hata: " + data.message); }
-        } catch (err) { alert("Sistem hatası!"); }
+            }
+        } catch (err) { alert("Hata!"); }
     }
 
     function closeModal() { document.getElementById("reviewsModal").classList.remove("active"); }

@@ -1,140 +1,181 @@
-<!--register.html-->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Velora | Kayıt Ol</title>
-    <link rel="stylesheet" href="css/style.css">
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
     <style>
-header {
-    background-color: #000;
-    padding: 20px 0 10px;
-    border-bottom: 2px solid #d4af37;
-}
+        :root {
+            --bg-color: #000;
+            --text-color: #fff;
+            --header-bg: #000;
+            --card-bg: #0d0d0d;
+            --gold: #d4af37;
+            --border: #d4af37;
+            --white: #b8860b;
+            --input-bg: #151515;
+        }
 
-button[type="submit"] {
-    width: 200px;
-    display: block;
-    margin: 20px auto;
-    border-radius: 50px;
-}
+        body.light-mode {
+            --bg-color: #f4f4f4;
+            --text-color: #1a1a1a;
+            --header-bg: #ffffff;
+            --card-bg: #ffffff;
+            --gold: #b8860b;
+            --border: #b8860b;
+            --input-bg: #eeeeee;
+        }
 
-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-}
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: 0.3s ease;
+        }
 
-nav a {
-    color: #f5f5f5;
-    text-decoration: none;
-    font-weight: 600;
-    letter-spacing: 1px;
-}
+        header {
+            background-color: var(--header-bg);
+            padding: 20px 0 10px;
+            border-bottom: 2px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-nav a:hover {
-    color: #d4af37;
-}
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 10px;
+            position: absolute;
+            right: 20px;
+            top: 15px;
+        }
+        .hamburger span {
+            width: 30px;
+            height: 3px;
+            background-color: var(--white);
+            border-radius: 2px;
+        }
 
+        nav { display: flex; justify-content: center; align-items: center; gap: 30px; }
+        nav a { color: var(--text-color); text-decoration: none; font-weight: 600; transition: 0.3s; }
+        nav a:hover { color: var(--gold); }
 
-.role-selector {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 30px;
-}
+        .theme-toggle {
+            background: none; border: 1px solid var(--gold); color: var(--gold);
+            padding: 5px 12px; border-radius: 20px; cursor: pointer; font-weight: 600;
+        }
 
-.role-btn {
-    padding: 12px 30px;
-    border: 2px solid #d4af37;
-    border-radius: 50px;
-    background-color: #2a2a2a;
-    color: #f5f5f5;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
-}
+        .form-container { 
+            max-width: 450px; 
+            margin: 60px auto; 
+            padding: 40px; 
+            background: var(--card-bg); 
+            border-radius: 20px; 
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+        }
 
-.role-btn:hover {
-    background-color: #3a3a3a;
-}
+        h2 { color: var(--gold); margin-bottom: 30px; letter-spacing: 2px; }
 
-.role-btn.active {
-    background-color: #d4af37;
-    color: #0d0d0d;
-}
+        .role-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
 
-@media (max-width: 768px) {
-    header {
-        position: relative;
-        border-bottom: none;
-    }
+        .role-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            background: transparent;
+            color: var(--gold);
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-    nav {
-        display: none;
-        position: absolute;
-        top: 70px;
-        right: 20px;
-        background: black;
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1rem;
-        border: 1px solid #d4af37;
-        z-index: 1000;
-    }
+        .role-btn.active {
+            background: var(--gold);
+            color: #000;
+        }
 
-    nav.active {
-        display: flex;
-    }
+        form { text-align: left; }
+        label { display: block; margin-bottom: 8px; font-size: 0.9em; font-weight: 600; }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            background: var(--input-bg);
+            border: 1px solid rgba(212,175,55,0.3);
+            border-radius: 8px;
+            color: var(--text-color);
+            box-sizing: border-box;
+        }
 
-    .hamburger {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        position: absolute;
-        top: 25px;
-        right: 20px;
-        z-index: 1100;
-        cursor: pointer;
-    }
+        input:focus { outline: none; border-color: var(--gold); }
 
-    .hamburger span {
-        width: 28px;
-        height: 3px;
-        background: #ffffff;
-    }
-}
-</style>
+        button[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            background: var(--gold);
+            color: #000;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1em;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
 
+        button[type="submit"]:hover { transform: translateY(-2px); opacity: 0.9; }
+
+        .form-container p { margin-top: 20px; font-size: 0.9em; }
+        .form-container p a { color: var(--gold); text-decoration: none; font-weight: bold; }
+
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            nav {
+                display: none; flex-direction: column; width: 100%;
+                background: var(--header-bg); padding: 20px 0; border-top: 1px solid var(--border);
+                position: absolute; top: 65px; left: 0;
+            }
+            nav.active { display: flex; }
+            .form-container { margin: 20px; padding: 25px; }
+        }
+    </style>
 </head>
-<body>
+<body id="mainBody">
 
 <header>
-    <h1 style="color: #d4af37;">VELORA</h1>
+    <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+    </div>
+    <h1 style="color: var(--gold); text-align: center; margin: 0 0 10px 0; font-size: 1.5rem;">VELORA</h1>
     <nav id="navMenu">
         <a href="index.html">ANA SAYFA</a>
         <a href="products.html">ÜRÜNLER</a>
         <a href="cart.html">SEPETİM</a>
         <a href="favorites.html">FAVORİLER</a>
+        <button id="themeToggle" class="theme-toggle">🌙 Mod</button>
     </nav>
-    <div class="hamburger" id="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
 </header>
 
 <div class="form-container">
-    <h2>Kayıt Ol</h2>
+    <h2>KAYIT OL</h2>
     
-  
     <div class="role-selector">
-        <button class="role-btn active" data-role="user">USER</button>
-        <button class="role-btn" data-role="admin">ADMIN</button>
+        <button class="role-btn active" data-role="user">MÜŞTERİ</button>
+        <button class="role-btn" data-role="admin">YÖNETİCİ</button>
     </div>
     
     <div id="message" class="message"></div>
@@ -143,45 +184,53 @@ nav a:hover {
         <input type="hidden" id="selectedRole" value="user">
 
         <label for="username">Kullanıcı Adı</label>
-        <input type="text" id="username" name="username" required>
+        <input type="text" id="username" name="username" placeholder="Kullanıcı adınızı girin" required>
 
         <label for="email">E-posta</label>
-        <input type="email" id="email" name="email" required>
+        <input type="email" id="email" name="email" placeholder="E-posta adresinizi girin" required>
 
         <label for="password">Şifre</label>
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="password" name="password" placeholder="••••••••" required>
 
         <label for="password2">Şifre Tekrar</label>
-        <input type="password" id="password2" name="password2" required>
+        <input type="password" id="password2" name="password2" placeholder="••••••••" required>
 
-        <button type="submit">Kayıt Ol</button>
+        <button type="submit">KAYIT OL</button>
     </form>
 
     <p>Zaten hesabın var mı? <a href="login.html">Giriş Yap</a></p>
 </div>
 
-<footer>
-    <p>&copy; 2025 VELORA</p>
-</footer>
-
 <script>
+    const body = document.getElementById("mainBody");
+    const themeToggle = document.getElementById("themeToggle");
+    const roleButtons = document.querySelectorAll('.role-btn');
+    const selectedRoleInput = document.getElementById('selectedRole');
 
-const roleButtons = document.querySelectorAll('.role-btn');
-const selectedRoleInput = document.getElementById('selectedRole');
+    // Hamburger Menü
+    document.getElementById("hamburger").onclick = () => document.getElementById("navMenu").classList.toggle("active");
 
-roleButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-        roleButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        selectedRoleInput.value = btn.dataset.role;
+    // Tema Yönetimi
+    const currentTheme = localStorage.getItem("theme") || "dark";
+    if (currentTheme === "light") { body.classList.add("light-mode"); themeToggle.textContent = "☀️ Mod"; }
+
+    themeToggle.onclick = () => {
+        body.classList.toggle("light-mode");
+        const isLight = body.classList.contains("light-mode");
+        localStorage.setItem("theme", isLight ? "light" : "dark");
+        themeToggle.textContent = isLight ? "☀️ Mod" : "🌙 Mod";
+    };
+
+    // Rol Seçimi
+    roleButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            roleButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedRoleInput.value = btn.dataset.role;
+        });
     });
-});
-
-
-
 </script>
 <script src="js/script.js"></script>
-
 
 </body>
 </html>

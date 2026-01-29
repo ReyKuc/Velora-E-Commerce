@@ -1,4 +1,3 @@
-<!--public/admin.html-->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -7,29 +6,62 @@
     <title>VELORA | Admin Paneli</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
     <style>
+        /* Tasarım Parametreleri */
+        :root {
+            --bg-color: #000;
+            --text-color: #fff;
+            --header-bg: #000;
+            --card-bg: #0d0d0d;
+            --gold: #d4af37;
+            --border: #d4af37;
+            --footer-text: #555;
+        }
+
+        body.light-mode {
+            --bg-color: #f4f4f4;
+            --text-color: #1a1a1a;
+            --header-bg: #ffffff;
+            --card-bg: #ffffff;
+            --gold: #b8860b;
+            --border: #b8860b;
+            --footer-text: #888;
+        }
+
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            background-color: #000;
-            color: #fff;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             text-align: center;
+            transition: 0.3s ease;
         }
 
         header {
             padding: 20px;
             text-align: center;
-            border-bottom: 2px solid #d4af37;
+            border-bottom: 2px solid var(--border);
+            background-color: var(--header-bg);
+            position: relative;
         }
 
         h1 {
-            color: #d4af37;
+            color: var(--gold);
             letter-spacing: 2px;
-            margin-bottom: 5px;
+            margin: 0 0 5px 0;
         }
 
+        /* Navigasyon & Hamburger */
         nav { display: flex; justify-content: center; align-items: center; gap: 30px; margin-top: 10px; }
-        nav a { color: #f5f5f5; text-decoration: none; font-weight: 600; transition: 0.3s; font-size: small; }
-        nav a:hover { color: #d4af37; }
+        nav a { color: var(--text-color); text-decoration: none; font-weight: 600; transition: 0.3s; font-size: small; }
+        nav a:hover { color: var(--gold); }
+
+        .theme-toggle {
+            background: none; border: 1px solid var(--gold); color: var(--gold);
+            padding: 4px 10px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 11px;
+        }
+
+        .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; position: absolute; right: 20px; top: 30px; }
+        .hamburger span { width: 27px; height: 3px; background: var(--gold); transition: 0.3s; }
 
         /* Logout Modal */
         .logout-confirm {
@@ -38,18 +70,18 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #0d0d0d;
+            background: var(--card-bg);
             padding: 30px;
-            border: 1px solid #d4af37;
+            border: 1px solid var(--border);
             border-radius: 15px;
             z-index: 2000;
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
         }
 
         .logout-confirm button {
             background: transparent;
-            border: 1px solid #d4af37;
-            color: #d4af37;
+            border: 1px solid var(--gold);
+            color: var(--gold);
             padding: 8px 25px;
             margin: 10px;
             border-radius: 20px;
@@ -59,92 +91,58 @@
         }
 
         .logout-confirm button#confirmYes {
-            background: #d4af37;
+            background: var(--gold);
             color: #000;
         }
 
         .hero { margin-top: 60px; }
         .hero p {
-            color: #d4af37;
+            color: var(--gold);
             font-size: 1.2rem;
             letter-spacing: 1px;
             opacity: 0.8;
         }
 
-        .categories-container {
-            margin: 50px auto;
-            max-width: 900px;
-            background-color: #0d0d0d;
-            border: 1px solid #d4af37;
-            border-radius: 20px;
-            padding: 40px;
-        }
-
-        .categories-container h2 {
-            color: #d4af37;
-            font-size: 1.5rem;
-            margin-bottom: 30px;
-            letter-spacing: 2px;
-        }
-
-        .categories {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 20px;
-        }
-
-        .category {
-            background-color: transparent;
-            color: #d4af37;
-            border: 1px solid #d4af37;
-            border-radius: 12px;
-            padding: 20px 10px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .category:hover { 
-            transform: translateY(-5px); 
-            background-color: #d4af37; 
-            color: #000; 
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
-        }
-
         footer {
             margin-top: 50px;
             padding: 20px 0;
-            color: #555;
+            color: var(--footer-text);
             font-size: 0.8rem;
-            border-top: 1px solid #1a1a1a;
+            border-top: 1px solid rgba(128, 128, 128, 0.2);
         }
 
-       
-        .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; position: absolute; right: 20px; top: 30px; }
-        .hamburger span { width: 27px; height: 3px; background: #ffffff; }
-
         @media (max-width: 768px) {
-            nav { display: none; flex-direction: column; gap: 15px; padding: 20px; }
+            nav {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 85px;
+                left: 0;
+                width: 100%;
+                background: var(--header-bg);
+                padding: 20px 0;
+                border-bottom: 1px solid var(--border);
+                z-index: 1000;
+                gap: 20px;
+            }
             nav.active { display: flex; }
             .hamburger { display: flex; }
         }
     </style>
 </head>
-<body>
+<body id="mainBody">
 
 <header>
     <h1>VELORA</h1>
     <nav id="navMenu">
-        <a href="admin.html" style="color: #d4af37;">ADMİN PANELİ</a>
+        <a href="admin.html" style="color: var(--gold);">ADMİN PANELİ</a>
         <a href="stockupdate.html">STOK GÜNCELLEME</a>
         <a href="priceupdate.html">FİYAT GÜNCELLEME</a>
         <a href="activation.html">AKTİVASYON</a>
         <a href="review.html">YORUMLAR</a>
-         <a href="addProduct.html">ÜRÜN EKLE</a>
-        <a href="#" id="logoutBtn">ÇIKIŞ</a>
+        <a href="addProduct.html">ÜRÜN EKLE</a>
+        <button id="themeToggle" class="theme-toggle">🌙 MOD</button>
+        <a href="#" id="logoutBtn" style="color: #ff4d4d;">ÇIKIŞ</a>
     </nav>
     <div class="hamburger" id="hamburger">
         <span></span>
@@ -161,26 +159,17 @@
 
 <section class="hero">
     <p>Admin Kontrol Paneli</p>
-</section>
-
-<!--<section id="categories" class="categories-container">
-    <h2>ÜRÜN KATEGORİLERİ</h2>
-    <div class="categories">
-        <a href="products.html?category=Kadın" class="category">KADIN</a>
-        <a href="products.html?category=Erkek" class="category">ERKEK</a>
-        <a href="products.html?category=Kozmetik" class="category">KOZMETİK</a>
-        <a href="products.html?category=Aksesuar" class="category">AKSESUAR</a>
-        <a href="products.html?category=Çanta" class="category">ÇANTA</a>
-        <a href="products.html?category=Ayakkabı" class="category">AYAKKABI</a>
+    <div style="margin-top: 20px; opacity: 0.6; font-size: 0.9rem;">
+        Hoş geldiniz. Sağ üstteki menüyü kullanarak sistem yönetimini gerçekleştirebilirsiniz.
     </div>
 </section>
--->
+
 <footer>
     <p>&copy; 2026 VELORA | Yönetim Sistemi</p>
 </footer>
 
 <script>
-    
+    // Giriş Kontrolü
     (function checkAuth() {
         const token = localStorage.getItem("token");
         const role = localStorage.getItem("role");
@@ -189,6 +178,8 @@
         }
     })();
 
+    const body = document.getElementById("mainBody");
+    const themeToggle = document.getElementById("themeToggle");
     const hamburger = document.getElementById("hamburger");
     const nav = document.getElementById("navMenu");
     const logoutBtn = document.getElementById("logoutBtn");
@@ -196,9 +187,24 @@
     const yesBtn = document.getElementById("confirmYes");
     const noBtn = document.getElementById("confirmNo");
 
+    // Hamburger Menü
     hamburger.addEventListener("click", () => nav.classList.toggle("active"));
 
- 
+    // Tema Yönetimi
+    const currentTheme = localStorage.getItem("theme") || "dark";
+    if (currentTheme === "light") {
+        body.classList.add("light-mode");
+        themeToggle.textContent = "☀️ MOD";
+    }
+
+    themeToggle.onclick = () => {
+        body.classList.toggle("light-mode");
+        const isLight = body.classList.contains("light-mode");
+        localStorage.setItem("theme", isLight ? "light" : "dark");
+        themeToggle.textContent = isLight ? "☀️ MOD" : "🌙 MOD";
+    };
+
+    // Logout İşlemleri
     logoutBtn.addEventListener("click", (e) => {
         e.preventDefault();
         logoutConfirm.style.display = "block";
@@ -210,10 +216,17 @@
 
     yesBtn.addEventListener("click", () => {
         localStorage.clear();
-        logoutConfirm.innerHTML = "<p style='color:#d4af37'>Güvenli çıkış yapıldı...</p>";
+        logoutConfirm.innerHTML = "<p style='color:var(--gold)'>Güvenli çıkış yapıldı...</p>";
         setTimeout(() => {
             window.location.href = "login.html";
         }, 1000);
+    });
+
+    // Menü dışına tıklandığında hamburger menüyü kapat
+    document.addEventListener("click", (e) => {
+        if (!nav.contains(e.target) && !hamburger.contains(e.target)) {
+            nav.classList.remove("active");
+        }
     });
 </script>
 

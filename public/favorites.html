@@ -1,284 +1,241 @@
-<!--public/favorites.html-->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Velora | Favoriler</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Velora | Favorilerim</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+    <style>
+        :root {
+            --bg-color: #000;
+            --text-color: #fff;
+            --header-bg: #000;
+            --card-bg: #0d0d0d;
+            --gold: #d4af37;
+            --border: #d4af37;
+            --white: #b8860b;
+        }
 
-     <style>
-header {
-    background-color: #000;
-    padding: 20px 0 10px;
-    border-bottom: 2px solid #d4af37;
-}
+        body.light-mode {
+            --bg-color: #f4f4f4;
+            --text-color: #1a1a1a;
+            --header-bg: #ffffff;
+            --card-bg: #ffffff;
+            --gold: #b8860b;
+            --border: #b8860b;
+        }
 
-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-}
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: 0.3s ease;
+        }
 
-nav a {
-    color: #f5f5f5;
-    text-decoration: none;
-    font-weight: 600;
-    letter-spacing: 1px;
-}
+        header {
+            background-color: var(--header-bg);
+            padding: 20px 0 10px;
+            border-bottom: 2px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-nav a:hover {
-    color: #d4af37;
-}
+        /* Hamburger Menü (Beyaz Çizgiler) */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 10px;
+            position: absolute;
+            right: 20px;
+            top: 15px;
+        }
+        .hamburger span {
+            width: 30px;
+            height: 3px;
+            background-color: var(--white);
+            border-radius: 2px;
+            transition: 0.3s;
+        }
 
-@media (max-width: 768px) {
+        nav { display: flex; justify-content: center; align-items: center; gap: 30px; }
+        nav a { color: var(--text-color); text-decoration: none; font-weight: 600; transition: 0.3s; }
+        nav a:hover { color: var(--gold); }
 
-    header {
-        position: relative;
-        border-bottom: none;
-    }
+        .theme-toggle {
+            background: none; border: 1px solid var(--gold); color: var(--gold);
+            padding: 5px 12px; border-radius: 20px; cursor: pointer; font-weight: 600;
+        }
 
-    nav {
-        display: none;
-        position: absolute;
-        top: 70px;
-        right: 20px;
-        background: black;
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1rem;
-        border: 1px solid #d4af37;
-        z-index: 1000;
-    }
+        .container { max-width: 1200px; margin: 40px auto; padding: 20px; }
+        
+        /* Favori Kartları Grid Yapısı */
+        #favoriteItems {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
 
-    nav.active {
-        display: flex;
-    }
+        .fav-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: 0.3s;
+            position: relative;
+        }
 
-    .hamburger {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        position: absolute;
-        top: 25px;
-        right: 20px;
-        z-index: 1100;
-        cursor: pointer;
-    }
+        .fav-item:hover { transform: translateY(-5px); }
 
-    .hamburger span {
-        width: 28px;
-        height: 3px;
-        background: #ffffff;
-    }
-}
+        .fav-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
 
-</style>
+        .btn-group { display: flex; gap: 10px; margin-top: auto; }
+        
+        .add-cart-btn {
+            flex: 2; background: var(--gold); color: #000; border: none;
+            padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer;
+        }
+
+        .remove-btn {
+            flex: 1; background: #ff4c4c; color: #fff; border: none;
+            padding: 10px; border-radius: 8px; cursor: pointer;
+        }
+
+        .message { padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none; text-align: center; }
+        .success { background: rgba(46, 204, 113, 0.2); color: #2ecc71; border: 1px solid #2ecc71; }
+        .error { background: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid #e74c3c; }
+
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            nav {
+                display: none; flex-direction: column; width: 100%;
+                background: var(--header-bg); padding: 20px 0; border-top: 1px solid var(--border);
+                position: absolute; top: 65px; left: 0;
+            }
+            nav.active { display: flex; }
+        }
+    </style>
 </head>
-<body>
+<body id="mainBody">
+
 <header>
-    <h1 style="color: #d4af37;">VELORA</h1>
+    <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+    </div>
+    <h1 style="color: var(--gold); text-align: center; margin: 0 0 10px 0; font-size: 1.5rem;">VELORA</h1>
     <nav id="navMenu">
         <a href="index.html">ANA SAYFA</a>
         <a href="products.html">ÜRÜNLER</a>
         <a href="cart.html">SEPETİM</a>
-         <a href="login.html" id="loginLink">GİRİŞ YAP</a>
-            <a href="register.html" id="registerLink">KAYIT OL</a>
-           <a href="#" id="logoutBtn" class="logout-btn" style="display:none; font-size: medium; "
-           >
-    ÇIKIŞ
-</a>
-<div id="logoutConfirm" class="logout-confirm">
-        <p>Çıkış yapmak istediğine emin misin?</p>
-        <button id="confirmYes">Evet</button>
-        <button id="confirmNo">Hayır</button>
-    </div>
+        <button id="themeToggle" class="theme-toggle">🌙 Mod</button>
+        <a href="#" id="logoutBtn" style="color: var(--gold);">ÇIKIŞ</a>
     </nav>
-     <div class="hamburger" id="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
 </header>
 
-<div class="form-container">
-    <h2>FAVORİLERİM</h2>
+<div class="container">
+    <h2 style="color: var(--gold); margin-bottom: 30px;">FAVORİLERİM</h2>
     <div id="message" class="message"></div>
-    <div id="favoriteItems"></div>
+    <div id="favoriteItems">Favorileriniz yükleniyor...</div>
 </div>
 
-<footer>
-    <p>&copy; 2025 VELORA</p>
-</footer>
-
 <script>
-const favoriteItemsDiv = document.getElementById("favoriteItems");
-const messageDiv = document.getElementById("message");
+    const token = localStorage.getItem("token");
+    if (!token) window.location.href = "login.html";
 
+    const body = document.getElementById("mainBody");
+    const themeToggle = document.getElementById("themeToggle");
+    const favoriteItemsDiv = document.getElementById("favoriteItems");
+    const messageDiv = document.getElementById("message");
 
-async function loadFavorites() {
-    try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            messageDiv.style.display = "block";
-            messageDiv.className = "message error";
-            messageDiv.textContent = "Lütfen giriş yapın!";
-            return;
+    // Tema ve Hamburger
+    document.getElementById("hamburger").onclick = () => document.getElementById("navMenu").classList.toggle("active");
+    
+    const currentTheme = localStorage.getItem("theme") || "dark";
+    if (currentTheme === "light") { body.classList.add("light-mode"); themeToggle.textContent = "☀️ Mod"; }
+
+    themeToggle.onclick = () => {
+        body.classList.toggle("light-mode");
+        const isLight = body.classList.contains("light-mode");
+        localStorage.setItem("theme", isLight ? "light" : "dark");
+        themeToggle.textContent = isLight ? "☀️ Mod" : "🌙 Mod";
+    };
+
+    async function loadFavorites() {
+        try {
+            const res = await fetch("/api/favorite", { headers: { "Authorization": "Bearer " + token } });
+            const data = await res.json();
+
+            if (!data.items || data.items.length === 0) {
+                favoriteItemsDiv.innerHTML = "<p style='color:#888;'>Henüz favori ürününüz bulunmuyor.</p>";
+                return;
+            }
+
+            favoriteItemsDiv.innerHTML = "";
+            data.items.forEach(item => {
+                if(!item.product) return;
+                
+                const card = document.createElement("div");
+                card.className = "fav-item";
+                card.innerHTML = `
+                    <img src="${item.product.image || 'https://via.placeholder.com/200'}" class="fav-image">
+                    <strong style="font-size:1.1em; display:block; margin-bottom:5px;">${item.product.name}</strong>
+                    <span style="color:var(--gold); font-weight:bold; margin-bottom:15px; display:block;">${item.product.price} ₺</span>
+                    <div class="btn-group">
+                        <button class="add-cart-btn" onclick="addToCart('${item.product._id}')">Sepete Ekle</button>
+                        <button class="remove-btn" onclick="removeFavorite('${item.product._id}')">🗑</button>
+                    </div>
+                `;
+                favoriteItemsDiv.appendChild(card);
+            });
+        } catch (err) { favoriteItemsDiv.innerHTML = "Hata oluştu."; }
+    }
+
+    async function addToCart(productId) {
+        const res = await fetch("/api/cart/add", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+            body: JSON.stringify({ productId, quantity: 1 })
+        });
+        if (res.ok) {
+            showMessage("Ürün başarıyla sepete eklendi!", "success");
         }
+    }
 
-        const res = await fetch("/api/favorite", { 
-            method: "GET",
+    async function removeFavorite(productId) {
+        const res = await fetch("/api/favorite/remove/" + productId, {
+            method: "DELETE",
             headers: { "Authorization": "Bearer " + token }
         });
-
-        const fav = await res.json();
-        
-       
-        if (fav.success === false) {
-             messageDiv.style.display = "block";
-             messageDiv.className = "message error";
-             messageDiv.textContent = fav.message || "Favoriler yüklenirken hata oluştu (Yetki/Sunucu hatası).";
-             return;
+        if (res.ok) {
+            loadFavorites();
+            showMessage("Ürün favorilerden çıkarıldı.", "success");
         }
-
-
-        if (!fav.items || fav.items.length === 0) {
-            favoriteItemsDiv.innerHTML = "<p>Favorileriniz boş.</p>";
-            return;
-        }
-
-        favoriteItemsDiv.innerHTML = "";
-        fav.items.forEach(item => {
-            const div = document.createElement("div");
-            div.style.border = "1px solid #d4af37";
-            div.style.borderRadius = "12px";
-            div.style.padding = "12px";
-            div.style.marginBottom = "10px";
-            div.style.backgroundColor = "#0d0d0d";
-            div.style.display = "flex";
-            div.style.justifyContent = "space-between";
-            div.style.alignItems = "center";
-
-            div.innerHTML = `
-                <span>${item.product.name}</span>
-                <div>
-                    <button class="addToCartBtn" data-id="${item.product._id}" 
-                        style="background:#d4af37;color:#0d0d0d;border:none;padding:5px 10px;border-radius:8px;cursor:pointer;margin-right:5px;">
-                        Sepete Ekle
-                    </button>
-                    <button class="removeFavBtn" data-id="${item.product._id}" 
-                        style="background:#ff4c4c;color:#fff;border:none;padding:5px 10px;border-radius:8px;cursor:pointer;">
-                        Sil
-                    </button>
-                </div>
-            `;
-            favoriteItemsDiv.appendChild(div);
-        });
-
-        document.querySelectorAll(".removeFavBtn").forEach(btn => {
-            btn.addEventListener("click", async () => {
-                const id = btn.getAttribute("data-id");
-                const res = await fetch("/api/favorite/remove/" + id, { 
-                    method: "DELETE",
-                    headers: { "Authorization": "Bearer " + token }
-                });
-                const data = await res.json();
-                if(data.success) {
-                     loadFavorites();
-                } else {
-                    alert(data.message || "Favorilerden çıkarma başarısız!");
-                }
-            });
-        });
-
-        
-        document.querySelectorAll(".addToCartBtn").forEach(btn => {
-            btn.addEventListener("click", async () => {
-                const productId = btn.getAttribute("data-id");
-                const res = await fetch("/api/cart/add", { 
-                    method: "POST",
-                    headers: { 
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + token
-                    },
-                    body: JSON.stringify({ productId, quantity: 1 })
-                });
-                const data = await res.json();
-                if(data.success) {
-                    messageDiv.style.display = "block";
-                    messageDiv.className = "message success";
-                    messageDiv.textContent = "Ürün sepete eklendi!";
-                } else {
-                    messageDiv.style.display = "block";
-                    messageDiv.className = "message error";
-                    messageDiv.textContent = data.message || "Sepete ekleme başarısız!";
-                }
-            });
-        });
-
-    } catch (err) {
-        messageDiv.style.display = "block";
-        messageDiv.className = "message error";
-        messageDiv.textContent = "Favoriler yüklenirken hata oluştu.";
     }
-}
 
-loadFavorites();
-</script>
- <script>
-const hamburger = document.getElementById("hamburger");
-const nav = document.getElementById("navMenu");
+    function showMessage(text, type) {
+        messageDiv.textContent = text;
+        messageDiv.className = `message ${type}`;
+        messageDiv.style.display = "block";
+        setTimeout(() => { messageDiv.style.display = "none"; }, 3000);
+    }
 
-hamburger.addEventListener("click", () => {
-    nav.classList.toggle("active");
-});
-const logoutBtn = document.getElementById("logoutBtn");
-const logoutConfirm = document.getElementById("logoutConfirm");
-const yesBtn = document.getElementById("confirmYes");
-const noBtn = document.getElementById("confirmNo");
+    document.getElementById("logoutBtn").onclick = () => {
+        localStorage.clear();
+        window.location.href = "login.html";
+    };
 
-logoutConfirm.style.display = "none";
-
-if (localStorage.getItem("token")) {
-    logoutBtn.style.display = "inline-block";
-}
-
-
-logoutBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    logoutConfirm.style.display = "block";
-});
-
-
-noBtn.addEventListener("click", () => {
-    logoutConfirm.style.display = "none";
-});
-
-
-yesBtn.addEventListener("click", () => {
-    localStorage.removeItem("token");
-    logoutConfirm.innerHTML = "<p>Çıkış yapıldı</p>";
-
-    setTimeout(() => {
-        logoutConfirm.style.display = "none";
-        logoutBtn.style.display = "none";
-    }, 1200);
-});
-
-const loginLink = document.getElementById("loginLink");
-const registerLink = document.getElementById("registerLink");
-
-if (localStorage.getItem("token")) {
-    loginLink.style.display = "none";
-    registerLink.style.display = "none";
-    logoutBtn.style.display = "inline-block";
-} else {
-    loginLink.style.display = "inline-block";
-    registerLink.style.display = "inline-block";
-    logoutBtn.style.display = "none";
-}
-
+    loadFavorites();
 </script>
 </body>
 </html>

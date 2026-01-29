@@ -1,244 +1,281 @@
-<!--public/login.html-->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Velora | Giriş Yap</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
     <style>
-header {
-    background-color: #000;
-    padding: 20px 0 10px;
-    border-bottom: 2px solid #d4af37;
-}
+        :root {
+            --bg-color: #000;
+            --text-color: #fff;
+            --header-bg: #000;
+            --card-bg: #0d0d0d;
+            --gold: #d4af37;
+            --border: #d4af37;
+            --white: #b8860b;
+            --input-bg: #151515;
+        }
 
-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-}
+        body.light-mode {
+            --bg-color: #f4f4f4;
+            --text-color: #1a1a1a;
+            --header-bg: #ffffff;
+            --card-bg: #ffffff;
+            --gold: #b8860b;
+            --border: #b8860b;
+            --input-bg: #eeeeee;
+        }
 
-nav a {
-    color: #f5f5f5;
-    text-decoration: none;
-    font-weight: 600;
-    letter-spacing: 1px;
-}
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: 0.3s ease;
+        }
 
-nav a:hover {
-    color: #d4af37;
-}
+        header {
+            background-color: var(--header-bg);
+            padding: 20px 0 10px;
+            border-bottom: 2px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-.role-select {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin-bottom: 30px;
-}
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 10px;
+            position: absolute;
+            right: 20px;
+            top: 15px;
+        }
+        .hamburger span {
+            width: 30px;
+            height: 3px;
+            background-color: var(--white);
+            border-radius: 2px;
+        }
 
-.role-select label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    border: 2px solid #d4af37;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: all 0.3s;
-    background-color: #2a2a2a;
-}
+        nav { display: flex; justify-content: center; align-items: center; gap: 30px; }
+        nav a { color: var(--text-color); text-decoration: none; font-weight: 600; transition: 0.3s; }
+        nav a:hover { color: var(--gold); }
 
-.role-select input[type="radio"] {
-    cursor: pointer;
-}
+        .theme-toggle {
+            background: none; border: 1px solid var(--gold); color: var(--gold);
+            padding: 5px 12px; border-radius: 20px; cursor: pointer; font-weight: 600;
+        }
 
-.role-select label:hover {
-    background-color: #3a3a3a;
-}
+        .form-container { 
+            max-width: 400px; 
+            margin: 60px auto; 
+            padding: 40px; 
+            background: var(--card-bg); 
+            border-radius: 20px; 
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+        }
 
-.role-select input[type="radio"]:checked + label,
-.role-select label:has(input[type="radio"]:checked) {
-    background-color: #d4af37;
-    color: #0d0d0d;
-}
+        h2 { color: var(--gold); margin-bottom: 30px; letter-spacing: 2px; }
 
-@media (max-width: 768px) {
-    header {
-        position: relative;
-        border-bottom: none;
-    }
+        /* Modern Rol Seçimi */
+        .role-select {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
 
-    nav {
-        display: none;
-        position: absolute;
-        top: 70px;
-        right: 20px;
-        background: black;
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1rem;
-        border: 1px solid #d4af37;
-        z-index: 1000;
-    }
+        .role-option {
+            flex: 1;
+            position: relative;
+        }
 
-    button[type="submit"] {
-        width: 200px;
-        display: block;
-        margin: 20px auto;
-        border-radius: 50px;
-    }
+        .role-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
 
-    nav.active {
-        display: flex;
-    }
+        .role-label {
+            display: block;
+            padding: 10px;
+            border: 1px solid var(--gold);
+            border-radius: 12px;
+            color: var(--gold);
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-    .hamburger {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        position: absolute;
-        top: 25px;
-        right: 20px;
-        z-index: 1100;
-        cursor: pointer;
-    }
+        .role-option input[type="radio"]:checked + .role-label {
+            background: var(--gold);
+            color: #000;
+        }
 
-    .hamburger span {
-        width: 28px;
-        height: 3px;
-        background: #ffffff;
-    }
-}
-</style>
+        form { text-align: left; }
+        label { display: block; margin-bottom: 8px; font-size: 0.85em; font-weight: 600; opacity: 0.9; }
+        
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            background: var(--input-bg);
+            border: 1px solid rgba(212,175,55,0.3);
+            border-radius: 10px;
+            color: var(--text-color);
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 8px rgba(212,175,55,0.2); }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            background: var(--gold);
+            color: #000;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1em;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        button[type="submit"]:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212,175,55,0.3); }
+
+        .message { padding: 12px; border-radius: 8px; margin-bottom: 20px; display: none; font-size: 0.9em; }
+        .success { background: rgba(46, 204, 113, 0.2); color: #2ecc71; border: 1px solid #2ecc71; }
+        .error { background: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid #e74c3c; }
+
+        .form-container p { margin-top: 25px; font-size: 0.9em; opacity: 0.8; }
+        .form-container p a { color: var(--gold); text-decoration: none; font-weight: bold; }
+
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            nav {
+                display: none; flex-direction: column; width: 100%;
+                background: var(--header-bg); padding: 20px 0; border-top: 1px solid var(--border);
+                position: absolute; top: 65px; left: 0;
+            }
+            nav.active { display: flex; }
+            .form-container { margin: 20px; padding: 25px; }
+        }
+    </style>
 </head>
-<body>
+<body id="mainBody">
 
 <header>
-    <h1 style="color: #d4af37;">VELORA</h1>
+    <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+    </div>
+    <h1 style="color: var(--gold); text-align: center; margin: 0 0 10px 0; font-size: 1.5rem;">VELORA</h1>
     <nav id="navMenu">
         <a href="index.html">ANA SAYFA</a>
         <a href="products.html">ÜRÜNLER</a>
         <a href="cart.html">SEPETİM</a>
         <a href="favorites.html">FAVORİLER</a>
+        <button id="themeToggle" class="theme-toggle">🌙 Mod</button>
     </nav>
-    <div class="hamburger" id="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
 </header>
 
 <div class="form-container">
-    <h2>Giriş Yap</h2>
+    <h2>GİRİŞ YAP</h2>
     
     <div class="role-select">
-        <label>
-            <input type="radio" name="role" value="user" checked>
-            <span>Kullanıcı</span>
-        </label>
-        <label>
-            <input type="radio" name="role" value="admin">
-            <span>Admin</span>
-        </label>
+        <div class="role-option">
+            <input type="radio" name="role" value="user" id="roleUser" checked>
+            <label for="roleUser" class="role-label">MÜŞTERİ</label>
+        </div>
+        <div class="role-option">
+            <input type="radio" name="role" value="admin" id="roleAdmin">
+            <label for="roleAdmin" class="role-label">YÖNETİCİ</label>
+        </div>
     </div>
 
     <div id="message" class="message"></div>
 
     <form id="loginForm">
         <label for="usernameOrEmail">E-posta veya Kullanıcı Adı</label>
-        <input type="text" id="usernameOrEmail" name="usernameOrEmail" required>
+        <input type="text" id="usernameOrEmail" name="usernameOrEmail" placeholder="user@velora.com" required>
 
         <label for="password">Şifre</label>
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="password" name="password" placeholder="••••••••" required>
 
-        <button type="submit">Giriş Yap</button>
+        <button type="submit">GİRİŞ YAP</button>
 
-        <p>
-            Hesabın yok mu? <a href="register.html">Kayıt Ol</a>
-        </p>
+        <p>Hesabın yok mu? <a href="register.html">Hemen Kayıt Ol</a></p>
     </form>
 </div>
 
-<footer>
-    <p>&copy; 2025 VELORA</p>
-</footer>
-
 <script>
-const hamburger = document.getElementById("hamburger");
-const nav = document.getElementById("navMenu");
+    const body = document.getElementById("mainBody");
+    const themeToggle = document.getElementById("themeToggle");
+    const hamburger = document.getElementById("hamburger");
+    const nav = document.getElementById("navMenu");
+    const messageDiv = document.getElementById("message");
 
-if (hamburger) {
-    hamburger.addEventListener("click", () => {
-        nav.classList.toggle("active");
-    });
-}
+    // Hamburger
+    hamburger.onclick = () => nav.classList.toggle("active");
 
-const loginForm = document.getElementById("loginForm");
-const messageDiv = document.getElementById("message");
+    // Tema Yönetimi
+    const currentTheme = localStorage.getItem("theme") || "dark";
+    if (currentTheme === "light") { body.classList.add("light-mode"); themeToggle.textContent = "☀️ Mod"; }
 
-loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+    themeToggle.onclick = () => {
+        body.classList.toggle("light-mode");
+        const isLight = body.classList.contains("light-mode");
+        localStorage.setItem("theme", isLight ? "light" : "dark");
+        themeToggle.textContent = isLight ? "☀️ Mod" : "🌙 Mod";
+    };
 
-    
-    const usernameOrEmail = document.getElementById("usernameOrEmail").value.trim();
-    const password = document.getElementById("password").value;
-    const role = document.querySelector('input[name="role"]:checked').value;
-
-    console.log("📤 Sunucuya gidiyor:", { usernameOrEmail, password, role });
-
-    try {
-        const res = await fetch("/api/auth/login", {
-            method: "POST",
-            headers: { 
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify({ usernameOrEmail, password, role })
-        });
-
-        console.log("📡 Yanıt Durumu:", res.status);
+    // Form İşlemleri
+    const loginForm = document.getElementById("loginForm");
+    loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
         
-        const data = await res.json();
-        console.log("📥 Sunucudan gelen:", data);
+        const usernameOrEmail = document.getElementById("usernameOrEmail").value.trim();
+        const password = document.getElementById("password").value;
+        const role = document.querySelector('input[name="role"]:checked').value;
 
-        messageDiv.style.display = "block";
+        try {
+            const res = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ usernameOrEmail, password, role })
+            });
 
-        if (data.success) {
-            messageDiv.textContent = data.message || "Giriş başarılı!";
-            messageDiv.className = "message success";
+            const data = await res.json();
+            messageDiv.style.display = "block";
 
-            
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("role", data.role);
-            localStorage.setItem("userEmail", usernameOrEmail);
+            if (data.success) {
+                messageDiv.textContent = "Giriş başarılı! Yönlendiriliyorsunuz...";
+                messageDiv.className = "message success";
+                
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("role", data.role);
+                localStorage.setItem("userEmail", usernameOrEmail);
 
-            setTimeout(() => {
-            
-                if (data.role === "admin") {
-                    window.location.href = "/admin.html";
-                } else {
-                    window.location.href = "/index.html";
-                }
-            }, 1000);
-        } else {
-            messageDiv.textContent = data.message || "Giriş başarısız!";
-            messageDiv.className = "message error";
-            
-          
-            if(data.message === "Kullanıcı bulunamadı") {
-                console.warn("DİKKAT: Veritabanında bu kullanıcı yok veya gönderilen string hatalı.");
+                setTimeout(() => {
+                    window.location.href = (data.role === "admin") ? "admin.html" : "index.html";
+                }, 1200);
+            } else {
+                messageDiv.textContent = data.message || "Giriş başarısız!";
+                messageDiv.className = "message error";
             }
+        } catch (err) {
+            messageDiv.style.display = "block";
+            messageDiv.textContent = "Bağlantı hatası!";
+            messageDiv.className = "message error";
         }
-    } catch (err) {
-        console.error("💥 Kritik Hata:", err);
-        messageDiv.style.display = "block";
-        messageDiv.textContent = "Bağlantı hatası!";
-        messageDiv.className = "message error";
-    }
-});
+    });
 </script>
-
 </body>
 </html>

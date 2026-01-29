@@ -6,19 +6,46 @@
     <title>VELORA | Ana Sayfa</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
     <style>
+        /* CSS Değişkenleri - Tema Yönetimi */
+        :root {
+            --bg-color: #000;
+            --text-color: #fff;
+            --header-bg: #000;
+            --card-bg: #0d0d0d;
+            --gold: #d4af37;
+            --gold-hover: #e0b84f;
+            --border: #d4af37;
+            --shadow: rgba(212, 175, 55, 0.3);
+        }
+
+        body.light-mode {
+            --bg-color: #f4f4f4;
+            --text-color: #1a1a1a;
+            --header-bg: #ffffff;
+            --card-bg: #ffffff;
+            --gold: #b8860b;
+            --gold-hover: #8b6508;
+            --border: #b8860b;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            background-color: #000;
-            color: #fff;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             text-align: center;
             overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         header {
-            background-color: #000;
+            background-color: var(--header-bg);
             padding: 20px 0 10px;
-            border-bottom: 2px solid #d4af37;
+            border-bottom: 2px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         nav {
@@ -31,7 +58,7 @@
         }
 
         nav a {
-            color: #f5f5f5;
+            color: var(--text-color);
             text-decoration: none;
             font-weight: 600;
             letter-spacing: 1px;
@@ -39,35 +66,48 @@
         }
 
         nav a:hover {
-            color: #d4af37;
+            color: var(--gold);
             transform: scale(1.05);
         }
 
-        .hero {
-            margin-top: 80px;
+        /* Tema Değiştirme Butonu */
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            margin-left: 10px;
+        }
+        .theme-toggle:hover {
+            background: var(--gold);
+            color: var(--bg-color);
         }
 
+        .hero { margin-top: 80px; }
         .hero h1 {
             font-size: 4rem;
-            color: #d4af37;
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
+            color: var(--gold);
+            text-shadow: 0 0 20px var(--shadow);
             letter-spacing: 4px;
             animation: glow 2s ease-in-out infinite alternate;
         }
 
         @keyframes glow {
-            from { text-shadow: 0 0 100px #d4af37, 0 0 20px #d4af37; }
-            to { text-shadow: 0 0 250px #f5c542, 0 0 40px #f5c542; }
+            from { text-shadow: 0 0 50px var(--gold), 0 0 10px var(--gold); }
+            to { text-shadow: 0 0 100px var(--gold-hover), 0 0 20px var(--gold-hover); }
         }
 
         .hero p {
             margin-top: 15px;
             font-size: 1.2rem;
-            color: #f5f5f5;
             opacity: 0.9;
         }
 
-        /* Öneri Bölümü */
+        /* Ürün Kartları */
         .recommendations-container {
             margin: 60px auto;
             max-width: 1400px;
@@ -80,17 +120,16 @@
             align-items: center;
             margin-bottom: 30px;
             padding-bottom: 15px;
-            border-bottom: 2px solid #d4af37;
+            border-bottom: 2px solid var(--border);
         }
 
         .recommendations-title {
-            color: #d4af37;
+            color: var(--gold);
             font-size: 1.8rem;
-            letter-spacing: 1px;
         }
 
         .personalized-badge {
-            background-color: #d4af37;
+            background-color: var(--gold);
             color: #000;
             padding: 8px 20px;
             border-radius: 20px;
@@ -100,205 +139,129 @@
 
         .products-grid {
             display: grid;
-            /* Sayfayı doldurmak için grid yapısı optimize edildi */
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 25px;
             margin-bottom: 40px;
         }
 
         .product-card {
-            background-color: #0d0d0d;
-            border: 1px solid #d4af37;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
             border-radius: 15px;
             padding: 20px;
             transition: all 0.3s ease;
             cursor: pointer;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
         }
 
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 10px 30px var(--shadow);
         }
 
         .product-image {
             width: 100%;
-            height: 320px; /* Daha dolgun görünüm için yükseklik artırıldı */
+            height: 320px;
             object-fit: cover;
             border-radius: 10px;
             margin-bottom: 15px;
         }
 
-        .product-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 10px;
-        }
+        .product-name { font-weight: 600; margin-bottom: 10px; color: var(--text-color); }
+        .product-price { color: var(--gold); font-size: 1.3rem; font-weight: bold; margin-bottom: 15px; }
 
-        .product-category {
-            color: #888;
-            font-size: 0.85rem;
-            margin-bottom: 10px;
-        }
+        .btn-cart { background: var(--gold); color: #000; border: none; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; flex: 1; }
+        .btn-fav { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 10px; border-radius: 8px; cursor: pointer; }
 
-        .product-price {
-            color: #d4af37;
-            font-size: 1.3rem;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .product-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-cart, .btn-fav {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-cart {
-            background-color: #d4af37;
-            color: #000;
-        }
-
-        .btn-cart:hover {
-            background-color: #e0b84f;
-        }
-
-        .btn-fav {
-            background-color: transparent;
-            border: 1px solid #d4af37;
-            color: #d4af37;
-        }
-
-        .btn-fav:hover {
-            background-color: #d4af37;
-            color: #000;
-        }
-
-        /* Kategoriler Bölümü */
+        /* Kategori Butonları */
         .categories-container {
             margin: 80px auto;
             max-width: 1000px;
-            background-color: #000;
-            border: 2px solid #d4af37;
+            border: 2px solid var(--border);
             border-radius: 20px;
             padding: 40px 30px;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
         }
-
-        .categories-container h2 {
-            color: #d4af37;
-            font-size: 1.8rem;
-            margin-bottom: 30px;
-            letter-spacing: 1px;
-        }
-
-        .categories {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
         .category {
-            background-color: #d4af37;
+            background-color: var(--gold);
             color: #000;
             border-radius: 15px;
-            width: 150px;
-            padding: 20px;
-            font-weight: 600;
-            text-transform: uppercase;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(212,175,55,0.3);
-        }
-
-        .category:hover {
-            transform: scale(1.08);
-            background-color: #c39b31;
-            box-shadow: 0 0 250px rgba(212,175,55,0.7);
-        }
-
-        footer {
-            background-color: #000;
-            color: #f5f5f5;
-            text-align: center;
-            padding: 30px 0;
-            border-top: 1px solid rgba(212,175,55,0.3);
-        }
-
-        .logout-confirm {
-            position: absolute;
-            top: 60px;
-            right: 20px;
-            background: #111;
-            border: 1px solid #d4af37;
+            width: 140px;
             padding: 15px;
-            border-radius: 10px;
-            z-index: 2000;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s;
+            display: inline-block;
+            margin: 10px;
         }
-        .logout-confirm button {
-            margin: 5px;
-            padding: 5px 15px;
-            cursor: pointer;
-            border-radius: 5px;
-            border: none;
-        }
-        #confirmYes { background: #d4af37; color: black; }
-        #confirmNo { background: #333; color: white; }
 
+        /* Hamburger Menü Çizgileri */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 10px;
+        }
+        .hamburger span {
+            width: 30px;
+            height: 3px;
+            background-color: var(--gold);
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        /* Mobil Görünüm Düzenlemeleri */
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
+            .hamburger { display: flex; position: absolute; right: 20px; top: 15px; }
+            
             nav {
                 display: none;
                 flex-direction: column;
-                position: absolute;
-                top: 70px;
-                left: 0;
                 width: 100%;
-                background: #000;
-                padding: 20px;
-                border-bottom: 1px solid #d4af37;
-                z-index: 1000;
+                background: var(--header-bg);
+                padding: 20px 0;
+                border-top: 1px solid var(--border);
+                margin-top: 40px;
             }
+            
             nav.active { display: flex; }
+            .hero h1 { font-size: 2.5rem; }
             .products-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+        }
+
+        footer { padding: 30px; border-top: 1px solid var(--border); margin-top: 50px; }
+        
+        .logout-confirm {
+            position: absolute; top: 60px; right: 20px; background: #111; border: 1px solid var(--gold);
+            padding: 15px; border-radius: 10px; z-index: 2000;
         }
     </style>
 </head>
-<body>
+<body id="mainBody">
 
     <header>
+        <div class="hamburger" id="hamburger">
+            <span ></span>
+            <span></span>
+            <span></span>
+        </div>
         <nav id="navMenu">
             <a href="index.html">ANA SAYFA</a>
-            <a href="#categories">KATEGORİLER</a>
             <a href="products.html">ÜRÜNLER</a>
             <a href="cart.html">SEPETİM</a>
             <a href="favorites.html">FAVORİLER</a>
             <a href="login.html" id="loginLink">GİRİŞ YAP</a>
             <a href="register.html" id="registerLink">KAYIT OL</a>
-            <a href="#" id="logoutBtn" style="display:none; color: #d4af37; font-size: 1.2rem;">ÇIKIŞ</a><button id="themeToggle" class="theme-toggle">🌙 Mod</button>
+            <a href="#" id="logoutBtn" style="display:none; color: var(--gold);">ÇIKIŞ</a>
+            <button id="themeToggle" class="theme-toggle">🌙 Mod</button>
             
             <div id="logoutConfirm" class="logout-confirm" style="display:none;">
-                <p style="font-size: 0.9rem; margin-bottom: 10px;">Çıkış yapılsın mı?</p>
-                <button id="confirmYes">Evet</button>
-                <button id="confirmNo">Hayır</button>
+                <p style="color: white; font-size: 0.9rem; margin-bottom: 10px;">Çıkış yapılsın mı?</p>
+                <button id="confirmYes" style="background: var(--gold); border:none; padding: 5px 10px; cursor:pointer;">Evet</button>
+                <button id="confirmNo" style="background: #333; color: white; border:none; padding: 5px 10px; cursor:pointer;">Hayır</button>
             </div>
         </nav>
-        <div class="hamburger" id="hamburger" style="display: none;"> <span></span><span></span><span></span>
-        </div>
     </header>
 
     <section class="hero">
@@ -308,14 +271,14 @@
 
     <section id="recommendations" class="recommendations-container" style="display:none;">
         <div class="recommendations-header">
-            <h2 class="recommendations-title" id="recommendationsTitle">Bunlarda İlginizi Çekebilir</h2>
-            <span class="personalized-badge" id="personalizedBadge">Kişiselleştirilmiş</span>
+            <h2 class="recommendations-title" id="recommendationsTitle">Bunlar Da İlginizi Çekebilir</h2>
+            <span class="personalized-badge" id="personalizedBadge">Sana Özel</span>
         </div>
         <div class="products-grid" id="recommendedProducts"></div>
     </section>
 
     <section id="categories" class="categories-container">
-        <h2>KATEGORİLER</h2>
+        <h2 style="color: var(--gold);">KATEGORİLER</h2>
         <div class="categories">
             <a href="products.html?category=Kadın" class="category">Kadın</a>
             <a href="products.html?category=Erkek" class="category">Erkek</a>
@@ -327,20 +290,42 @@
     </section>
 
     <footer>
-        <p>&copy; 2026 VELORA </p>
+        <p>&copy; 2026 VELORA | Premium Lifestyle</p>
     </footer>
 
 <script>
 const token = localStorage.getItem("token");
+const navMenu = document.getElementById("navMenu");
+const hamburger = document.getElementById("hamburger");
+const themeToggle = document.getElementById("themeToggle");
+const body = document.getElementById("mainBody");
 
+// 1. Hamburger Menü Kontrolü
+hamburger.onclick = () => {
+    navMenu.classList.toggle("active");
+};
 
+// 2. Tema Yönetimi (Dark/Light Mode)
+const currentTheme = localStorage.getItem("theme") || "dark";
+if (currentTheme === "light") {
+    body.classList.add("light-mode");
+    themeToggle.textContent = "☀️ Mod";
+}
+
+themeToggle.onclick = () => {
+    body.classList.toggle("light-mode");
+    const isLight = body.classList.contains("light-mode");
+    localStorage.setItem("theme", isLight ? "light" : "dark");
+    themeToggle.textContent = isLight ? "☀️ Mod" : "🌙 Mod";
+};
+
+// 3. Kullanıcı Oturum Kontrolü
 if (token) {
     document.getElementById("logoutBtn").style.display = "inline-block";
     document.getElementById("loginLink").style.display = "none";
     document.getElementById("registerLink").style.display = "none";
     loadRecommendations();
 }
-
 
 document.getElementById("logoutBtn").onclick = (e) => {
     e.preventDefault();
@@ -356,12 +341,12 @@ document.getElementById("confirmYes").onclick = () => {
     window.location.reload();
 };
 
+// 4. Dinamik Öneriler (Satın alınanları göstermez, sayfayı doldurur)
 async function loadRecommendations() {
     try {
         const res = await fetch("/api/recommendations", {
             headers: { "Authorization": "Bearer " + token }
         });
-
         const data = await res.json();
 
         if (data.success && data.recommendations && data.recommendations.length > 0) {
@@ -370,52 +355,34 @@ async function loadRecommendations() {
             const title = document.getElementById("recommendationsTitle");
             const badge = document.getElementById("personalizedBadge");
 
-         
-            if (data.isPersonalized) {
-                title.textContent = "Sana Özel Ürünler";
-                badge.style.display = "inline-block";
-            } else {
-                title.textContent = "Yeni Gelenleri Keşfedin";
-                badge.style.display = "none";
-            }
+            title.textContent = data.isPersonalized ? "Sana Özel Seçimler" : "Yeni Gelenleri Keşfedin";
+            badge.style.display = data.isPersonalized ? "inline-block" : "none";
 
-            productsGrid.innerHTML = "";
-            data.recommendations.forEach(product => {
-                const card = document.createElement("div");
-                card.className = "product-card";
-                card.onclick = () => window.location.href = `products.html?id=${product._id}`;
-
-                card.innerHTML = `
+            productsGrid.innerHTML = data.recommendations.map(product => `
+                <div class="product-card" onclick="window.location.href='products.html?id=${product._id}'">
                     <img src="${product.image}" alt="${product.name}" class="product-image">
                     <div class="product-name">${product.name}</div>
-                    <div class="product-category">${product.category}</div>
                     <div class="product-price">${product.price}₺</div>
                     <div class="product-actions" onclick="event.stopPropagation()">
                         <button class="btn-cart" onclick="addToCart('${product._id}')">Sepete Ekle</button>
                         <button class="btn-fav" onclick="toggleFavorite('${product._id}')">♡</button>
                     </div>
-                `;
-                productsGrid.appendChild(card);
-            });
+                </div>
+            `).join('');
 
             container.style.display = "block";
         }
-    } catch (err) {
-        console.error("Öneri hatası:", err);
-    }
+    } catch (err) { console.error("Hata:", err); }
 }
 
 async function addToCart(productId) {
     try {
         const res = await fetch("/api/cart/add", {
             method: "POST",
-            headers: { 
-                "Content-Type": "application/json", 
-                "Authorization": "Bearer " + token 
-            },
+            headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
             body: JSON.stringify({ productId, quantity: 1 })
         });
-        if (res.ok) alert("Ürün sepetinize eklendi.");
+        if (res.ok) alert("Sepete eklendi!");
     } catch (err) { alert("Hata oluştu."); }
 }
 
@@ -423,20 +390,12 @@ async function toggleFavorite(productId) {
     try {
         const res = await fetch("/api/favorite/add", {
             method: "POST",
-            headers: { 
-                "Content-Type": "application/json", 
-                "Authorization": "Bearer " + token 
-            },
+            headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
             body: JSON.stringify({ productId })
         });
-        if (res.ok) alert("Favorilere güncellendi.");
+        if (res.ok) alert("Favorilere eklendi!");
     } catch (err) { alert("Hata oluştu."); }
 }
-
-document.getElementById("hamburger").onclick = () => {
-    document.getElementById("navMenu").classList.toggle("active");
-};
 </script>
-
 </body>
 </html>

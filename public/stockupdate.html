@@ -1,331 +1,259 @@
-<!--public/stockupdate.html-->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VELORA | Stok Yönetimi</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
-<style>
-body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background-color: #000;
-    color: #fff;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VELORA | Stok Yönetimi</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+    <style>
+        /* Tasarım Değişkenleri */
+        :root {
+            --bg-color: #000;
+            --text-color: #fff;
+            --header-bg: #000;
+            --card-bg: #0d0d0d;
+            --gold: #d4af37;
+            --border: #d4af37;
+            --input-bg: #1a1a1a;
+        }
 
-header {
-    padding: 20px;
-    text-align: center;
-    border-bottom: 2px solid #d4af37;
-}
+        body.light-mode {
+            --bg-color: #f4f4f4;
+            --text-color: #1a1a1a;
+            --header-bg: #ffffff;
+            --card-bg: #ffffff;
+            --gold: #b8860b;
+            --border: #b8860b;
+            --input-bg: #e0e0e0;
+        }
 
-h1 {
-    color: #d4af37;
-    letter-spacing: 2px;
-}
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: 0.3s ease;
+        }
 
-.container {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 20px;
-}
+        header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--border);
+            background-color: var(--header-bg);
+            position: relative;
+        }
 
-.product-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border: 1px solid #d4af37;
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 15px;
-    background-color: #0d0d0d;
-}
+        h1 { color: var(--gold); letter-spacing: 2px; margin: 0 0 5px 0; }
 
-.product-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    flex: 1;
-}
+        /* Navigasyon & Hamburger */
+        nav { display: flex; justify-content: center; align-items: center; gap: 30px; margin-top: 10px; }
+        nav a { color: var(--text-color); text-decoration: none; font-weight: 600; font-size: small; transition: 0.3s; }
+        nav a:hover { color: var(--gold); }
 
-.product-image {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 8px;
-}
+        .theme-toggle {
+            background: none; border: 1px solid var(--gold); color: var(--gold);
+            padding: 4px 10px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 11px;
+        }
 
-.product-info {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
+        .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; position: absolute; right: 20px; top: 30px; }
+        .hamburger span { width: 27px; height: 3px; background: var(--gold); }
 
-.product-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
+        /* Konteyner ve Kartlar */
+        .container { max-width: 1200px; margin: 40px auto; padding: 20px; }
 
-.stock-input {
-    width: 80px;
-    padding: 8px;
-    border-radius: 8px;
-    border: 1px solid #d4af37;
-    background-color: #1a1a1a;
-    color: #fff;
-    text-align: center;
-    font-size: 16px;
-    font-weight: bold;
-}
+        .product-item {
+            display: flex; align-items: center; justify-content: space-between;
+            border: 1px solid var(--border); border-radius: 12px; padding: 15px;
+            margin-bottom: 15px; background-color: var(--card-bg); transition: 0.2s;
+        }
 
+        .product-left { display: flex; align-items: center; gap: 15px; flex: 1; }
+        .product-image { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
+        .product-info { display: flex; flex-direction: column; gap: 5px; text-align: left; }
 
-.stock-badge {
-    display: inline-block;
-    width: fit-content;
-    padding: 10px 9px !important; 
-    border-radius: 30px;          
-    font-size: 12px;             
-    font-weight: 60;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-top: 5px;
-}
+        /* Sağ Taraf - Kontroller */
+        .product-right { display: flex; align-items: center; gap: 15px; }
 
-.stock-high   { background-color: #2ecc71; color: #000; }
-.stock-medium { background-color: #f39c12; color: #000; }
-.stock-low    { background-color: #e74c3c; color: #fff; }
-.stock-out    { background-color: #95a5a6; color: #fff; }
+        .stock-input {
+            width: 80px; padding: 8px; border-radius: 8px; border: 1px solid var(--gold);
+            background-color: var(--input-bg); color: var(--text-color);
+            text-align: center; font-size: 16px; font-weight: bold;
+        }
 
-.update-btn {
-    padding: 10px 20px;
-    border-radius: 20px;
-    border: none;
-    background-color: #d4af37;
-    color: #000;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
+        /* Rozetler */
+        .stock-badge {
+            display: inline-block; width: fit-content; padding: 4px 10px; 
+            border-radius: 30px; font-size: 11px; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 0.5px; margin-top: 5px;
+        }
+        .stock-high   { background-color: #2ecc71; color: #000; }
+        .stock-medium { background-color: #f39c12; color: #000; }
+        .stock-low    { background-color: #e74c3c; color: #fff; }
+        .stock-out    { background-color: #95a5a6; color: #fff; }
 
-.update-btn:hover {
-    background-color: #c39b31;
-    transform: scale(1.05);
-}
+        .update-btn {
+            padding: 10px 20px; border-radius: 20px; border: none;
+            background-color: var(--gold); color: #000; font-weight: bold;
+            cursor: pointer; transition: 0.3s;
+        }
+        .update-btn:hover { opacity: 0.8; transform: scale(1.05); }
 
-.update-btn:disabled {
-    background-color: #666;
-    cursor: not-allowed;
-}
+        /* Mesaj Kutuları */
+        .message-box {
+            position: fixed; top: 20px; right: 20px; padding: 15px 25px;
+            border-radius: 8px; font-weight: bold; display: none; z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
 
-.success-message {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: #2ecc71;
-    color: #000;
-    padding: 15px 25px;
-    border-radius: 8px;
-    font-weight: bold;
-    display: none;
-    z-index: 1000;
-}
-
-.error-message {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: #e74c3c;
-    color: #fff;
-    padding: 15px 25px;
-    border-radius: 8px;
-    font-weight: bold;
-    display: none;
-    z-index: 1000;
-}
-
-.back-btn {
-    display: inline-block;
-    margin: 20px;
-    padding: 10px 20px;
-    background-color: #d4af37;
-    color: #000;
-    text-decoration: none;
-    border-radius: 20px;
-    font-weight: bold;
-}
-nav { display: flex; justify-content: center; align-items: center; gap: 30px; }
-        nav a { color: #f5f5f5; text-decoration: none; font-weight: 600;font-size:small; transition: 0.3s; }
-        nav a:hover { color: #d4af37; }
-
-.back-btn:hover {
-    background-color: #c39b31;
-}
-</style>
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            nav {
+                display: none; flex-direction: column; position: absolute; top: 85px; left: 0;
+                width: 100%; background: var(--header-bg); padding: 20px 0;
+                border-bottom: 1px solid var(--border); z-index: 1000; gap: 15px;
+            }
+            nav.active { display: flex; }
+            .product-item { flex-direction: column; text-align: center; gap: 20px; }
+            .product-left { flex-direction: column; }
+            .product-right { width: 100%; justify-content: center; }
+            .stock-input { flex: 1; }
+            .update-btn { flex: 2; }
+        }
+    </style>
 </head>
-<body>
-
+<body id="mainBody">
 
 <header>
-    <h1 style="color: #d4af37; text-align: center; margin-bottom: 10px;">VELORA</h1>
-       <nav>
+    <h1>VELORA</h1>
+    <nav id="navMenu">
         <a href="admin.html">ADMİN PANELİ</a>
-        <a href="stockupdate.html"style="color: #d4af37;">STOK GÜNCELLEME</a>
+        <a href="stockupdate.html" style="color: var(--gold);">STOK GÜNCELLEME</a>
         <a href="priceupdate.html">FİYAT GÜNCELLEME</a>
         <a href="activation.html">AKTİVASYON</a>
-        <a href="review.html" >YORUMLAR</a>
+        <a href="review.html">YORUMLAR</a>
         <a href="addProduct.html">ÜRÜN EKLE</a>
-        <a href="#" id="logoutBtn">ÇIKIŞ</a>
+        <button id="themeToggle" class="theme-toggle">🌙 MOD</button>
+        <a href="#" id="logoutBtn" style="color: #ff4d4d;">ÇIKIŞ</a>
     </nav>
+    <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+    </div>
 </header>
 
 <div class="container">
-    <div id="productList"></div>
+    <h2 style="color: var(--gold); text-align: center; margin-bottom: 30px;">Stok Yönetimi</h2>
+    <div id="productList">Ürünler yükleniyor...</div>
 </div>
 
-<div id="successMessage" class="success-message"></div>
-<div id="errorMessage" class="error-message"></div>
+<div id="msgBox" class="message-box"></div>
 
 <script>
-const productList = document.getElementById("productList");
-const successMessage = document.getElementById("successMessage");
-const errorMessage = document.getElementById("errorMessage");
-const token = localStorage.getItem("token");
-const role = localStorage.getItem("role");
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+    const body = document.getElementById("mainBody");
+    const themeToggle = document.getElementById("themeToggle");
+    const hamburger = document.getElementById("hamburger");
+    const navMenu = document.getElementById("navMenu");
+    const productList = document.getElementById("productList");
+    const msgBox = document.getElementById("msgBox");
 
+    if (!token || role !== "admin") { window.location.href = "login.html"; }
 
-if (role !== "admin") {
-    alert("Yetkisiz erişim!");
-    window.location.href = "index.html";
-}
+    // Hamburger & Tema
+    hamburger.onclick = () => navMenu.classList.toggle("active");
 
-function showMessage(message, isSuccess = true) {
-    const msgEl = isSuccess ? successMessage : errorMessage;
-    msgEl.textContent = message;
-    msgEl.style.display = "block";
-    
-    setTimeout(() => {
-        msgEl.style.display = "none";
-    }, 3000);
-}
+    const currentTheme = localStorage.getItem("theme") || "dark";
+    if (currentTheme === "light") {
+        body.classList.add("light-mode");
+        themeToggle.textContent = "☀️ MOD";
+    }
 
-function getStockBadge(stock) {
-    if (stock === undefined || stock === null || stock <= 0) {
-        return '<span class="stock-badge stock-out">Stokta Yok</span>';
-    } else if (stock <= 10) {
-        return `<span class="stock-badge stock-low" >Kritik: ${stock}</span>`;
-    } else if (stock <= 30) {
-        return `<span class="stock-badge stock-medium">Düşük: ${stock}</span>`;
-    } else {
+    themeToggle.onclick = () => {
+        body.classList.toggle("light-mode");
+        const isLight = body.classList.contains("light-mode");
+        localStorage.setItem("theme", isLight ? "light" : "dark");
+        themeToggle.textContent = isLight ? "☀️ MOD" : "🌙 MOD";
+    };
+
+    function showMessage(text, isSuccess = true) {
+        msgBox.textContent = text;
+        msgBox.style.display = "block";
+        msgBox.style.backgroundColor = isSuccess ? "#2ecc71" : "#e74c3c";
+        msgBox.style.color = isSuccess ? "#000" : "#fff";
+        setTimeout(() => { msgBox.style.display = "none"; }, 3000);
+    }
+
+    function getStockBadge(stock) {
+        if (!stock || stock <= 0) return '<span class="stock-badge stock-out">Stokta Yok</span>';
+        if (stock <= 10) return `<span class="stock-badge stock-low">Kritik: ${stock}</span>`;
+        if (stock <= 30) return `<span class="stock-badge stock-medium">Düşük: ${stock}</span>`;
         return `<span class="stock-badge stock-high">Normal: ${stock}</span>`;
     }
-}
 
-async function loadProducts() {
-    try {
-        const res = await fetch("/api/admin/products", {
-            headers: { "Authorization": "Bearer " + token }
-        });
-        const data = await res.json();
-        
-        if (!data.success) {
-            errorMessage.textContent = "Ürünler yüklenemedi";
-            errorMessage.style.display = "block";
-            return;
-        }
-        
-        const products = data.products;
-        productList.innerHTML = "";
+    async function loadProducts() {
+        try {
+            const res = await fetch("/api/admin/products", {
+                headers: { "Authorization": "Bearer " + token }
+            });
+            const data = await res.json();
+            if (!data.success) return;
 
-        if (products.length === 0) {
-            productList.innerHTML = "<p>Henüz ürün yok.</p>";
-            return;
-        }
-
-        products.forEach(product => {
-            const div = document.createElement("div");
-            div.className = "product-item";
-            
-            const currentStock = product.stock || 0;
-
-            div.innerHTML = `
-                <div class="product-left">
-                    <img src="${product.image}" class="product-image" alt="${product.name}">
-                    <div class="product-info">
-                        <strong>${product.name}</strong>
-                        <small style="color:#aaa;">${product.category}</small>
-                        <span style="color:#d4af37;">${product.price} ₺</span>
-                        ${getStockBadge(currentStock)}
+            productList.innerHTML = "";
+            data.products.forEach(product => {
+                const currentStock = product.stock || 0;
+                const div = document.createElement("div");
+                div.className = "product-item";
+                div.innerHTML = `
+                    <div class="product-left">
+                        <img src="${product.image}" class="product-image">
+                        <div class="product-info">
+                            <strong>${product.name}</strong>
+                            <small style="opacity:0.7;">${product.category}</small>
+                            <span style="color: var(--gold); font-weight:600;">${product.price} ₺</span>
+                            ${getStockBadge(currentStock)}
+                        </div>
                     </div>
-                </div>
-
-                <div class="product-right">
-                    <input 
-                        type="number" 
-                        class="stock-input" 
-                        id="stock-${product._id}"
-                        value="${currentStock}"
-                        min="0"
-                        max="9999"
-                    >
-                    <button 
-                        class="update-btn" 
-                        onclick="updateStock('${product._id}', '${product.name}')">
-                        Güncelle
-                    </button>
-                </div>
-            `;
-
-            productList.appendChild(div);
-        });
-
-    } catch (err) {
-        console.error("Yükleme hatası:", err);
-        showMessage("Ürünler yüklenirken hata oluştu!", false);
+                    <div class="product-right">
+                        <input type="number" class="stock-input" id="stock-${product._id}" value="${currentStock}" min="0">
+                        <button class="update-btn" onclick="updateStock('${product._id}', '${product.name}')">Güncelle</button>
+                    </div>
+                `;
+                productList.appendChild(div);
+            });
+        } catch (err) { showMessage("Yükleme hatası!", false); }
     }
-}
 
-async function updateStock(productId, productName) {
-    const inputEl = document.getElementById(`stock-${productId}`);
-    const newStock = parseInt(inputEl.value);
-    
-    if (isNaN(newStock) || newStock < 0) {
-        showMessage("Geçerli bir stok değeri girin!", false);
-        return;
-    }
-    
-    try {
-        const res = await fetch(`/api/admin/products/${productId}/stock`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + token
-            },
-            body: JSON.stringify({ stock: newStock })
-        });
-        
-        const data = await res.json();
-        
-        if (data.success) {
-            showMessage(`${productName} stoğu ${newStock} olarak güncellendi!`, true);
-            loadProducts(); 
-        } else {
-            showMessage(data.message || "Güncelleme başarısız!", false);
+    async function updateStock(productId, productName) {
+        const newStock = parseInt(document.getElementById(`stock-${productId}`).value);
+        if (isNaN(newStock) || newStock < 0) {
+            showMessage("Geçerli bir stok girin!", false);
+            return;
         }
-        
-    } catch (err) {
-        console.error("Güncelleme hatası:", err);
-        showMessage("Stok güncellenirken hata oluştu!", false);
+
+        try {
+            const res = await fetch(`/api/admin/products/${productId}/stock`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({ stock: newStock })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showMessage(`${productName} güncellendi!`);
+                loadProducts();
+            }
+        } catch (err) { showMessage("Hata oluştu!", false); }
     }
-}
 
- document.getElementById("logoutBtn").onclick = () => {
+    document.getElementById("logoutBtn").onclick = () => {
         localStorage.clear();
-        window.location.href = "index.html";
+        window.location.href = "login.html";
     };
-loadProducts();
-</script>
 
+    loadProducts();
+</script>
 </body>
 </html>
